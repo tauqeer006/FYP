@@ -1,9 +1,0 @@
-django-admin startproject FYP
-python manage.py startapp main 
-
-python manage.py migrate
-python manage.py createsuperuser
-
-Tauqeer fypwork123
-
-api key for gemini AIzaSyBXyZU6rOgwXtMSywB1ku-bAfq1JiIjsPM
