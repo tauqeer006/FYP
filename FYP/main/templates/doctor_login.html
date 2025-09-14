@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - X-Ai Pediatric Diagnostic System</title>
+
+  <!-- Fonts and Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap">
+  <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+
+  <!-- Your custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+
+  <!-- Preloader -->
+  <div class="preloader">
+    <div class="loader">
+      <div class="loader-outter"></div>
+      <div class="loader-inner"></div>
+    </div>
+  </div>
+  <!-- End Preloader -->
+
+  <div class="container">
+    <div class="row">
+      <!-- Left side: Medical Info -->
+      <div class="col-md-6">
+        <div class="info-section animate-fade-in-up delay-200">
+          <h1>X-Ai Pediatric Diagnostic System</h1>
+          <p>Welcome to our medical portal where advanced diagnostics meet compassionate care.</p>
+          
+          <div class="image-container">
+            <img src="{% static 'img/blog2.jpg' %}" alt="Medical Illustration" class="animate-float">
+          </div>
+        </div>
+      </div>
+
+      <!-- Right side: Login Form -->
+      <div class="col-md-6">
+        <div class="login-card animate-fade-in-up delay-400">
+          <div class="login-icon">
+            <i class="fas fa-sign-in-alt"></i>
+          </div>
+          
+          <h3 class="text-center"> Doctor Login</h3>
+
+          <form id="loginForm" method="POST" action="{% url 'loginSystem' %}">
+              {% csrf_token %}
+
+            <div class="form-group">
+              <label>username</label>
+              <input type="text" class="form-control" id="username" placeholder="Enter email" required name="username">
+            </div>
+
+            <div class="form-group">
+              <label>Password</label>
+              <div class="password-container">
+                <input type="password" class="form-control" id="password" placeholder="Password" required name="password">
+                  <i class="fas fa-eye" id="toggleIcon"></i>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary">Login</button>
+
+            <p class="text-center mt-3 mb-0">
+              <a href="#">Forgot password?</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        document.querySelector('.preloader').style.display = 'none';
+      }, 800);
+    });
+
+    
+    
+  </script>
+</body>
+</html>

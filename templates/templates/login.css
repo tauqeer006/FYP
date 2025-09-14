@@ -1,0 +1,554 @@
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #42a5f5 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Preloader */
+    .preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #42a5f5 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+
+    .loader {
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+
+    .loader-outter {
+      position: absolute;
+      border: 4px solid transparent;
+      border-top: 4px solid #fff;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      animation: spin 1s linear infinite;
+    }
+
+    .loader-inner {
+      position: absolute;
+      border: 4px solid transparent;
+      border-top: 4px solid rgba(255, 255, 255, 0.6);
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      top: 10px;
+      left: 10px;
+      animation: spin 1.5s linear infinite reverse;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Animated Background */
+    .animated-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .floating-shape {
+      position: absolute;
+      opacity: 0.1;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .shape-1 {
+      top: 20%;
+      left: 10%;
+      width: 60px;
+      height: 60px;
+      background: white;
+      border-radius: 50%;
+      animation-delay: 0s;
+    }
+
+    .shape-2 {
+      top: 60%;
+      right: 15%;
+      width: 40px;
+      height: 40px;
+      background: white;
+      transform: rotate(45deg);
+      animation-delay: 2s;
+    }
+
+    .shape-3 {
+      bottom: 20%;
+      left: 20%;
+      width: 30px;
+      height: 30px;
+      background: white;
+      border-radius: 50%;
+      animation-delay: 4s;
+    }
+
+    .shape-4 {
+      top: 30%;
+      right: 30%;
+      width: 20px;
+      height: 20px;
+      background: white;
+      animation-delay: 1s;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-20px) rotate(180deg);
+      }
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .row {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      animation: slideUp 0.8s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .col-md-6 {
+      flex: 1;
+      padding: 0;
+    }
+
+    /* Info Section */
+    .info-section {
+      background: linear-gradient(135deg, #667eea 0%, #42a5f5 100%);
+      color: white;
+      padding: 115px 100px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .info-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .info-section h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
+      animation: fadeInUp 1s ease-out 0.3s both;
+    }
+
+    .info-section p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 30px;
+      position: relative;
+      z-index: 2;
+      animation: fadeInUp 1s ease-out 0.5s both;
+    }
+
+    .image-container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      animation: fadeInUp 1s ease-out 0.7s both;
+    }
+
+    .medical-icon {
+      font-size: 8rem;
+      color: rgba(255, 255, 255, 0.9);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Login Card */
+    .login-card {
+      padding: 60px 40px;
+      background: white;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      animation: fadeInRight 1s ease-out 0.4s both;
+    }
+
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .login-icon {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .login-icon i {
+      font-size: 3rem;
+      color: #667eea;
+      background: linear-gradient(135deg, #667eea 0%, #42a5f5 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .login-card h3 {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .login-card h3::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(135deg, #667eea 0%, #42a5f5 100%);
+      border-radius: 2px;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid #e1e8ed;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+      position: relative;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      background: white;
+      transform: translateY(-2px);
+    }
+
+    .form-control:focus + .input-icon {
+      color: #667eea;
+      transform: translateY(-2px);
+    }
+
+    .password-container {
+      position: relative;
+    }
+
+    .password-container .fas {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #666;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: color 0.3s ease;
+    }
+
+    .password-container .fas:hover {
+      color: #667eea;
+    }
+
+    /* Button */
+    .btn-primary {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #667eea 0%, #42a5f5 100%);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    /* Links */
+    .text-center a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .text-center a:hover {
+      color: #42a5f5;
+      text-decoration: underline;
+    }
+
+    .mt-3 {
+      margin-top: 1rem;
+    }
+
+    .mb-0 {
+      margin-bottom: 0;
+    }
+
+    /* Loading State */
+    .btn-primary.loading {
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
+    .btn-primary.loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      border-top: 2px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+
+      .row {
+        flex-direction: column;
+        border-radius: 15px;
+      }
+
+      .col-md-6 {
+        width: 100%;
+      }
+
+      .info-section {
+        padding: 40px 30px;
+        text-align: center;
+      }
+
+      .info-section h1 {
+        font-size: 2rem;
+      }
+
+      .medical-icon {
+        font-size: 6rem;
+      }
+
+      .login-card {
+        padding: 40px 30px;
+      }
+
+      .login-card h3 {
+        font-size: 1.5rem;
+      }
+
+      .floating-shape {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 5px;
+      }
+
+      .info-section {
+        padding: 30px 20px;
+      }
+
+      .login-card {
+        padding: 30px 20px;
+      }
+
+      .info-section h1 {
+        font-size: 1.8rem;
+      }
+
+      .medical-icon {
+        font-size: 5rem;
+      }
+    }
+
+    /* Additional Animations */
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease;
+    }
+
+    .animate-on-scroll.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Micro-interactions */
+    .form-group {
+      transition: transform 0.2s ease;
+    }
+
+    .form-group:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Success Animation */
+    @keyframes success {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .success-animation {
+      animation: success 0.6s ease-in-out;
+    }
+  

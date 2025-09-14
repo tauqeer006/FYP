@@ -1,0 +1,316 @@
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    :root {
+      --medical-blue: #1A76D1;
+      --medical-darkBlue: #0d47a1;
+      --medical-lightBlue: #42a5f5;
+      --medical-offWhite: #f4f7f8;
+      --medical-gray: #f6f8f7;
+    }
+
+    body {
+      background-color: var(--medical-offWhite);
+      min-height: 100vh;
+    }
+
+    /* Preloader Styles */
+    .preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .loader {
+      position: relative;
+      width: 60px;
+      height: 60px;
+    }
+
+    .loader-outter {
+      position: absolute;
+      border: 4px solid transparent;
+      border-top-color: var(--medical-blue);
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      animation: spin 1s linear infinite;
+    }
+
+    .loader-inner {
+      position: absolute;
+      border: 4px solid transparent;
+      border-top-color: var(--medical-lightBlue);
+      border-radius: 50%;
+      width: 80%;
+      height: 80%;
+      top: 10%;
+      left: 10%;
+      animation: spin 0.8s linear infinite reverse;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Main content styles */
+    .main-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Main Content Styles */
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .top-bar {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .top-bar h1 {
+      color: var(--medical-darkBlue);
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+    }
+
+    .user-profile img {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 10px;
+    }
+
+    .user-profile .user-info span {
+      display: block;
+    }
+
+    .user-profile .user-info .name {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .user-profile .user-info .role {
+      font-size: 0.8rem;
+      color: #777;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .action-button {
+      padding: 12px 20px;
+      background-color: var(--medical-blue);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    .action-button:hover {
+      background-color: var(--medical-darkBlue);
+    }
+
+    .action-button i {
+      margin-right: 8px;
+    }
+
+    /* Content Cards */
+    .content-section {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .content-section h2 {
+      color: var(--medical-darkBlue);
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    /* Forms */
+    .form-section {
+      display: none;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .form-section.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #555;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--medical-blue);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(26, 118, 209, 0.1);
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -10px;
+    }
+
+    .form-col {
+      flex: 1;
+      padding: 0 10px;
+      min-width: 200px;
+    }
+
+    .submit-btn {
+      padding: 10px 20px;
+      background-color: var(--medical-blue);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--medical-darkBlue);
+    }
+
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .form-row {
+        flex-direction: column;
+      }
+
+      .form-col {
+        margin-bottom: 15px;
+      }
+    }
+    
+  /* dashbaord bar design */
+      
+  .dashboard-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 30px;
+  }
+
+  .bar-card {
+    flex: 1;
+    min-width: 250px;
+    padding: 20px;
+    border-radius: 15px;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bar-card h3 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+
+  .bar-card p {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  .bar-doctors {
+    background: linear-gradient(135deg, #2196f3, #64b5f6);
+  }
+
+  .bar-patients {
+    background: linear-gradient(135deg, #66bb6a, #a5d6a7);
+  }
+
+  .bar-cured {
+    background: linear-gradient(135deg, #ff9800, #ffcc80);
+  }
+
+  /* Optional hover effect */
+  .bar-card:hover {
+    transform: scale(1.03);
+    transition: transform 0.3s ease;
+  }

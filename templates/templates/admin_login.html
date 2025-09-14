@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - X-Ai Pediatric Diagnostic System</title>
+
+  <!-- Fonts and Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="login.css">
+ 
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+    <div class="floating-shape shape-3"></div>
+    <div class="floating-shape shape-4"></div>
+  </div>
+
+  <!-- Preloader -->
+  <div class="preloader">
+    <div class="loader">
+      <div class="loader-outter"></div>
+      <div class="loader-inner"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <!-- Left side: Medical Info -->
+      <div class="col-md-6">
+        <div class="info-section">
+          <h1>X-Ai Pediatric Diagnostic System</h1>
+          <p>Welcome to our medical portal  Experience the future of pediatric healthcare with AI-powered precision.</p>
+          
+          <div class="image-container">
+            <i class="fas fa-stethoscope medical-icon"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right side: Login Form -->
+      <div class="col-md-6">
+        <div class="login-card">
+          <div class="login-icon">
+            <i class="fas fa-user-md"></i>
+          </div>
+          
+          <h3>Admin Login</h3>
+
+          <form id="loginForm" method="POST" action="#">
+            <div class="form-group animate-on-scroll">
+              <label>Username</label>
+<input 
+  type="email" 
+  class="form-control" 
+  id="username" 
+  placeholder="Enter your Gmail address" 
+  required 
+  name="username" 
+  pattern="[a-zA-Z0-9._%+-]+@gmail\.com$" 
+  title="Please enter a valid Gmail address (e.g., name@gmail.com)">
+            </div>
+
+            <div class="form-group animate-on-scroll">
+              <label>Password</label>
+              <div class="password-container">
+                <input type="password" class="form-control" id="password" placeholder="Enter your password" required name="password">
+                <i class="fas fa-eye" id="toggleIcon" onclick="togglePassword()"></i>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary animate-on-scroll">
+              <span id="btnText">Login</span>
+            </button>
+
+            <p class="text-center mt-3 mb-0 animate-on-scroll">
+              <a href="#" id="forgotPasswordLink">Forgot password?</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Preloader
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        document.querySelector('.preloader').style.opacity = '0';
+        setTimeout(function() {
+          document.querySelector('.preloader').style.display = 'none';
+        }, 500);
+      }, 800);
+    });
+
+    // Password toggle
+    function togglePassword() {
+      const passwordInput = document.getElementById('password');
+      const toggleIcon = document.getElementById('toggleIcon');
+      
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+      }
+    }
+
+    // Form submission with loading
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const btn = document.querySelector('.btn-primary');
+      const btnText = document.getElementById('btnText');
+      
+      btn.classList.add('loading');
+      btnText.textContent = 'Logging in...';
+      
+      // Simulate login process
+      setTimeout(function() {
+        btn.classList.remove('loading');
+        btn.classList.add('success-animation');
+        btnText.textContent = 'Success!';
+        
+        setTimeout(function() {
+          btnText.textContent = 'Login';
+          btn.classList.remove('success-animation');
+          // Here you would normally redirect or submit the form
+          alert('Login successful! (Demo mode)');
+        }, 1500);
+      }, 2000);
+    });
+
+    // Animate elements on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    });
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Add hover effects to form inputs
+    document.querySelectorAll('.form-control').forEach(input => {
+      input.addEventListener('focus', function() {
+        this.parentElement.style.transform = 'translateY(-2px)';
+      });
+      
+      input.addEventListener('blur', function() {
+        this.parentElement.style.transform = 'translateY(0)';
+      });
+    });
+
+    // Forgot password animation
+    document.getElementById('forgotPasswordLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      this.style.animation = 'bounce 0.6s ease-in-out';
+      setTimeout(() => {
+        this.style.animation = '';
+        alert('Password reset functionality would be implemented here.');
+      }, 600);
+    });
+
+    // Add parallax effect to floating shapes
+    document.addEventListener('mousemove', function(e) {
+      const shapes = document.querySelectorAll('.floating-shape');
+      const x = e.clientX / window.innerWidth;
+      const y = e.clientY / window.innerHeight;
+      
+      shapes.forEach((shape, index) => {
+        const speed = (index + 1) * 0.3;
+        const xPos = x * speed * 15;
+        const yPos = y * speed * 15;
+        
+        shape.style.transform += ` translate(${xPos}px, ${yPos}px)`;
+      });
+    });
+
+    // Add typing animation to placeholders
+    function typeWriter(element, text, speed = 100) {
+      let i = 0;
+      element.placeholder = '';
+      
+      function type() {
+        if (i < text.length) {
+          element.placeholder += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      
+      type();
+    }
+
+    // Initialize typing animations
+    setTimeout(() => {
+      const usernameInput = document.getElementById('username');
+      const passwordInput = document.getElementById('password');
+      
+      typeWriter(usernameInput, 'Enter your username');
+      setTimeout(() => {
+        typeWriter(passwordInput, 'Enter your password');
+      }, 1000);
+    }, 1500);
+  </script>
+</body>
+</html>

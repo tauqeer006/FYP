@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Post-Exercise Pediatric Fracture Report</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fadeIn { animation: fadeIn 0.4s ease-out forwards;}
+  </style>
+</head>
+<body class="bg-gray-100 p-6 font-sans space-y-6">
+
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-lg fadeIn">
+    <h1 class="text-2xl font-bold mb-4">🏃‍♂️ Posture & Fracture Exercise Report (via AI)</h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700">
+      <div><strong>Patient ID:</strong> 12345</div>
+      <div><strong>Age/Sex:</strong> 5 y / M</div>
+      <div><strong>Exam:</strong> Fracture Rehab & Posture Analysis</div>
+      <div><strong>Date:</strong> 2025‑07‑16</div>
+    </div>
+
+    <hr class="my-4"/>
+
+    <!-- 1. Observations -->
+    <section class="space-y-2 fadeIn delay">
+      <h2 class="text-xl font-semibold">1. Analysis & Observations</h2>
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>AI Detected:</strong> Marked right-leg valgus during single-leg stance (confidence 0.89).</li>
+        <li><strong>Postural Findings:</strong> Scapular asymmetry and mild lumbar lordosis observed via video analysis.</li>
+        <li><strong>Fracture Region:</strong> Right tibial shaft area – slight delayed loading but improved range after 10 sessions.</li>
+      </ul>
+    </section>
+
+    <!-- 2. AI Explanation -->
+    <section class="space-y-2 fadeIn delay-100">
+      <h2 class="text-xl font-semibold">2. AI Explanation & Insights</h2>
+      <ul class="list-disc list-inside space-y-1">
+        <li>Valgus alignment correlated with tibial fracture history; AI attention heatmap indicates medial knee tracking.</li>
+        <li>Postural asymmetry aligns with Physio‑pedia posture screening criteria:contentReference[oaicite:1]{index=1}.</li>
+        <li>NLP suggestions highlight risk of compensatory knee stress during gait and stance.</li>
+      </ul>
+    </section>
+
+    <!-- 3. Recommendations -->
+    <section class="space-y-2 fadeIn delay-200">
+      <h2 class="text-xl font-semibold">3. Recommendations & Intervention Plan</h2>
+      <ul class="list-disc list-inside space-y-1">
+        <li>**Corrective Exercises**: Single-leg balance on foam pad (3×30s), resisted hip abductor sets (2×10 reps).</li>
+        <li>Enhance core stability with supine pelvic tilts and bird-dog (2×12 each side daily).</li>
+        <li>**Progression Milestone**: Re-assess valgus stabilization after 4 weeks; consider gait retraining if not improved.</li>
+        <li>**Preventive Strategy**: Encourage daily posture breaks and monitor front/back posture, especially shoulder/pelvic symmetry.</li>
+      </ul>
+    </section>
+
+    <hr class="my-4"/>
+
+    <!-- Footer -->
+    <div class="text-sm text-gray-600">
+      <p><strong>Physiotherapist:</strong> Dr. Jane Doe</p>
+      <p><strong>Signed:</strong> 2025‑07‑16 10:35</p>
+    </div>
+
+    <div class="mt-6 flex justify-end gap-2">
+      <button id="downloadPdf" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Download PDF</button>
+      <button onclick="history.back()" class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300">Back</button>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('downloadPdf').addEventListener('click', () => {
+      alert('Generating PDF...');
+      // Integrate html2pdf or server-side PDF export here
+    });
+  </script>
+</body>
+</html>

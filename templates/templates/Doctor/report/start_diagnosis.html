@@ -1,0 +1,87 @@
+<!-- Diagnostic Form with Patient Dropdown and X-ray Upload -->
+<div id="diagnostic-form" class="p-4 border-2 border-gray-200 border-dashed rounded-lg mt-14 bg-white ">
+  <h2 class="text-2xl font-semibold mb-6">Start Diagnostic Analysis</h2>
+
+  <form class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+    <!-- Patient Dropdown -->
+    <div class="md:col-span-2">
+      <label for="patient-select" class="block mb-2 text-sm font-medium text-gray-900">Select Patient</label>
+      <select id="patient-select" name="patient_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+        <option value="">Choose patient</option>
+        <option value="1">John Doe</option>
+        <option value="2">Jane Smith</option>
+        <option value="3">Ali Raza</option>
+      </select>
+    </div>
+
+    <!-- Patient Details -->
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-900">Patient ID</label>
+      <input type="text" id="patient-id" value="P123456" readonly class="bg-gray-100 border border-gray-300 text-gray-500 text-sm rounded-lg block w-full p-2.5" />
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-900">Age</label>
+      <input type="text" id="patient-age" value="34" readonly class="bg-gray-100 border border-gray-300 text-gray-500 text-sm rounded-lg block w-full p-2.5" />
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-900">Weight</label>
+      <input type="text" id="patient-weight" value="70kg" readonly class="bg-gray-100 border border-gray-300 text-gray-500 text-sm rounded-lg block w-full p-2.5" />
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-900">Gender</label>
+      <input type="text" id="patient-gender" value="Male" readonly class="bg-gray-100 border border-gray-300 text-gray-500 text-sm rounded-lg block w-full p-2.5" />
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-900">Phone</label>
+      <input type="text" id="patient-phone" value="+123456789" readonly class="bg-gray-100 border border-gray-300 text-gray-500 text-sm rounded-lg block w-full p-2.5" />
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-900">Email</label>
+      <input type="text" id="patient-email" value="john@example.com" readonly class="bg-gray-100 border border-gray-300 text-gray-500 text-sm rounded-lg block w-full p-2.5" />
+    </div>
+
+    
+    <!-- X-ray Uploads -->
+    <div class="md:col-span-2">
+      <label class="block mb-2 text-sm font-medium text-gray-900">Upload X-ray Images (at least one required)</label>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <input type="file" name="xray1" accept="image/*" required class="file-input" />
+        <input type="file" name="xray2" accept="image/*" class="file-input" />
+        <input type="file" name="xray3" accept="image/*" class="file-input" />
+      </div>
+    </div>
+
+    <!-- Start Button -->
+    <div class="md:col-span-2 flex justify-end">
+      <button id="start-diagnosis" type="button"
+        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-2.5 text-center flex items-center gap-2">
+        <svg id="start-icon" class="w-5 h-5 animate-spin hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        <span id="start-text">Start</span>
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.getElementById('start-diagnosis').addEventListener('click', () => {
+    const btn = document.getElementById('start-diagnosis');
+    const icon = document.getElementById('start-icon');
+    const text = document.getElementById('start-text');
+
+    icon.classList.remove('hidden');
+    text.textContent = 'Processing...';
+    btn.disabled = true;
+
+    setTimeout(() => {
+      window.location.href = 'report/report.html';
+    }, 2000); // Simulated processing delay
+  });
+</script>

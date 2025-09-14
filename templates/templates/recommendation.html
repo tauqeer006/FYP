@@ -1,0 +1,35 @@
+{% extends 'base_doctor.html' %}
+{% block content %}
+<div class="content-section form-section">
+  <h2>Treatment Recommendation</h2>
+  <form method="POST" action="{% url 'save_recommendation' %}">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="recPatientSelect">Select Patient</label>
+      <select class="form-control" id="recPatientSelect" name="patient_id" required>
+        <option value="">Select a patient</option>
+        {% for patient in patients %}
+          <option value="{{ patient.id }}">{{ patient.fname }} {{ patient.lname }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="medication">Medication</label>
+      <textarea class="form-control" id="medication" placeholder="Prescribe medication..." name="medication" required></textarea>
+    </div>
+    <div class="form-group">
+      <label for="dosage">Dosage Instructions</label>
+      <textarea class="form-control" id="dosage" placeholder="Dosage and frequency..." name="dosage" required></textarea>
+    </div>
+    <div class="form-group">
+      <label for="instructions">Special Instructions</label>
+      <textarea class="form-control" id="instructions" placeholder="Any specific instructions..." name="instructions"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="followUp">Follow-up Plan</label>
+      <input type="text" class="form-control" id="followUp" placeholder="Next appointment, follow-up tests, etc." name="follow_up">
+    </div>
+    <button type="submit" class="submit-btn">Save Recommendation</button>
+  </form>
+</div>
+{% endblock %}

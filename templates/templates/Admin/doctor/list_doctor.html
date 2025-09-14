@@ -1,0 +1,82 @@
+<div class="p-4 max-w-7xl mx-auto">
+  <h2 class="text-2xl font-semibold mb-6 text-gray-800">Doctors List</h2>
+
+  <!-- Doctor Filter Controls -->
+  <div class="w-full bg-white p-6 rounded-xl border border-gray-200 shadow-sm mb-6">
+    <h3 class="text-lg font-semibold mb-4 text-gray-700">Filter Doctors</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <!-- Search by Name -->
+      <input type="text" id="filter-doctor-name" placeholder="Search by name"
+        class="form-input" />
+
+      <!-- Search by Email -->
+      <input type="text" id="filter-doctor-email" placeholder="Search by email"
+        class="form-input" />
+
+      <!-- Sort -->
+      <select id="sort-doctor" class="form-input">
+        <option value="">Sort by</option>
+        <option value="name-asc">Name A–Z</option>
+        <option value="name-desc">Name Z–A</option>
+        <option value="experience-asc">Experience ↑</option>
+        <option value="experience-desc">Experience ↓</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Doctors Table -->
+  <div class="overflow-x-auto rounded-xl border border-gray-300 bg-white shadow-sm">
+    <table class="min-w-[1000px] w-full text-sm text-left border-collapse">
+      <thead class="bg-gray-100 text-gray-700">
+        <tr>
+          <th class="px-4 py-3 border">ID</th>
+          <th class="px-4 py-3 border">Full Name</th>
+          <th class="px-4 py-3 border">Email</th>
+          <th class="px-4 py-3 border">Gender</th>
+          <th class="px-4 py-3 border">Age</th>
+          <th class="px-4 py-3 border">Specialty</th>
+          <th class="px-4 py-3 border">License #</th>
+          <th class="px-4 py-3 border">Experience (yrs)</th>
+          <th class="px-4 py-3 border">Phone</th>
+          <th class="px-4 py-3 border">Address</th>
+          <th class="px-4 py-3 border text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="doctor-table-body" class="text-gray-700">
+        <tr class="hover:bg-gray-50" data-id="1">
+          <td class="border px-4 py-2">1</td>
+          <td class="border px-4 py-2">Dr. Alice Johnson</td>
+          <td class="border px-4 py-2">alice.johnson@example.com</td>
+          <td class="border px-4 py-2">Female</td>
+          <td class="border px-4 py-2">40</td>
+          <td class="border px-4 py-2">Cardiology</td>
+          <td class="border px-4 py-2">LIC123456</td>
+          <td class="border px-4 py-2">15</td>
+          <td class="border px-4 py-2">+123456789</td>
+          <td class="border px-4 py-2">123 Health St, Cityville</td>
+          <td class="border px-4 py-2 text-center">
+            <button class="edit-doctor-btn bg-yellow-400 hover:bg-yellow-500 text-white text-xs font-medium px-3 py-1 rounded mr-1" data-id="1">Edit</button>
+            <button class="delete-doctor-btn bg-red-500 hover:bg-red-600 text-white text-xs font-medium px-3 py-1 rounded" data-id="1">Delete</button>
+          </td>
+        </tr>
+        <tr class="hover:bg-gray-50" data-id="2">
+          <td class="border px-4 py-2">2</td>
+          <td class="border px-4 py-2">Dr. Bob Smith</td>
+          <td class="border px-4 py-2">bob.smith@example.com</td>
+          <td class="border px-4 py-2">Male</td>
+          <td class="border px-4 py-2">35</td>
+          <td class="border px-4 py-2">Dermatology</td>
+          <td class="border px-4 py-2">LIC654321</td>
+          <td class="border px-4 py-2">8</td>
+          <td class="border px-4 py-2">+987654321</td>
+          <td class="border px-4 py-2">456 Clinic Rd, Townsville</td>
+          <td class="border px-4 py-2 text-center">
+            <button class="edit-doctor-btn bg-yellow-400 hover:bg-yellow-500 text-white text-xs font-medium px-3 py-1 rounded mr-1" data-id="2">Edit</button>
+            <button class="delete-doctor-btn bg-red-500 hover:bg-red-600 text-white text-xs font-medium px-3 py-1 rounded" data-id="2">Delete</button>
+          </td>
+        </tr>
+        <!-- More rows -->
+      </tbody>
+    </table>
+  </div>
+</div>

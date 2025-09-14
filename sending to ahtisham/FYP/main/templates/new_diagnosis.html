@@ -1,0 +1,178 @@
+{% block content %}
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e6f0ff;
+    margin: 0;
+    padding: 0;
+  }
+
+  .content-section {
+    background-color: #ffffff;
+    padding: 40px;
+    margin: 40px auto;
+    border-radius: 12px;
+    max-width: 800px;
+    box-shadow: 0 4px 12px rgba(0, 93, 180, 0.2);
+    border-top: 6px solid #005db4;
+  }
+
+  .content-section h2 {
+    color: #005db4;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #003d80;
+  }
+
+  .form-control {
+    padding: 10px 12px;
+    font-size: 15px;
+    border: 1px solid #b3d1ff;
+    border-radius: 6px;
+    background-color: #f4faff;
+    transition: border-color 0.3s;
+  }
+
+  .form-control:focus {
+    border-color: #3399ff;
+    outline: none;
+  }
+
+  .submit-btn {
+    background-color: #005db4;
+    color: #ffffff;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: block;
+    margin: 30px auto 0;
+    transition: background-color 0.3s;
+  }
+
+  .submit-btn:hover {
+    background-color: #004a91;
+  }
+
+  .form-text {
+    font-size: 13px;
+    color: #666;
+    margin-top: 5px;
+  }
+
+  .diagnosis-result {
+    margin-top: 40px;
+    background-color: #f9faff;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 5px solid #005db4;
+  }
+
+  .diagnosis-result h3 {
+    color: #003d80;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    margin-top: 10px;
+  }
+
+  .table th, .table td {
+    border: 1px solid #cce0ff;
+    padding: 12px;
+    text-align: left;
+  }
+
+  .table th {
+    background-color: #e6f0ff;
+    color: #003d80;
+    font-weight: 600;
+  }
+
+  .table td {
+    background-color: #ffffff;
+  }
+</style>
+
+<div class="content-section form-section">
+  <h2>New Diagnosis</h2>
+  {% if error %}
+  <div style="color: red; font-weight: bold; text-align: center; margin-bottom: 20px;">
+    {{ error }}
+  </div>
+{% endif %}
+
+  <form method="POST" action="{% url 'predict_diagnosis' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <!-- Patient Dropdown -->
+    <div class="form-group">
+      <label for="patientSelect">Select Patient</label>
+      <select class="form-control" id="patientSelect" name="patient_id" required>
+        <option value="">Select a patient</option>
+        {% for patient in patients %}
+          <option value="{{ patient.id }}" 
+                  data-name="{{ patient.fname }} {{ patient.lname }}" 
+                  data-age="{{ patient.age }}">
+            {{ patient.fname }} {{ patient.lname }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Auto-Filled Fields -->
+    <div class="form-group">
+      <label>Patient Name</label>
+      <input type="text" id="patientName" class="form-control" readonly name="patient_name">
+    </div>
+    <div class="form-group">
+      <label>Age</label>
+      <input type="text" id="patientAge" class="form-control" readonly name="patient_age">
+    </div>
+    <div class="form-group">
+      <label>Patient ID</label>
+      <input type="text" id="patientId" class="form-control" readonly name="patient_id_display">
+    </div>
+
+    <div class="form-group">
+      <label>Upload X-Ray Images</label>
+      <input type="file" class="form-control" name="xray_images" accept="image/*" multiple required>
+      <small class="form-text">You can upload multiple X-ray image files (JPG, PNG, etc.)</small>
+    </div>
+
+    <button type="submit" class="submit-btn">Predict Diagnosis</button>
+  </form>
+
+  
+</div>
+
+<script>
+  document.getElementById('patientSelect').addEventListener('change', function () {
+    const selected = this.options[this.selectedIndex];
+    const patientId = selected.value;
+    const patientName = selected.getAttribute('data-name');
+    const patientAge = selected.getAttribute('data-age');
+
+    document.getElementById('patientName').value = patientName || '';
+    document.getElementById('patientAge').value = patientAge || '';
+    document.getElementById('patientId').value = patientId || '';
+  });
+</script>
+{% endblock %}
