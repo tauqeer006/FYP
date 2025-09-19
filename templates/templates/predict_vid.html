@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Exercise Recommendations</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #007BFF 0%, #007BFF 100%);
+            min-height: 100vh;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .video-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .video-thumbnail {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            background: linear-gradient(45deg, #f0f2f5, #e4e7eb);
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-button:hover {
+            background: rgba(102, 126, 234, 1);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .duration-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .difficulty-badge {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .difficulty-intermediate {
+            background: linear-gradient(45deg, #fa709a, #fee140);
+        }
+
+        .difficulty-advanced {
+            background: linear-gradient(45deg, #ff9a9e, #fecfef);
+        }
+
+        .stats-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .video-player {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-container {
+            position: relative;
+            max-width: 900px;
+            width: 90%;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .close-button {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .header-gradient {
+            background: linear-gradient(135deg, #007BFF 0%, #007BFF 100%);
+            color: white;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .video-container {
+                width: 95%;
+                height: 250px;
+            }
+
+            .play-button {
+                width: 50px;
+                height: 50px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header-gradient py-5 mb-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-4 fw-bold mb-2">
+                        <i class="fas fa-heart-pulse me-3"></i>
+                        Medical Exercise Videos
+                    </h1>
+                    <p class="lead mb-0 opacity-90">
+                        Professional Pediatric exercises recommended by medical experts
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="d-flex flex-column align-items-md-end gap-2">
+                        <div class="stats-item text-white">
+                            <i class="fas fa-video"></i>
+                            <span>10 Videos Available</span>
+                        </div>
+                        <div class="stats-item text-white">
+                            <i class="fas fa-clock"></i>
+                            <span>Total: 45 minutes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container pb-5">
+        <div class="glass-effect rounded-4 p-4 mb-4">
+            <div class="row align-items-center mb-4">
+                <div class="col-md-6">
+                    <h3 class="h4 fw-semibold mb-2 text-gray-800">Recommended for You</h3>
+                    <p class="text-gray-600 mb-0">Curated exercises based on your health profile</p>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex gap-2 justify-content-md-end">
+                        <button class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-filter me-1"></i>Filter
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-sort me-1"></i>Sort
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Videos Grid -->
+            <div class="row g-4" id="videosGrid">
+                <!-- Videos will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Player Modal -->
+    <div class="video-player" id="videoPlayer">
+        <div class="video-container">
+            <button class="close-button" id="closeVideo">
+                <i class="fas fa-times"></i>
+            </button>
+            <video id="videoElement" controls width="100%" height="500">
+                Your browser does not support the video tag.
+            </video>
+            <div class="p-4 bg-white">
+                <h4 id="videoTitle" class="fw-bold mb-2"></h4>
+                <p id="videoDescription" class="text-gray-600 mb-3"></p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex gap-3">
+                        <span class="stats-item">
+                            <i class="fas fa-eye text-primary"></i>
+                            <span id="videoViews"></span>
+                        </span>
+                        <span class="stats-item">
+                            <i class="fas fa-thumbs-up text-success"></i>
+                            <span id="videoLikes"></span>
+                        </span>
+                    </div>
+                    <button class="btn btn-primary btn-sm">
+                        <i class="fas fa-bookmark me-1"></i>Save to Playlist
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Sample video data
+        const videos = [
+            {
+                id: 1,
+                title: "Lower Back Pain Relief Exercises",
+                description: "Gentle exercises to alleviate lower back pain and improve flexibility. Perfect for beginners with chronic back issues.",
+                duration: "8:45",
+                difficulty: "Beginner",
+                views: "125K",
+                likes: "4.2K",
+                thumbnail: "https://img.youtube.com/vi/-hSma-BRzoo/hqdefault.jpg",
+                videoUrl: "vid1.MP4"
+            },
+            {
+                id: 2,
+                title: "Neck and Shoulder Tension Release",
+                description: "Effective stretches for office workers to reduce neck stiffness and shoulder tension.",
+                duration: "6:30",
+                difficulty: "Beginner",
+                views: "89K",
+                likes: "3.8K",
+                thumbnail: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=300&h=180&fit=crop&crop=center"
+            },
+            {
+                id: 3,
+                title: "Knee Strengthening Routine",
+                description: "Build stronger knees with these low-impact exercises designed for recovery and prevention.",
+                duration: "10:15",
+                difficulty: "Intermediate",
+                views: "67K",
+                likes: "2.9K",
+                thumbnail: "https://images.unsplash.com/photo-1549476464-37392f717541?w=300&h=180&fit=crop&crop=center"
+            },
+            {
+                id: 4,
+                title: "Posture Correction Exercises",
+                description: "Improve your posture with these targeted exercises for spine alignment and core strength.",
+                duration: "12:20",
+                difficulty: "Intermediate",
+                views: "156K",
+                likes: "6.1K",
+                thumbnail: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=300&h=180&fit=crop&crop=center"
+            },
+            {
+                id: 5,
+                title: "Wrist and Hand Mobility",
+                description: "Essential exercises for preventing carpal tunnel syndrome and improving hand flexibility.",
+                duration: "5:45",
+                difficulty: "Beginner",
+                views: "43K",
+                likes: "1.8K",
+                thumbnail: "https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=300&h=180&fit=crop&crop=center"
+            },
+            {
+                id: 6,
+                title: "Hip Flexor Stretches",
+                description: "Combat tight hip flexors with these effective stretching routines for better mobility.",
+                duration: "9:10",
+                difficulty: "Intermediate",
+                views: "92K",
+                likes: "4.5K",
+                thumbnail: "https://images.unsplash.com/photo-1506629905607-cc7c6c4d4b4c?w=300&h=180&fit=crop&crop=center"
+            },
+            {
+                id: 7,
+                title: "Core Stabilization for Back Health",
+                description: "Strengthen your core muscles to support your spine and prevent back injuries.",
+                duration: "15:30",
+                difficulty: "Advanced",
+                views: "78K",
+                likes: "3.7K",
+                thumbnail: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=300&h=180&fit=crop&crop=center"
+            },
+            {
+                id: 8,
+                title: "Ankle Mobility and Strength",
+                description: "Improve ankle stability and prevent injuries with these targeted exercises.",
+                duration: "7:25",
+                difficulty: "Beginner",
+                views: "34K",
+                likes: "1.5K",
+                thumbnail: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=300&h=180&fit=crop&crop=center"
+            },
+            {
+                id: 9,
+                title: "Breathing Exercises for Relaxation",
+                description: "Learn proper breathing techniques to reduce stress and improve oxygen flow.",
+                duration: "11:40",
+                difficulty: "Beginner",
+                views: "203K",
+                likes: "8.9K",
+                thumbnail: "https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=300&h=180&fit=crop&crop=center"
+            },
+            {
+                id: 10,
+                title: "Full Body Rehabilitation Routine",
+                description: "Comprehensive exercise routine for overall body recovery and maintenance.",
+                duration: "18:45",
+                difficulty: "Advanced",
+                views: "115K",
+                likes: "5.3K",
+                thumbnail: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=300&h=180&fit=crop&crop=center"
+            }
+        ];
+
+        // Function to get difficulty badge class
+        function getDifficultyClass(difficulty) {
+            switch (difficulty.toLowerCase()) {
+                case 'beginner': return 'difficulty-badge';
+                case 'intermediate': return 'difficulty-badge difficulty-intermediate';
+                case 'advanced': return 'difficulty-badge difficulty-advanced';
+                default: return 'difficulty-badge';
+            }
+        }
+
+        // Function to render videos
+        function renderVideos() {
+            const grid = document.getElementById('videosGrid');
+
+            videos.forEach((video, index) => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'col-lg-6 fade-in';
+                videoCard.style.animationDelay = `${index * 0.1}s`;
+
+                videoCard.innerHTML = `
+                    <div class="video-card rounded-4 p-3 h-100">
+                        <div class="row g-3">
+                            <div class="col-5">
+                                <div class="video-thumbnail position-relative" style="height: 120px;">
+                                    <img src="${video.thumbnail}" alt="${video.title}" 
+                                         class="w-100 h-100 object-cover rounded-3"
+                                         style="object-fit: cover;">
+                                    <button class="play-button pulse" onclick="playVideo(${video.id})">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                    <div class="duration-badge">${video.duration}</div>
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <div class="h-100 d-flex flex-column">
+                                    <div class="mb-2">
+                                        <span class="${getDifficultyClass(video.difficulty)}">${video.difficulty}</span>
+                                    </div>
+                                    <h5 class="fw-semibold mb-2 text-gray-800 lh-sm">${video.title}</h5>
+                                    <p class="text-gray-600 mb-3 small lh-sm">${video.description.substring(0, 80)}...</p>
+                                    <div class="mt-auto">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <div class="d-flex gap-3">
+                                                <span class="stats-item">
+                                                    <i class="fas fa-eye"></i>
+                                                    ${video.views}
+                                                </span>
+                                                <span class="stats-item">
+                                                    <i class="fas fa-thumbs-up"></i>
+                                                    ${video.likes}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-primary btn-sm w-100" onclick="playVideo(${video.id})">
+                                            <i class="fas fa-play me-1"></i>
+                                            Start Exercise
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                grid.appendChild(videoCard);
+            });
+        }
+
+        // Function to play video
+        function playVideo(videoId) {
+            const video = videos.find(v => v.id === videoId);
+            if (!video) return;
+
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoElement = document.getElementById('videoElement');
+            const videoTitle = document.getElementById('videoTitle');
+            const videoDescription = document.getElementById('videoDescription');
+            const videoViews = document.getElementById('videoViews');
+            const videoLikes = document.getElementById('videoLikes');
+
+            // Set video details
+            videoTitle.textContent = video.title;
+            videoDescription.textContent = video.description;
+            videoViews.textContent = video.views;
+            videoLikes.textContent = video.likes;
+
+            // Load local MP4 file
+            videoElement.src = video.videoUrl;
+            videoElement.play().catch(console.log);
+
+            // Show video player
+            videoPlayer.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+
+
+            // Play video
+            videoElement.play().catch(e => {
+                console.log('Video play error:', e);
+                // Fallback: show a placeholder or error message
+            });
+        }
+
+        // Function to close video
+        function closeVideo() {
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoElement = document.getElementById('videoElement');
+
+            videoElement.pause();
+            videoElement.src = '';
+            videoPlayer.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Event listeners
+        document.getElementById('closeVideo').addEventListener('click', closeVideo);
+
+        // Close video on outside click
+        document.getElementById('videoPlayer').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeVideo();
+            }
+        });
+
+        // Close video on escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeVideo();
+            }
+        });
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function () {
+            renderVideos();
+        });
+    </script>
+</body>
+
+</html>
