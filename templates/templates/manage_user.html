@@ -37,7 +37,7 @@
                 </div>
                 <ul class="nav">
                     <li>
-                        <a class="nav-link" href="dashboard.html">
+                        <a class="nav-link" href="{% url 'index_admin'}">
                             <i class="nc-icon nc-chart-pie-35"></i>
                             <p>Dashboard</p>
                         </a>
@@ -54,7 +54,7 @@
                         <div class="collapse" id="userManagement">
                             <ul class="nav">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="./add_users.html">
+                                    <a class="nav-link" href="{% url 'add_user'}">
                                         <span class="sidebar-normal">Add Users</span>
                                     </a>
                                 </li>
@@ -66,48 +66,9 @@
                             </ul>
                         </div>
                     </li>
-                     <li>
-                        <a class="nav-link" href="./diagnosis.html">
-                            <i class="nc-icon nc-atom"></i>
-                            <p>Diagnosis</p>
-                        </a>
-                    </li> 
-                    <!-- <li>
-                        <a class="nav-link" href="./table.html">
-                            <i class="nc-icon nc-notes"></i>
-                            <p>Table List</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link" href="./typography.html">
-                            <i class="nc-icon nc-paper-2"></i>
-                            <p>Typography</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link" href="./icons.html">
-                            <i class="nc-icon nc-atom"></i>
-                            <p>Icons</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link" href="./maps.html">
-                            <i class="nc-icon nc-pin-3"></i>
-                            <p>Maps</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link" href="./notifications.html">
-                            <i class="nc-icon nc-bell-55"></i>
-                            <p>Notifications</p>
-                        </a>
-                    </li> -->
-                    <li class="nav-item active active-pro">
-                        <a class="nav-link active" href="#">
-                            <i class="nc-icon nc-alien-33"></i>
-                            <p>USER</p>
-                        </a>
-                    </li>
+                     
+                    
+                    
                 </ul>
             </div>
         </div>
@@ -135,13 +96,7 @@
                                     <span class="notification">5</span>
                                     <span class="d-lg-none">Notification</span>
                                 </a>
-                                <!-- <ul class="dropdown-menu">
-                                    <a class="dropdown-item" href="#">Notification 1</a>
-                                    <a class="dropdown-item" href="#">Notification 2</a>
-                                    <a class="dropdown-item" href="#">Notification 3</a>
-                                    <a class="dropdown-item" href="#">Notification 4</a>
-                                    <a class="dropdown-item" href="#">Another notification</a>
-                                </ul> -->
+                                
                             </li>
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
@@ -156,19 +111,7 @@
                                     <span class="no-icon">Account</span>
                                 </a>
                             </li>
-                            <!-- <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="no-icon">Dropdown</span>
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <a class="dropdown-item" href="#">Something</a>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                    <div class="divider"></div>
-                                    <a class="dropdown-item" href="#">Separated link</a>
-                                </div>
-                            </li> -->
+                            
                             <li class="nav-item">
                                 <a class="nav-link" href="#pablo">
                                     <span class="no-icon">Log out</span>
@@ -256,12 +199,6 @@
     </div>
   </div>
 </div>
-
-
-
-
-
-
 
 
 

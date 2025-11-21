@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # Django Web Application - Main Interface
+  django-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.django
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./FYP:/app
+      - ./media:/app/media
+    environment:
+      - DEBUG=True
+      - DJANGO_SETTINGS_MODULE=FYP.settings
+    depends_on:
+      - cnn-api
+      - xray-api
+     
+    networks:
+      - fyp-network
+
+  # CNN API - Left/Right Fracture Detection
+  cnn-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.cnn-api
+    ports:
+      - "5001:5001"
+    # Avoid mounting code to prevent overwriting built image and inflating context
+    environment:
+      - FLASK_ENV=production
+    networks:
+      - fyp-network
+
+  # X-ray Model API - Fracture Detection
+  xray-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.xray-api
+    ports:
+      - "5002:5002"
+    # No bind mount; image includes model weights
+    environment:
+      - FLASK_ENV=production
+    networks:
+      - fyp-network
+
+  pose-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.pose-api
+    ports:
+      - "5003:5003"
+    environment:
+      - API_ENV=production
+    networks:
+      - fyp-network
+
+  
+
+networks:
+  fyp-network:
+    driver: bridge
+
+volumes:
+  media-volume:
+
+
+

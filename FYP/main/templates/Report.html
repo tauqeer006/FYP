@@ -92,11 +92,13 @@
             </div>
 
             <div class="mb-4">
+                {% if report %}
                 <h5 class="section-title">🖋 Report Authenticated By</h5>
-                <p><strong>Doctor's Name:</strong> Dr. Ayesha Siddiqui</p>
+                <p><strong>Doctor's Name:</strong> {{report.doctor}}</p>
                 <p><strong>Specialization:</strong> Neurology Consultant</p>
                 <p><strong>License No.:</strong> D-0098</p>
                 <p><strong>Signature:</strong> _______________________</p>
+                {% endif %}
             </div>
         </div>
     </div>

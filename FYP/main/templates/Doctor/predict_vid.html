@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Exercise Recommendations</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #007BFF 0%, #007BFF 100%);
+            min-height: 100vh;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .video-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .video-thumbnail {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            background: linear-gradient(45deg, #f0f2f5, #e4e7eb);
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-button:hover {
+            background: rgba(102, 126, 234, 1);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .duration-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .difficulty-badge {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .difficulty-intermediate {
+            background: linear-gradient(45deg, #fa709a, #fee140);
+        }
+
+        .difficulty-advanced {
+            background: linear-gradient(45deg, #ff9a9e, #fecfef);
+        }
+
+        .stats-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .video-player {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-container {
+            position: relative;
+            max-width: 900px;
+            width: 90%;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .close-button {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .header-gradient {
+            background: linear-gradient(135deg, #007BFF 0%, #007BFF 100%);
+            color: white;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .video-container {
+                width: 95%;
+                height: 250px;
+            }
+
+            .play-button {
+                width: 50px;
+                height: 50px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header-gradient py-5 mb-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-4 fw-bold mb-2">
+                        <i class="fas fa-heart-pulse me-3"></i>
+                        Medical Exercise Videos
+                    </h1>
+                    <p class="lead mb-0 opacity-90">
+                        Professional Pediatric exercises recommended by medical experts
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="d-flex flex-column align-items-md-end gap-2">
+                        <div class="stats-item text-white">
+                            <i class="fas fa-video"></i>
+                            <span>Expert Exercises Suggested</span>
+                        </div>
+                        <div class="stats-item text-white">
+                            <i class="fas fa-clock"></i>
+                            <span>10 Clips</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container pb-5">
+        <div class="glass-effect rounded-4 p-4 mb-4">
+            <div class="row align-items-center mb-4">
+                <div class="col-md-6">
+                    <h3 class="h4 fw-semibold mb-2 text-gray-800">Recommended for You</h3>
+                    <p class="text-gray-600 mb-0">Curated exercises based on your health profile</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown">
+                            <i class="fas fa-list me-1"></i> Select Type
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" onclick="loadVideos('boneanomaly')">boneanomaly</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="loadVideos('bonelesion')">bonelesion</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="loadVideos('foreignbody')">foreignbody</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="loadVideos('fracture')">fracture</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="loadVideos('metal')">metal</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="loadVideos('periostealreaction')">periostealreaction</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="loadVideos('pronatorsign')">pronatorsign</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="loadVideos('softtissue')">softtissue</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="loadVideos('text')">text</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Videos Grid -->
+            <div class="row g-4" id="videosGrid">
+                <!-- Videos will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Player Modal -->
+    <div class="video-player" id="videoPlayer">
+        <div class="video-container">
+            <button class="close-button" id="closeVideo">
+                <i class="fas fa-times"></i>
+            </button>
+            <video id="videoElement" controls width="100%" height="500">
+                Your browser does not support the video tag.
+            </video>
+            <div class="p-4 bg-white">
+                <h4 id="videoTitle" class="fw-bold mb-2"></h4>
+                <p id="videoDescription" class="text-gray-600 mb-3"></p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex gap-3">
+                        <span class="stats-item">
+                            <i class="fas fa-eye text-primary"></i>
+                            <span id="videoViews"></span>
+                        </span>
+                        <span class="stats-item">
+                            <i class="fas fa-thumbs-up text-success"></i>
+                            <span id="videoLikes"></span>
+                        </span>
+                    </div>
+                    <button class="btn btn-primary btn-sm">
+                        <i class="fas fa-bookmark me-1"></i>Save to Playlist
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Fetch videos from Django endpoint
+    function loadVideos(diseaseType) {
+    fetch(`/Recommend_video/${diseaseType}/`)   // Django API endpoint
+        .then(response => response.json())
+        .then(data => renderVideos(data.videos))  // ✅ Corrected
+        .catch(err => console.error("Error loading videos:", err));
+}
+
+
+    // Render videos dynamically
+    function renderVideos(videos) {
+        const grid = document.getElementById('videosGrid');
+        grid.innerHTML = "";  // clear old videos
+
+        videos.forEach((video, index) => {
+            const videoCard = document.createElement('div');
+            videoCard.className = 'col-lg-6 fade-in';
+            videoCard.style.animationDelay = `${index * 0.1}s`;
+
+            videoCard.innerHTML = `
+                <div class="video-card rounded-4 p-3 h-100">
+                    <div class="row g-3">
+                        <div class="col-5">
+                            <div class="video-thumbnail position-relative" style="height: 120px;">
+                                <img src="${video.thumbnail}" alt="${video.title}" 
+                                     class="w-100 h-100 object-cover rounded-3"
+                                     style="object-fit: cover;">
+                                <button class="play-button pulse" onclick="playVideo('${video.videoUrl}', '${video.title}', '${video.description}')">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <div class="duration-badge">${video.duration}</div>
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <div class="h-100 d-flex flex-column">
+                                <div class="mb-2">
+                                    <span class="difficulty-badge">${video.difficulty}</span>
+                                </div>
+                                <h5 class="fw-semibold mb-2 text-gray-800 lh-sm">${video.title}</h5>
+                                <p class="text-gray-600 mb-3 small lh-sm">${video.description}</p>
+                                <div class="mt-auto">
+                                    <button class="btn btn-primary btn-sm w-100" onclick="playVideo('${video.videoUrl}', '${video.title}', '${video.description}')">
+                                        <i class="fas fa-play me-1"></i>
+                                        Start Exercise
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            grid.appendChild(videoCard);
+        });
+    }
+
+    // Play video
+    function playVideo(videoUrl, title, description) {
+        const videoPlayer = document.getElementById('videoPlayer');
+        const videoElement = document.getElementById('videoElement');
+
+        document.getElementById('videoTitle').textContent = title;
+        document.getElementById('videoDescription').textContent = description;
+
+        videoElement.src = videoUrl;
+        videoElement.play().catch(console.log);
+
+        videoPlayer.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Close video
+    function closeVideo() {
+        const videoPlayer = document.getElementById('videoPlayer');
+        const videoElement = document.getElementById('videoElement');
+
+        videoElement.pause();
+        videoElement.src = '';
+        videoPlayer.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    // Event listeners
+    document.getElementById('closeVideo').addEventListener('click', closeVideo);
+    document.getElementById('videoPlayer').addEventListener('click', function (e) {
+        if (e.target === this) closeVideo();
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeVideo();
+    });
+
+    // Load default disease type when page loads
+    document.addEventListener('DOMContentLoaded', function () {
+        loadVideos('boneanomaly');  // 👈 loads from Django instead of dummy
+    });
+</script>
+
+</body>
+
+</html>

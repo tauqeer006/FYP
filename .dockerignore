@@ -1,0 +1,59 @@
+# VCS
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.egg-info
+
+# Envs
+venv/
+*/venv/
+.env
+*.env
+
+# Not needed for builds
+Dataset for posture detection and recommendation/
+Pose_Dection/dataset/
+Pose_Dection/*.ipynb
+Model_Training/
+**/runs/
+**/datasets/
+**/avi_dataset/
+**/videos/
+**/testing image/
+**/*.ipynb
+
+# Node/npm
+node_modules/
+
+# Docker
+Docker-README.md
+start.sh
+stop.sh
+
+# Media and reports (runtime volume)
+media/
+FYP/media/
+FYP/FYP/db.sqlite3
+FYP/db.sqlite3
+
+# Large weights except the ones we explicitly COPY
+**/*.pt
+!Models_Apis/best.pt
+Models_Apis/cnn_lr_from_filename.pth
+!Models_Apis/cnn_lr_from_filename_v2.pth
+Pose_Dection/pose_dataset.*
+
+# Compiled/static artifacts
+**/*.h5
+!Pose_Dection/exercise_autoencoder.h5
+
+# Archives
+*.zip
+*.7z
+
+

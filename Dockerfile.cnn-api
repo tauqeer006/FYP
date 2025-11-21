@@ -1,0 +1,27 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install minimal system dependencies (only what's needed for PyTorch)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgl1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install PyTorch CPU versions from PyTorch index
+RUN pip install --no-cache-dir \
+    torch==2.1.0+cpu \
+    torchvision==0.16.0+cpu \
+    --index-url https://download.pytorch.org/whl/cpu
+
+# Copy and install other requirements
+COPY requirements-cnn.txt .
+RUN pip install --no-cache-dir -r requirements-cnn.txt
+
+# Copy only the essential files
+COPY Models_Apis/cnn_api.py .
+COPY Models_Apis/cnn_lr_from_filename_v2.pth .
+
+EXPOSE 5001
+
+CMD ["python", "cnn_api.py"]

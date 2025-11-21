@@ -1,0 +1,10 @@
+<h2>Saved Reports</h2>
+<ul>
+  {% for r in reports %}
+    <li>
+      {{r.Patient_name}} ({{r.Patient_idx}}) - 
+      <a href="{{ r.report_file.url }}" target="_blank">View Report</a>
+      
+    </li>
+  {% endfor %}
+</ul>

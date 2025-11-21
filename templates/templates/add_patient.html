@@ -83,10 +83,17 @@
     min-height: 80px;
   }
 </style>
+{% if messages %}
+  <ul>
+    {% for message in messages %}
+      <li style="color:red;">{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
 
 <div class="content-section form-section">
   <h2>Add New Patient</h2>
-  <form method="POST" action="{% url 'add_patient_record1' %}">
+  <form id="patientForm" method="POST" action="{% url 'add_patient_record1' %}">
     {% csrf_token %}
     <div class="form-row">
       <div class="form-col">
@@ -107,7 +114,8 @@
       <div class="form-col">
         <div class="form-group">
           <label for="dateOfBirth">Date of Birth</label>
-          <input type="date" class="form-control" id="dateOfBirth" name="dob" required>
+          <input type="date" class="form-control" id="dateOfBirth" name="dob" value="{{ dob|default:'' }}" required>
+          <small id="dobError" style="color:red; display:none;"></small>
         </div>
       </div>
       <div class="form-col">
@@ -155,4 +163,6 @@
     <button type="submit" class="submit-btn">Add Patient</button>
   </form>
 </div>
+
+
 {% endblock %}

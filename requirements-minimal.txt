@@ -1,0 +1,25 @@
+# Django Web Framework
+Django
+
+# Utilities
+requests
+python-dotenv
+markdown
+
+# Minimal ML dependencies - only what's actually used in views.py
+# TensorFlow CPU only (compatible with existing model)
+tensorflow-cpu==2.13.0
+
+# OpenCV headless (no GUI dependencies)
+opencv-python-headless
+
+# MediaPipe for pose detection
+mediapipe
+
+# Basic data processing
+numpy
+matplotlib
+Pillow
+
+# No ultralytics, no torch, no scikit-learn, no pandas
+# These were causing the 900MB+ downloads

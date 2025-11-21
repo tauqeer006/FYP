@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Exercise Monitoring</title>
+  <style>
+    body { text-align: center; background: #111; color: white; font-family: Arial; }
+    video { border: 2px solid #0f0; border-radius: 10px; margin-top: 20px; }
+    #feedback { font-size: 1.5rem; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Exercise Quality Detection</h1>
+  <video id="camera" width="640" height="480" autoplay muted></video>
+  <div id="feedback">Initializing...</div>
+
+  <script>
+    const video = document.getElementById('camera');
+    const feedback = document.getElementById('feedback');
+
+    // Ask for camera access
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => { video.srcObject = stream; })
+      .catch(err => { feedback.innerText = "Camera access denied."; });
+
+    // Capture frames and send to backend
+    async function sendFrame() {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0);
+      const frame = canvas.toDataURL('image/jpeg');
+
+      const res = await fetch('/monitor/process_frame/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ frame })
+      });
+      const data = await res.json();
+      feedback.innerText = `Feedback: ${data.feedback} | Confidence: ${data.confidence.toFixed(2)} | Error: ${data.error.toFixed(4)}`;
+    }
+
+    setInterval(sendFrame, 500); // send frame every 0.5s
+  </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+# CNN API Requirements - Only what's actually used in cnn_api.py
+
+# Flask API
+flask==3.0.0
+
+# Image processing
+pillow==10.4.0
+
+# NumPy compatibility (PyTorch 2.1.0 works with NumPy 1.24.x)
+numpy==1.24.4

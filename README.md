@@ -1,3 +1,15 @@
 # FYP
-this is my final year project.
-new changes
+app password: qeeo buqs itfn olwu
+admin = Tauqeer Qureshi
+password = tauqeer056
+
+patient:
+sameer3456
+sameer123
+
+Tauqeerqureshi
+Qureshi
+
+doctor:
+bilal
+bilal1234

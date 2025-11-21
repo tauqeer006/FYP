@@ -1,0 +1,33 @@
+# Django Web Framework
+Django
+
+# Utilities
+requests
+python-dotenv
+
+
+# Flask APIs
+Flask==3.0.0
+
+# Machine Learning - CPU only versions for faster downloads
+tensorflow
+ultralytics
+opencv-python
+mediapipe
+
+matplotlib
+numpy
+
+# Data Processing
+pandas
+scikit-learn
+
+# Utilities
+requests
+
+
+
+
+
+
+

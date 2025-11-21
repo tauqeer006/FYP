@@ -1,0 +1,31 @@
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# System deps minimal - only what's actually needed
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
+    libgl1 \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender1 \
+    libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install only the minimal dependencies actually used
+COPY requirements-minimal.txt .
+RUN pip install --no-cache-dir --timeout 1000 -r requirements-minimal.txt
+
+# Copy only the Django app
+COPY FYP/ ./
+
+# Ensure media dir exists (mounted at runtime in compose)
+RUN mkdir -p media/reports
+
+EXPOSE 8000
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

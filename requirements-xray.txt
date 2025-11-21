@@ -1,0 +1,13 @@
+# X-ray API Requirements - Only what's actually used in X-ray_model.py
+
+# YOLO model (includes PyTorch automatically)
+ultralytics==8.2.42
+
+# Flask API
+flask==3.0.0
+
+# Image processing
+pillow==10.4.0
+
+
+

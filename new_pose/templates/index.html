@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise Tracker - X-Ai Pediatric Diagnostic System</title>
+    <style>
+        /* Reset some defaults */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 700px;
+            width: 90%;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        p.description {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            color: #34495e;
+        }
+
+        button#startBtn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button#startBtn:hover {
+            background: #ff4757;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            margin-top: 20px;
+            font-size: 1.3em;
+            color: #2c3e50;
+        }
+
+        video, img {
+            margin-top: 20px;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Pose Detection Exercise</h1>
+    <p class="description">
+        Track your exercise performance using our <strong>X-Ai Pediatric Diagnostic System</strong>.
+        Click the button below to start the camera and begin your exercise session.
+    </p>
+    <button id="startBtn">Start Camera</button>
+
+    <h2>Reps: <span id="reps">0</span></h2>
+    <h2>Stage: <span id="stage">None</span></h2>
+
+    <video id="camera" autoplay playsinline></video>
+    <img id="output" alt="Processed Frame" />
+</div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>

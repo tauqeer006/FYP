@@ -1,0 +1,23 @@
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Install minimal system libraries required by OpenCV (used by Ultralytics)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgl1 libglib2.0-0 && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy and install requirements
+COPY requirements-xray.txt .
+RUN pip install --no-cache-dir -r requirements-xray.txt
+
+# Copy only essential files
+COPY Models_Apis/X-ray_model.py ./
+COPY Models_Apis/best.pt ./
+
+EXPOSE 5002
+
+CMD ["python", "X-ray_model.py"]

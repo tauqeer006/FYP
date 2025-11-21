@@ -1,0 +1,57 @@
+<div id="user-details-container" class="p-6 bg-gradient-to-br bg-white to-indigo-100 min-h-screen">
+  <!-- User Information -->
+  <div class="max-w-5xl mx-auto">
+    <h3 class="text-3xl font-bold text-gray-800 mb-6 text-center">👤 User Profile</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/100 backdrop-blur-md p-6 rounded-2xl shadow-lg hover:shadow-2xl transition">
+      <p class="text-lg"><span class="font-semibold text-gray-700">Name:</span> John Doe</p>
+      <p class="text-lg"><span class="font-semibold text-gray-700">Email:</span> johndoe@example.com</p>
+      <p class="text-lg"><span class="font-semibold text-gray-700">Gender:</span> Male</p>
+      <p class="text-lg"><span class="font-semibold text-gray-700">Age:</span> 8 years</p>
+      <p class="text-lg"><span class="font-semibold text-gray-700">Weight:</span> 25 kg</p>
+    </div>
+
+    <!-- Appointment Section -->
+    <div class="mt-10">
+      <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">📅 Appointments</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- Previous Appointment -->
+        <div class="bg-white/80 backdrop-blur-lg border border-gray-200 shadow-lg rounded-2xl p-6 hover:-translate-y-2 hover:shadow-2xl transition duration-300">
+          <h4 class="text-xl font-semibold text-indigo-600 mb-4 flex items-center gap-2">
+            ⏮️ Previous Appointment
+          </h4>
+          <ul class="space-y-2 text-gray-700">
+            <li><span class="font-semibold">Doctor:</span> Dr. Sarah Johnson</li>
+            <li><span class="font-semibold">Date:</span> 20 Sept 2025</li>
+            <li><span class="font-semibold">Time:</span> 10:30 AM</li>
+            <li><span class="font-semibold">Notes:</span> Follow-up checkup for bone fracture recovery.</li>
+          </ul>
+        </div>
+
+        <!-- Next Appointment -->
+        <div class="bg-white/80 backdrop-blur-lg border border-gray-200 shadow-lg rounded-2xl p-6 hover:-translate-y-2 hover:shadow-2xl transition duration-300">
+          <h4 class="text-xl font-semibold text-indigo-600 mb-4 flex items-center gap-2">
+            ⏭️ Next Appointment
+          </h4>
+          <ul class="space-y-2 text-gray-700">
+            <li><span class="font-semibold">Doctor:</span> Dr. Ahmed Khan</li>
+            <li><span class="font-semibold">Date:</span> 10 Oct 2025</li>
+            <li><span class="font-semibold">Time:</span> 2:00 PM</li>
+            <li><span class="font-semibold">Purpose:</span> Routine pediatric checkup.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  /* Custom scrollbar for better aesthetics */
+  #user-details-container::-webkit-scrollbar {
+    width: 8px;
+  }
+  #user-details-container::-webkit-scrollbar-thumb {
+    background-color: rgba(99, 102, 241, 0.5);
+    border-radius: 4px;
+  }

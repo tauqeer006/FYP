@@ -1,0 +1,32 @@
+# ------------------------------
+#   FASTAPI – Pose Tracking API
+# ------------------------------
+FROM python:3.10-slim
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Linux dependencies required for OpenCV & Mediapipe
+RUN apt-get update && apt-get install -y \
+    libglib2.0-0 \
+    libgl1 \
+    libopencv-dev \
+    ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create work directory
+WORKDIR /app
+
+# Copy requirement file
+COPY requirements-pose.txt /app/requirements-pose.txt
+
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements-pose.txt
+
+# Copy all pose api files
+COPY new_pose/ /app/
+
+# Expose FastAPI port
+EXPOSE 5003
+
+# Start FastAPI server
+CMD ["uvicorn", "pose_api:app", "--host", "0.0.0.0", "--port", "5003"]

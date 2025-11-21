@@ -1,0 +1,97 @@
+<div class="p-6 bg-gray-50 min-h-screen">
+  <!-- User Profile -->
+  <div class="bg-white shadow-lg rounded-2xl p-6 mb-6 transition-transform duration-300 hover:scale-[1.01]">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">👩‍⚕️ Patient Profile</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
+      <p><span class="font-semibold">Name:</span> Alice Smith</p>
+      <p><span class="font-semibold">Email:</span> alice@example.com</p>
+      <p><span class="font-semibold">Gender:</span> Female</p>
+      <p><span class="font-semibold">Age:</span> 28</p>
+      <p><span class="font-semibold">Patient ID:</span> U-1023</p>
+    </div>
+  </div>
+
+  <!-- Medical History -->
+  <div class="bg-white shadow-lg rounded-2xl p-6 mb-6 transition-transform duration-300 hover:scale-[1.01]">
+    <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+      🩺 Medical History
+    </h3>
+
+    <div class="space-y-6">
+      <!-- Record 1 -->
+      <div class="p-5 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+        <div class="flex justify-between items-center mb-3">
+          <h4 class="font-semibold text-gray-800">Pediatric Diagnosis</h4>
+          <span class="text-xs text-gray-600">2025-09-10 • 10:30 AM</span>
+        </div>
+        <p><span class="font-semibold">Condition:</span> Fracture (Left Arm)</p>
+        <p><span class="font-semibold">Doctor Notes:</span> Mild fracture, recommended rest and calcium supplements.</p>
+        <div class="mt-2">
+          <span class="block text-sm font-semibold text-blue-700">📈 Improvement: 40%</span>
+          <div class="w-full bg-blue-200 rounded-full h-2 mt-1">
+            <div class="bg-blue-600 h-2 rounded-full transition-all duration-700 w-[40%]"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Record 2 -->
+      <div class="p-5 bg-gradient-to-r from-green-50 to-green-100 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+        <div class="flex justify-between items-center mb-3">
+          <h4 class="font-semibold text-gray-800">Follow-up Checkup</h4>
+          <span class="text-xs text-gray-600">2025-09-18 • 11:15 AM</span>
+        </div>
+        <p><span class="font-semibold">Condition:</span> Fracture Healing Progress</p>
+        <p><span class="font-semibold">Doctor Notes:</span> Significant improvement, advised light physiotherapy.</p>
+        <div class="mt-2">
+          <span class="block text-sm font-semibold text-green-700">📈 Improvement: 70%</span>
+          <div class="w-full bg-green-200 rounded-full h-2 mt-1">
+            <div class="bg-green-600 h-2 rounded-full transition-all duration-700 w-[70%]"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Record 3 -->
+      <div class="p-5 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+        <div class="flex justify-between items-center mb-3">
+          <h4 class="font-semibold text-gray-800">Final Report</h4>
+          <span class="text-xs text-gray-600">2025-09-25 • 09:45 AM</span>
+        </div>
+        <p><span class="font-semibold">Condition:</span> Fully Healed</p>
+        <p><span class="font-semibold">Doctor Notes:</span> Patient has fully recovered. No restrictions needed.</p>
+        <div class="mt-2">
+          <span class="block text-sm font-semibold text-purple-700">📈 Improvement: 100%</span>
+          <div class="w-full bg-purple-200 rounded-full h-2 mt-1">
+            <div class="bg-purple-600 h-2 rounded-full transition-all duration-700 w-[100%]"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback Section -->
+  <div class="bg-white shadow-lg rounded-2xl p-6 transition-transform duration-300 hover:scale-[1.01]">
+    <h3 class="text-xl font-bold text-gray-800 mb-4">💬 Give Feedback</h3>
+
+    <!-- Rating -->
+    <div class="flex items-center gap-1 mb-4">
+      <span class="text-gray-700 font-medium mr-2">Rate your experience:</span>
+      <div class="flex space-x-1 cursor-pointer text-yellow-400">
+        <span class="text-2xl hover:scale-110 transition-transform">★</span>
+        <span class="text-2xl hover:scale-110 transition-transform">★</span>
+        <span class="text-2xl hover:scale-110 transition-transform">★</span>
+        <span class="text-2xl hover:scale-110 transition-transform">★</span>
+        <span class="text-2xl hover:scale-110 transition-transform">☆</span>
+      </div>
+    </div>
+
+    <!-- Feedback Text -->
+    <textarea placeholder="Write your feedback for the doctor..."
+      class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4"></textarea>
+
+    <!-- Submit Button -->
+    <button
+      class="bg-blue-600 text-white px-5 py-2 rounded-lg shadow-md hover:bg-blue-700 transition-colors">
+      Submit Feedback
+    </button>
+  </div>
+</div>
