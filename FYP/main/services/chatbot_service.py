@@ -23,7 +23,7 @@ class ChatbotService:
         """Initialize the chatbot service with routes data"""
         self.routes_file = Path(__file__).parent.parent / "config" / "routes.yml"
         self.routes_data = None
-        self.gemini_api_key = "AIzaSyAw0_LNo3c1dLn0CHh0C0tEbe2-DBmerv8"
+        self.gemini_api_key = "AIzaSyDk-aE6_LA-PIbgh0AqwBVypModgSgu7XY"
         self.gemini_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
         self.load_routes()
     
@@ -55,7 +55,7 @@ class ChatbotService:
             user_roles: List of user roles to filter routes (e.g., ['admin', 'doctor'])
         
         Returns:
-            Formatted string with all available routes
+            Formatted string with all available routes, form schemas, and buttons
         """
         if not self.routes_data or 'routes' not in self.routes_data:
             return "No routes available"
@@ -81,6 +81,21 @@ class ChatbotService:
             if 'required_auth' in route_info:
                 context += f"  Requires Login: {'Yes' if route_info['required_auth'] else 'No'}\n"
             
+            # Include form_schema information for form filling
+            if 'form_schema' in route_info and route_info['form_schema']:
+                form_schema = route_info['form_schema']
+                if 'fields' in form_schema:
+                    context += "  FORM FIELDS (for voice form filling):\n"
+                    for field in form_schema['fields']:
+                        context += f"    - {field.get('name', 'N/A')}: {field.get('label', 'N/A')} ({field.get('type', 'text')})\n"
+            
+            # Include buttons information for button clicking
+            if 'buttons' in route_info and route_info['buttons']:
+                context += "  BUTTONS (for voice button clicking):\n"
+                for button in route_info['buttons']:
+                    button_text = button.get('text', button.get('name', 'N/A'))
+                    context += f"    - {button_text}\n"
+            
             context += "\n"
         
         return context
@@ -96,81 +111,101 @@ class ChatbotService:
         Returns:
             Gemini's response text, or None if API call fails
         """
+
         try:
             # Construct the prompt
-            prompt = f"""You are a helpful assistant for a medical diagnostic system. A user has asked you a question.
-
-First, determine if the user wants:
-TYPE_A: To navigate to a page (e.g., "go to diagnosis", "show me patients", "main page")
-TYPE_B: A general/conversational question (e.g., "hi", "hello", "what's the weather")
-TYPE_C: To fill a form on CURRENT page (e.g., "enter username bilal", "add password 12345", "fill email john@test.com")
-TYPE_D: To click a button on CURRENT page (e.g., "click login button", "press submit", "click add patient")
+            prompt = f"""You are an intelligent assistant for a medical diagnostic system. Your job is to:
+1. Match user navigation requests to routes using keywords
+2. Detect when users want to FILL FORM FIELDS
+3. Detect when users want to CLICK BUTTONS
+4. Respond to general questions conversationally
 
 {routes_context}
 
+CRITICAL INSTRUCTIONS FOR FORM FILLING:
+- User says "enter [field] [value]", "fill [field] [value]", "type [field] [value]", "put [field] [value]"
+- Examples: "enter username john", "fill password 123", "type email test@example.com"
+- Extract the field name and value from what user said
+- Look at the route's form_schema to understand available fields
+- Return TYPE: FORM_FILL with FIELDS as JSON
+
+CRITICAL INSTRUCTIONS FOR BUTTON CLICKING:
+- User says "click [button]", "press [button]", "submit [button]", "click on [button]"
+- Examples: "click login", "press submit", "click next button"
+- Extract the button name from what user said
+- Look at the route's buttons array to match button names
+- Return TYPE: BUTTON_CLICK with BUTTON_TO_CLICK
+
+CRITICAL INSTRUCTIONS FOR PAGE SCROLLING:
+- User says "scroll down", "scroll up", "scroll", "page down", "page up"
+- Examples: "scroll down", "scroll up", "go down", "go up", "back to top"
+- Detect keywords: "scroll", "page", "down", "up", "top", "bottom"
+- Return TYPE: SCROLL with SCROLL_DIRECTION (up or down)
+- Do NOT navigate to a different page - just scroll the current page
+
+CRITICAL INSTRUCTIONS FOR NAVIGATION:
+- User asks to "go to", "navigate to", "open", "show me" a page
+- Match keywords from the routes list
+- Return TYPE: NAVIGATION with ROUTE_ID and PATH
+
 USER REQUEST: "{user_query}"
 
-Your task:
-1. Determine if this is TYPE_A, TYPE_B, TYPE_C, or TYPE_D
-2. If TYPE_A (navigation):
-   TYPE: NAVIGATION
-   ROUTE_ID: [route_id]
-   PATH: [path]
-   REASON: [why you matched this route]
+DETECTION LOGIC:
+Step 1: Check if user is trying to FILL a form (keywords: "enter", "fill", "type", "put", "input")
+  - If yes → TYPE: FORM_FILL
+Step 2: Check if user is trying to CLICK a button (keywords: "click", "press", "submit", "hit")
+  - If yes → TYPE: BUTTON_CLICK
+Step 3: Check if user is trying to SCROLL (keywords: "scroll", "page", "down", "up", "top", "bottom")
+  - If yes → TYPE: SCROLL
+Step 4: Check if user is trying to NAVIGATE (keywords: "go", "navigate", "open", "show", "take me")
+  - If yes → TYPE: NAVIGATION
+Step 5: Otherwise → TYPE: CONVERSATION
 
-3. If TYPE_B (conversational/general):
-   TYPE: CONVERSATION
-   ANSWER: [your helpful response]
+RESPONSE FORMAT (choose ONE):
 
-4. If TYPE_C (form filling on current page):
-   Extract ONLY the field values from the user request
-   DO NOT include PATH or ROUTE_ID (user is already on the page)
-   
-   Respond with EXACTLY this format:
-   TYPE: FORM_FILL
-   FIELDS: {{field_name: value, field_name: value}}
-   BUTTON_TO_CLICK: null
-   REASON: [what fields user is filling]
-
-5. If TYPE_D (button click on current page):
-   Extract the button name/text
-   DO NOT include FIELDS, ROUTE_ID, or PATH
-   
-   Respond with EXACTLY this format:
-   TYPE: BUTTON_CLICK
-   BUTTON_TO_CLICK: [exact button text]
-   REASON: [why user wants to click this button]
-
-IMPORTANT RULES:
-- FORM_FILL and BUTTON_CLICK are for CURRENT PAGE ONLY (no navigation, no route info)
-- Never include PATH or ROUTE_ID for FORM_FILL or BUTTON_CLICK
-- Only include ROUTE_ID and PATH for NAVIGATION requests
-- For FORM_FILL: extract field values accurately (username, password, email, etc.)
-- For BUTTON_CLICK: identify button text exactly (Login, Submit, Add Patient, etc.)
-- Set BUTTON_TO_CLICK to null if user only wants to fill fields without clicking
-
-Example 1 - Form Filling on Current Page:
-User: "enter username bilal and password bilal1234"
-Response:
+FOR FORM FILLING (user wants to enter data on current page):
 TYPE: FORM_FILL
-FIELDS: {{"username": "bilal", "password": "bilal1234"}}
-BUTTON_TO_CLICK: null
-REASON: User filling login form fields on current page
+FIELDS: {{"field_name": "value", "another_field": "another_value"}}
+BUTTON_TO_CLICK: "Submit" or null
+REASON: User wants to fill form fields
 
-Example 2 - Button Click on Current Page:
-User: "click login button"
-Response:
+FOR BUTTON CLICKING (user wants to click a button on current page):
 TYPE: BUTTON_CLICK
-BUTTON_TO_CLICK: Login
-REASON: User wants to click login button on current page
+BUTTON_TO_CLICK: exact button text to click
+REASON: User wants to click a button
 
-Example 3 - Navigation to Different Page:
-User: "go to add patient page"
-Response:
+FOR PAGE SCROLLING (user wants to scroll the page):
+TYPE: SCROLL
+SCROLL_DIRECTION: up or down
+REASON: User wants to scroll the page
+
+FOR NAVIGATION (user wants to go to a different page):
 TYPE: NAVIGATION
-ROUTE_ID: add_patient_record
-PATH: /add_patient_record/
-REASON: User wants to navigate to add patient form"""
+ROUTE_ID: exact_route_id
+PATH: /exact/path/
+REASON: Keywords matched: list which keywords matched
+
+FOR CONVERSATION (user asking a general question):
+TYPE: CONVERSATION
+ANSWER: helpful response about the question
+
+EXAMPLES:
+1. User: "enter username john password 123" → TYPE: FORM_FILL, FIELDS: {{"username": "john", "password": "123"}}
+2. User: "fill email test@test.com" → TYPE: FORM_FILL, FIELDS: {{"email": "test@test.com"}}
+3. User: "click login button" → TYPE: BUTTON_CLICK, BUTTON_TO_CLICK: "Login"
+4. User: "press submit" → TYPE: BUTTON_CLICK, BUTTON_TO_CLICK: "Submit"
+5. User: "scroll down" → TYPE: SCROLL, SCROLL_DIRECTION: down
+6. User: "scroll up" → TYPE: SCROLL, SCROLL_DIRECTION: up
+7. User: "go to patient dashboard" → TYPE: NAVIGATION, ROUTE_ID: patient_dashboard, PATH: /Patient_dashboard/
+8. User: "what is diabetes?" → TYPE: CONVERSATION, ANSWER: explanation
+
+IMPORTANT: 
+- For FORM_FILL: Return the extracted field names and values as JSON
+- For BUTTON_CLICK: Return the exact button text you want clicked
+- For SCROLL: Return "up" or "down" as SCROLL_DIRECTION
+- For NAVIGATION: Use exact route IDs and paths from the routes list
+- Do NOT confuse form filling with navigation - if user is filling a form on current page, return FORM_FILL, not NAVIGATION
+- Do NOT confuse scrolling with navigation - if user says "scroll down", return SCROLL, not NAVIGATION"""
 
             headers = {
                 'Content-Type': 'application/json',
@@ -214,7 +249,7 @@ REASON: User wants to navigate to add patient form"""
             logger.error(f"Unexpected error in Gemini API call: {str(e)}")
             return None
     
-    def parse_gemini_response(self, gemini_response: str) -> Tuple[Optional[str], Optional[str], Optional[str], Optional[str], Optional[str], Optional[Dict], Optional[str]]:
+    def parse_gemini_response(self, gemini_response: str) -> Tuple[Optional[str], Optional[str], Optional[str], Optional[str], Optional[str], Optional[Dict], Optional[str], Optional[str]]:
         """
         Parse Gemini's response to extract response type and relevant data
         
@@ -222,12 +257,13 @@ REASON: User wants to navigate to add patient form"""
             gemini_response: The raw response from Gemini API
         
         Returns:
-            Tuple of (response_type, route_id, path, reason, answer, form_fields, button_to_click)
-            - For navigation: ('navigation', route_id, path, reason, None, None, None)
-            - For conversation: ('conversation', None, None, None, answer, None, None)
-            - For form_fill: ('form_fill', None, None, None, None, form_fields_dict, None)
-            - For button_click: ('button_click', None, None, None, None, None, button_text)
-            - For error: (None, None, None, None, None, None, None)
+            Tuple of (response_type, route_id, path, reason, answer, form_fields, button_to_click, scroll_direction)
+            - For navigation: ('navigation', route_id, path, reason, None, None, None, None)
+            - For conversation: ('conversation', None, None, None, answer, None, None, None)
+            - For form_fill: ('form_fill', None, None, None, None, form_fields_dict, None, None)
+            - For button_click: ('button_click', None, None, None, None, None, button_text, None)
+            - For scroll: ('scroll', None, None, None, None, None, None, scroll_direction)
+            - For error: (None, None, None, None, None, None, None, None)
         """
         try:
             lines = gemini_response.strip().split('\n')
@@ -239,10 +275,15 @@ REASON: User wants to navigate to add patient form"""
             answer = None
             form_fields = None
             button_to_click = None
+            scroll_direction = None
             
             for line in lines:
                 if line.startswith('TYPE:'):
                     response_type = line.replace('TYPE:', '').strip().lower()
+                elif line.startswith('SCROLL_DIRECTION:'):
+                    scroll_direction = line.replace('SCROLL_DIRECTION:', '').strip().lower()
+                    if scroll_direction not in ['up', 'down']:
+                        scroll_direction = None
                 elif line.startswith('ROUTE_ID:'):
                     route_id = line.replace('ROUTE_ID:', '').strip()
                 elif line.startswith('PATH:'):
@@ -266,26 +307,30 @@ REASON: User wants to navigate to add patient form"""
             if response_type == 'navigation':
                 if route_id and path:
                     logger.info(f"Parsed navigation route: {route_id} -> {path}")
-                    return response_type, route_id, path, reason, None, None, None
+                    return response_type, route_id, path, reason, None, None, None, None
             elif response_type == 'conversation':
                 if answer:
                     logger.info(f"Parsed conversation response")
-                    return response_type, None, None, None, answer, None, None
+                    return response_type, None, None, None, answer, None, None, None
             elif response_type == 'form_fill':
                 if form_fields:
                     logger.info(f"Parsed form fill with fields: {form_fields}")
-                    return response_type, None, None, None, None, form_fields, None
+                    return response_type, None, None, None, None, form_fields, None, None
             elif response_type == 'button_click':
                 if button_to_click:
                     logger.info(f"Parsed button click: {button_to_click}")
-                    return response_type, None, None, None, None, None, button_to_click
+                    return response_type, None, None, None, None, None, button_to_click, None
+            elif response_type == 'scroll':
+                if scroll_direction:
+                    logger.info(f"Parsed scroll: {scroll_direction}")
+                    return response_type, None, None, None, None, None, None, scroll_direction
             
             logger.warning(f"Could not parse Gemini response properly. Type: {response_type}")
-            return None, None, None, None, None, None, None
+            return None, None, None, None, None, None, None, None
         
         except Exception as e:
             logger.error(f"Error parsing Gemini response: {str(e)}")
-            return None, None, None, None, None, None, None
+            return None, None, None, None, None, None, None, None
     
     def validate_route(self, route_id: str, path: str) -> bool:
         """
@@ -443,7 +488,7 @@ REASON: User wants to navigate to add patient form"""
                 }
             
             # Parse Gemini response
-            response_type, route_id, path, reason, answer, form_fields, button_to_click = self.parse_gemini_response(gemini_response)
+            response_type, route_id, path, reason, answer, form_fields, button_to_click, scroll_direction = self.parse_gemini_response(gemini_response)
             
             # Handle conversation type responses
             if response_type == 'conversation':
@@ -453,6 +498,26 @@ REASON: User wants to navigate to add patient form"""
                     'response_type': 'conversation',
                     'message': answer,
                     'answer': answer
+                }
+            
+            # Handle scroll type responses
+            if response_type == 'scroll':
+                logger.info(f"Scroll requested: {scroll_direction}")
+                if not scroll_direction or scroll_direction not in ['up', 'down']:
+                    logger.warning("Could not parse scroll direction from Gemini response")
+                    return {
+                        'success': False,
+                        'response_type': 'scroll',
+                        'message': 'Could not determine scroll direction',
+                        'scroll_direction': None
+                    }
+                
+                return {
+                    'success': True,
+                    'response_type': 'scroll',
+                    'scroll_direction': scroll_direction,
+                    'message': f"Scrolling page {scroll_direction}",
+                    'reason': reason or 'User requested scroll'
                 }
             
             # Handle button_click type responses

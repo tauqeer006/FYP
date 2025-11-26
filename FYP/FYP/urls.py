@@ -63,6 +63,8 @@ urlpatterns = [
     ### new changes...
     # Chatbot API
     path('api/chatbot/query/', views.chatbot_query, name='chatbot_query'),
+    path('api/chatbot/debug/', views.chatbot_debug, name='chatbot_debug'),
+    path('voice-test/', views.voice_test, name='voice_test'),
     
     # Password Reset API
     path('api/password-reset/request/', views.request_password_reset, name='request_password_reset'),

@@ -626,7 +626,7 @@ def Report(request):
         this fracture ocurrs and in how many week it takes to get good 
         """
 
-        api_key = "AIzaSyAw0_LNo3c1dLn0CHh0C0tEbe2-DBmerv8"
+        api_key = "AIzaSyDk-aE6_LA-PIbgh0AqwBVypModgSgu7XY"
         url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
 
         headers = {
@@ -1033,6 +1033,18 @@ from main.services.chatbot_service import get_chatbot_service
 
 @csrf_exempt
 @require_http_methods(["POST"])
+@csrf_exempt
+@require_http_methods(["GET"])
+def voice_test(request):
+    """
+    Render the voice recognition test/debug page
+    GET /voice-test/
+    """
+    return render(request, 'voice_test.html')
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
 def chatbot_query(request):
     """
     API endpoint for chatbot query processing
@@ -1100,6 +1112,80 @@ def chatbot_query(request):
             'message': 'An error occurred while processing your request',
             'matched_route': None,
             'path': None,
+            'error': str(e)
+        }, status=500)
+
+
+@csrf_protect
+def chatbot_debug(request):
+    """
+    DEBUG endpoint to test chatbot route matching
+    Returns detailed information about how Gemini processed the query
+    
+    Request:
+        POST /api/chatbot/debug/
+        {
+            "query": "user text query"
+        }
+    
+    Response:
+        {
+            "query": "original user query",
+            "gemini_response": "raw Gemini response",
+            "parsed_result": {...parsed result...},
+            "final_result": {...final JSON response...}
+        }
+    """
+    try:
+        data = json.loads(request.body)
+        user_query = data.get('query', '').strip()
+        
+        if not user_query:
+            return JsonResponse({
+                'error': 'Query cannot be empty'
+            }, status=400)
+        
+        # Get user roles
+        user_roles = ['anonymous']
+        if request.user.is_authenticated:
+            if request.user.is_staff or request.user.is_superuser:
+                user_roles = ['admin']
+            else:
+                user_roles = ['doctor', 'patient']
+        
+        # Get chatbot service
+        chatbot_service = get_chatbot_service()
+        
+        # Get routes context
+        routes_context = chatbot_service.format_routes_for_context(user_roles)
+        
+        # Call Gemini API
+        gemini_response = chatbot_service.call_gemini_api(user_query, routes_context)
+        
+        # Parse response
+        parsed = chatbot_service.parse_gemini_response(gemini_response)
+        
+        # Get final result
+        final_result = chatbot_service.process_query(user_query, user_roles)
+        
+        return JsonResponse({
+            'query': user_query,
+            'gemini_response': gemini_response,
+            'parsed_result': {
+                'response_type': parsed[0],
+                'route_id': parsed[1],
+                'path': parsed[2],
+                'reason': parsed[3],
+                'answer': parsed[4],
+                'form_fields': parsed[5],
+                'button_to_click': parsed[6]
+            },
+            'final_result': final_result
+        }, status=200)
+    
+    except Exception as e:
+        logger.error(f"Error in chatbot_debug endpoint: {str(e)}")
+        return JsonResponse({
             'error': str(e)
         }, status=500)
 

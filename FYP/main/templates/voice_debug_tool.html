@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Command Debug Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .test-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .test-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .test-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .test-button:active {
+            transform: translateY(0);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        #customQuery {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        #customQuery:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-test {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-test:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .response-container {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .response-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .response-content {
+            background: white;
+            padding: 12px;
+            border-radius: 4px;
+            border-left: 4px solid #667eea;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #333;
+        }
+
+        .status {
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .status.loading {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status.error {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .info-box {
+            background: #fffbea;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .info-box strong {
+            color: #e65100;
+        }
+
+        .quick-tests {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .comparison-table td {
+            font-size: 13px;
+        }
+
+        .match-yes {
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        .match-no {
+            color: #c62828;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            .test-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Voice Command Debug Tool</h1>
+
+        <div class="test-section">
+            <h2>📌 Information</h2>
+            <div class="info-box">
+                <strong>How to use:</strong> Click on any test button or enter a custom query to see exactly what the API returns. This helps debug why voice commands might not be working correctly.
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🧪 Quick Tests</h2>
+            <div class="test-grid">
+                <button class="test-button" onclick="testQuery('admin login')">Admin Login</button>
+                <button class="test-button" onclick="testQuery('patient dashboard')">Patient Dashboard</button>
+                <button class="test-button" onclick="testQuery('doctor login')">Doctor Login</button>
+                <button class="test-button" onclick="testQuery('main page')">Main Page</button>
+                <button class="test-button" onclick="testQuery('add patient')">Add Patient</button>
+                <button class="test-button" onclick="testQuery('diagnosis')">Diagnosis</button>
+                <button class="test-button" onclick="testQuery('patient reports')">Patient Reports</button>
+                <button class="test-button" onclick="testQuery('hello')">Hello (Conversation)</button>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>✏️ Custom Query</h2>
+            <div class="input-group">
+                <input type="text" id="customQuery" placeholder="Enter your voice command here...">
+                <button class="btn-test" onclick="testCustomQuery()">Test Query</button>
+            </div>
+            <div id="status"></div>
+            <div id="response"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📊 Response Details</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Expected</th>
+                        <th>Actual</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Response Type</td>
+                        <td>navigation OR conversation</td>
+                        <td id="type-actual">-</td>
+                        <td id="type-status">-</td>
+                    </tr>
+                    <tr>
+                        <td>Route ID</td>
+                        <td>Should match routes.yml</td>
+                        <td id="route-actual">-</td>
+                        <td id="route-status">-</td>
+                    </tr>
+                    <tr>
+                        <td>Path</td>
+                        <td>Should match Django URL</td>
+                        <td id="path-actual">-</td>
+                        <td id="path-status">-</td>
+                    </tr>
+                    <tr>
+                        <td>Success</td>
+                        <td>true</td>
+                        <td id="success-actual">-</td>
+                        <td id="success-status">-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="test-section">
+            <h2>🔍 Raw API Response</h2>
+            <div id="rawResponse" class="response-container">
+                <div class="response-title">Click a test button or enter a custom query to see the API response here</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function testQuery(query) {
+            await performTest(query);
+        }
+
+        function testCustomQuery() {
+            const query = document.getElementById('customQuery').value.trim();
+            if (!query) {
+                alert('Please enter a query');
+                return;
+            }
+            performTest(query);
+        }
+
+        async function performTest(query) {
+            const statusEl = document.getElementById('status');
+            const responseEl = document.getElementById('response');
+            const rawResponseEl = document.getElementById('rawResponse');
+
+            // Show loading
+            statusEl.className = 'status loading';
+            statusEl.textContent = '⏳ Testing...';
+            rawResponseEl.innerHTML = '<div class="response-title">Loading...</div>';
+
+            try {
+                const response = await fetch('/api/chatbot/debug/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({ query: query })
+                });
+
+                const data = await response.json();
+
+                // Update raw response
+                rawResponseEl.innerHTML = `<div class="response-title">Full API Response</div><div class="response-content">${JSON.stringify(data, null, 2)}</div>`;
+
+                // Update table
+                updateTable(data);
+
+                // Show success
+                statusEl.className = 'status success';
+                statusEl.textContent = `✅ Test complete for: "${query}"`;
+
+            } catch (error) {
+                statusEl.className = 'status error';
+                statusEl.textContent = `❌ Error: ${error.message}`;
+                rawResponseEl.innerHTML = `<div class="response-title">Error</div><div class="response-content">${error.message}</div>`;
+                clearTable();
+            }
+        }
+
+        function updateTable(data) {
+            const parsed = data.parsed_result || {};
+            const final = data.final_result || {};
+
+            // Response Type
+            const type = parsed.response_type || 'unknown';
+            document.getElementById('type-actual').textContent = type;
+            document.getElementById('type-status').innerHTML = ['navigation', 'conversation', 'form_fill', 'button_click'].includes(type) ? '<span class="match-yes">✓</span>' : '<span class="match-no">✗</span>';
+
+            // Route ID
+            const routeId = parsed.route_id || '(none)';
+            document.getElementById('route-actual').textContent = routeId;
+            document.getElementById('route-status').innerHTML = (type === 'navigation' && routeId !== '(none)') ? '<span class="match-yes">✓</span>' : (type === 'navigation' ? '<span class="match-no">✗</span>' : '-');
+
+            // Path
+            const path = parsed.path || final.path || '(none)';
+            document.getElementById('path-actual').textContent = path;
+            document.getElementById('path-status').innerHTML = (path && path !== '(none)' && path !== '/') ? '<span class="match-yes">✓</span>' : (path === '/' ? '<span class="match-no">⚠ (home)</span>' : '-');
+
+            // Success
+            const success = final.success ? 'true' : 'false';
+            document.getElementById('success-actual').textContent = success;
+            document.getElementById('success-status').innerHTML = final.success ? '<span class="match-yes">✓</span>' : '<span class="match-no">✗</span>';
+        }
+
+        function clearTable() {
+            document.getElementById('type-actual').textContent = '-';
+            document.getElementById('type-status').textContent = '-';
+            document.getElementById('route-actual').textContent = '-';
+            document.getElementById('route-status').textContent = '-';
+            document.getElementById('path-actual').textContent = '-';
+            document.getElementById('path-status').textContent = '-';
+            document.getElementById('success-actual').textContent = '-';
+            document.getElementById('success-status').textContent = '-';
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    cookie = cookie.trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Allow Enter key to test
+        document.getElementById('customQuery').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                testCustomQuery();
+            }
+        });
+    </script>
+</body>
+</html>

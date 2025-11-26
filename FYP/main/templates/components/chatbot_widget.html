@@ -1,6 +1,6 @@
-<!-- Chatbot Widget - Non-Intrusive Floating Component -->
+<!-- Simple Chatbot Widget - Clean Voice & Text Input -->
 <style>
-  /* Chatbot Widget Styles - Isolated to prevent design conflicts */
+  /* Chatbot Widget Styles */
   .chatbot-widget {
     position: fixed;
     bottom: 20px;
@@ -33,49 +33,6 @@
 
   .chatbot-button.active {
     background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  }
-
-  /* Background listening indicator */
-  .listening-indicator {
-    position: absolute;
-    bottom: 15px;
-    right: 15px;
-    width: 14px;
-    height: 14px;
-    background: #4CAF50;
-    border-radius: 50%;
-    border: 2px solid white;
-    box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
-    z-index: 9999;
-  }
-
-  .listening-indicator.active {
-    background: #f44336;
-    box-shadow: 0 0 12px rgba(244, 67, 54, 0.8);
-  }
-
-  .pulse {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: inherit;
-    animation: pulse-animation 2s infinite;
-  }
-
-  @keyframes pulse-animation {
-    0% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    50% {
-      transform: scale(1.2);
-      opacity: 0.7;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
   }
 
   .chatbot-panel {
@@ -217,14 +174,9 @@
     background: #764ba2;
   }
 
-  .voice-button.listening {
+  .voice-button.recording {
     background: #f5576c;
-    animation: pulse 0.6s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    box-shadow: 0 0 0 3px rgba(245, 87, 108, 0.3);
   }
 
   .chatbot-text-input {
@@ -296,14 +248,9 @@
 
 <div class="chatbot-widget">
   <!-- Floating Button -->
-  <button class="chatbot-button" id="chatbot-toggle" title="Open Chatbot (or say 'Hey Bot')">
+  <button class="chatbot-button" id="chatbot-toggle" title="Open Chatbot">
     <i class="fas fa-comments"></i>
   </button>
-  
-  <!-- Background Listening Indicator -->
-  <div class="listening-indicator" id="listening-indicator" title="Listening for 'Hey Bot'...">
-    <span class="pulse"></span>
-  </div>
 
   <!-- Chat Panel -->
   <div class="chatbot-panel" id="chatbot-panel">
@@ -314,12 +261,12 @@
 
     <div class="chatbot-messages" id="chatbot-messages">
       <div class="message bot">
-        👋 Hello! I'm your X-Ai assistant. Try saying "diagnosis" or "patient reports" to navigate.
+        👋 Hello! I'm your X-Ai assistant. Click the microphone to record, or type a command.
       </div>
     </div>
 
     <div class="chatbot-input-area">
-      <button class="voice-button" id="voice-button" title="Click to speak">
+      <button class="voice-button" id="voice-button" title="Click to record (hold for seconds), click to stop">
         <i class="fas fa-microphone"></i>
       </button>
       <input 
@@ -337,7 +284,7 @@
 </div>
 
 <script>
-// Form filling utility function
+// Simple Form Filling Utility
 function fillFormFields(formSchema, formFields, buttonToClick) {
   if (!formFields || Object.keys(formFields).length === 0) {
     console.warn('No form fields to fill');
@@ -346,16 +293,12 @@ function fillFormFields(formSchema, formFields, buttonToClick) {
 
   try {
     let filledCount = 0;
-    let notFoundCount = 0;
     
-    // Iterate through form fields and fill them
+    // Fill form fields
     Object.keys(formFields).forEach(fieldName => {
       const fieldValue = formFields[fieldName];
-      
-      // Try to find input by name attribute
       let inputElement = document.querySelector(`input[name="${fieldName}"], select[name="${fieldName}"], textarea[name="${fieldName}"]`);
       
-      // If not found by name, try by ID (from form_schema)
       if (!inputElement && formSchema && formSchema.fields) {
         const fieldSchema = formSchema.fields.find(f => f.name === fieldName);
         if (fieldSchema && fieldSchema.id) {
@@ -367,7 +310,7 @@ function fillFormFields(formSchema, formFields, buttonToClick) {
         const inputType = inputElement.type || inputElement.tagName.toLowerCase();
         
         if (inputType === 'checkbox') {
-          inputElement.checked = (fieldValue === true || fieldValue === 'true' || fieldValue === 'checked');
+          inputElement.checked = (fieldValue === true || fieldValue === 'true');
         } else if (inputType === 'radio') {
           const radioGroup = document.querySelectorAll(`input[name="${fieldName}"][value="${fieldValue}"]`);
           if (radioGroup.length > 0) {
@@ -375,51 +318,35 @@ function fillFormFields(formSchema, formFields, buttonToClick) {
             radioGroup[0].checked = true;
           }
         } else if (inputType === 'select' || inputElement.tagName === 'SELECT') {
-          // For select/dropdown
           inputElement.value = fieldValue;
-          // Trigger change event in case there's dependent field logic
           inputElement.dispatchEvent(new Event('change', { bubbles: true }));
         } else {
-          // Text, email, password, date, tel, textarea, file, etc.
           inputElement.value = fieldValue;
           inputElement.dispatchEvent(new Event('input', { bubbles: true }));
           inputElement.dispatchEvent(new Event('change', { bubbles: true }));
         }
-        
-        console.log(`✓ Filled field: ${fieldName} = ${fieldValue}`);
         filledCount++;
-      } else {
-        console.warn(`✗ Could not find field: ${fieldName}`);
-        notFoundCount++;
       }
     });
     
-    // Only click button if it's explicitly mentioned (not null)
+    // Click button if specified
     if (buttonToClick && buttonToClick.toLowerCase() !== 'null') {
       setTimeout(() => {
-        let button = null;
-        
-        // Try to find button by text content (case-insensitive)
         const buttons = document.querySelectorAll('button, input[type="submit"]');
-        button = Array.from(buttons).find(btn => 
+        let foundButton = Array.from(buttons).find(btn => 
           btn.textContent.trim().toLowerCase() === buttonToClick.toLowerCase() || 
           btn.value.toLowerCase() === buttonToClick.toLowerCase()
         );
         
-        // If not found, try common submit button patterns
-        if (!button) {
-          button = document.querySelector('button[type="submit"]');
+        if (!foundButton) {
+          foundButton = document.querySelector('button[type="submit"]');
         }
         
-        if (button) {
-          console.log(`✓ Clicking button: ${buttonToClick}`);
-          button.click();
-        } else {
-          console.warn(`✗ Could not find button: ${buttonToClick}`);
+        if (foundButton) {
+          foundButton.click();
         }
       }, 200);
     }
-    
   } catch (error) {
     console.error('Error filling form:', error);
   }
@@ -434,237 +361,91 @@ document.addEventListener('DOMContentLoaded', function() {
   const input = document.getElementById('chatbot-input');
   const messagesDiv = document.getElementById('chatbot-messages');
 
-  let isListening = false;
-  let isBackgroundListening = false;
+  let isRecording = false;
   let recognition = null;
-  let backgroundRecognition = null;
-  let backgroundListeningEnabled = false;
-  const WAKE_WORDS = ['hey bot', 'hello bot', 'ok bot', 'okay bot', 'bot'];
-  const indicator = document.getElementById('listening-indicator');
 
   // Check for Web Speech API support
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   
   if (!SpeechRecognition) {
-    console.error('❌ Speech Recognition API not supported in this browser');
-    if (indicator) indicator.style.display = 'none';
-  }
-  
-  if (SpeechRecognition) {
-    // Main recognition for chatbot panel
+    console.warn('⚠️ Speech Recognition not supported in this browser');
+    voiceBtn.disabled = true;
+    voiceBtn.title = 'Speech Recognition not supported in your browser';
+  } else {
+    // Initialize Speech Recognition
     recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = false;
     recognition.language = 'en-US';
 
     recognition.onstart = function() {
-      isListening = true;
-      voiceBtn.classList.add('listening');
-      console.log('🎤 Voice recognition started');
+      isRecording = true;
+      voiceBtn.classList.add('recording');
+      console.log('🎤 Recording started - speak now!');
     };
 
     recognition.onend = function() {
-      isListening = false;
-      voiceBtn.classList.remove('listening');
-      console.log('⏹️ Voice recognition ended');
+      isRecording = false;
+      voiceBtn.classList.remove('recording');
+      console.log('⏹️ Recording stopped');
     };
 
     recognition.onresult = function(event) {
       let transcript = '';
-      let isFinal = false;
       
       for (let i = event.resultIndex; i < event.results.length; i++) {
         transcript += event.results[i][0].transcript;
-        if (event.results[i].isFinal) {
-          isFinal = true;
-        }
       }
-      
-      console.log('Speech recognized:', { transcript, isFinal, confidence: event.results[event.results.length - 1][0].confidence });
       
       if (transcript.trim()) {
         input.value = transcript.trim();
-        if (isFinal) {
-          console.log('✅ Final speech received, sending message...');
-          setTimeout(() => {
-            sendMessage();
-          }, 100);
-        }
+        console.log('✅ Speech recognized:', transcript.trim());
       }
     };
 
     recognition.onerror = function(event) {
-      console.error('Speech recognition error:', event.error);
-      voiceBtn.classList.remove('listening');
+      console.error('❌ Speech recognition error:', event.error);
+      voiceBtn.classList.remove('recording');
+      isRecording = false;
     };
-
-    // Background recognition - always listening for wake word
-    backgroundRecognition = new SpeechRecognition();
-    backgroundRecognition.continuous = true;
-    backgroundRecognition.interimResults = true;
-    backgroundRecognition.language = 'en-US';
-
-    backgroundRecognition.onstart = function() {
-      isBackgroundListening = true;
-      if (indicator) indicator.classList.add('active');
-      console.log('🎤 Background voice listening enabled. Say "Hey Bot" to activate.');
-    };
-
-    backgroundRecognition.onend = function() {
-      isBackgroundListening = false;
-      if (indicator) indicator.classList.remove('active');
-      // Restart background listening if not stopped intentionally
-      if (document.hidden === false) {
-        setTimeout(() => {
-          try {
-            backgroundRecognition.start();
-          } catch (e) {
-            console.log('Background listening will restart...');
-          }
-        }, 100);
-      }
-    };
-
-    backgroundRecognition.onresult = function(event) {
-      let transcript = '';
-      let isFinal = false;
-      
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        transcript += event.results[i][0].transcript.toLowerCase();
-        if (event.results[i].isFinal) {
-          isFinal = true;
-        }
-      }
-      
-      // Check for wake word
-      if (isFinal) {
-        const hasWakeWord = WAKE_WORDS.some(word => transcript.includes(word));
-        if (hasWakeWord) {
-          console.log('✨ Wake word detected! Opening chatbot and listening...');
-          
-          // Open chatbot panel
-          panel.classList.add('active');
-          toggle.classList.add('active');
-          input.focus();
-          
-          // Show wake word message
-          const wakeMsg = document.createElement('div');
-          wakeMsg.className = 'message bot';
-          wakeMsg.textContent = '🎤 I\'m listening! What would you like to do?';
-          messagesDiv.appendChild(wakeMsg);
-          messagesDiv.scrollTop = messagesDiv.scrollHeight;
-          
-          // Stop background listening and start main listening
-          backgroundRecognition.stop();
-          setTimeout(() => {
-            recognition.start();
-          }, 300);
-        }
-      }
-    };
-
-    backgroundRecognition.onerror = function(event) {
-      if (event.error !== 'no-speech') {
-        console.log('Background listening error, restarting...');
-      }
-    };
-
-    // Start background listening with delay to ensure page is ready
-    function startBackgroundListening() {
-      if (!backgroundListeningEnabled) return;
-      try {
-        backgroundRecognition.start();
-        console.log('✅ Background listening started');
-      } catch (e) {
-        console.log('⚠️ Background listening will start when ready');
-        setTimeout(startBackgroundListening, 1000);
-      }
-    }
-
-    // Enable background listening after a short delay
-    setTimeout(() => {
-      backgroundListeningEnabled = true;
-      startBackgroundListening();
-    }, 2000);
-
-    // Handle page visibility - stop listening if page hidden
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        if (isBackgroundListening) {
-          try { backgroundRecognition.stop(); } catch(e) {}
-        }
-        if (isListening) {
-          try { recognition.stop(); } catch(e) {}
-        }
-      } else {
-        if (backgroundListeningEnabled) {
-          setTimeout(startBackgroundListening, 500);
-        }
-      }
-    });
   }
 
-  // Toggle panel
+  // Toggle chatbot panel
   toggle.addEventListener('click', () => {
     panel.classList.toggle('active');
     toggle.classList.toggle('active');
     
     if (panel.classList.contains('active')) {
       input.focus();
-      // Stop background listening, start main
-      if (isBackgroundListening) {
-        try { backgroundRecognition.stop(); } catch(e) {}
-      }
-    } else {
-      // Resume background listening when panel closed
-      if (!isListening && backgroundListeningEnabled && SpeechRecognition) {
-        setTimeout(() => {
-          try {
-            backgroundRecognition.start();
-          } catch (e) {
-            console.log('Background listening will resume...');
-          }
-        }, 300);
-      }
     }
   });
 
-  // Close panel
+  // Close button
   closeBtn.addEventListener('click', () => {
     panel.classList.remove('active');
     toggle.classList.remove('active');
-    if (isListening) {
-      try { recognition.stop(); } catch(e) {}
-    }
-    // Resume background listening
-    if (!isBackgroundListening && backgroundListeningEnabled && SpeechRecognition) {
-      setTimeout(() => {
-        try {
-          backgroundRecognition.start();
-        } catch (e) {
-          console.log('Background listening will resume...');
-        }
-      }, 300);
+    
+    if (isRecording && recognition) {
+      recognition.stop();
     }
   });
 
-  // Voice button - manual trigger
+  // Voice button - toggle recording
   voiceBtn.addEventListener('click', () => {
     if (!recognition) {
-      console.error('❌ Voice recognition not available');
-      alert('Voice recognition not supported in your browser. Please use Chrome, Edge, or Firefox.');
+      alert('⚠️ Speech Recognition not supported. Please use Chrome or Edge browser.');
       return;
     }
-    if (isListening) {
-      console.log('🛑 Stopping voice recognition');
+
+    if (isRecording) {
+      // Stop recording
+      console.log('🛑 Stopping recording');
       recognition.stop();
     } else {
-      console.log('🎤 Starting voice recognition');
-      try {
-        recognition.start();
-      } catch (e) {
-        console.error('Error starting recognition:', e);
-      }
+      // Start recording
+      console.log('🎤 Starting recording...');
+      input.value = ''; // Clear previous text
+      recognition.start();
     }
   });
 
@@ -673,7 +454,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const text = input.value.trim();
     if (!text) return;
 
-    // Add user message to UI
+    // Add user message
     const userMsg = document.createElement('div');
     userMsg.className = 'message user';
     userMsg.textContent = text;
@@ -698,36 +479,33 @@ document.addEventListener('DOMContentLoaded', function() {
       const botMsg = document.createElement('div');
       botMsg.className = 'message bot';
       
-      // Check response type
+      // Handle different response types
       if (data.response_type === 'conversation') {
-        // Conversational response - just display the answer
         botMsg.textContent = data.answer || data.message || 'I didn\'t understand that.';
         messagesDiv.appendChild(botMsg);
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
-      } else if (data.response_type === 'form_fill') {
-        // Form fill response - fill form on CURRENT page, don't navigate
+      } 
+      else if (data.response_type === 'form_fill') {
         if (data.success && data.form_fields) {
-          botMsg.textContent = '📝 ' + (data.message || 'Filling form fields...');
+          botMsg.textContent = '📝 ' + (data.message || 'Filling form...');
           messagesDiv.appendChild(botMsg);
           messagesDiv.scrollTop = messagesDiv.scrollHeight;
           
-          // Fill form fields on current page (no navigation)
           setTimeout(() => {
             fillFormFields(data.form_schema, data.form_fields, data.button_to_click);
           }, 300);
         } else {
-          botMsg.textContent = data.message || '❓ Could not fill form.';
+          botMsg.textContent = data.message || 'Could not fill form.';
           messagesDiv.appendChild(botMsg);
           messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
-      } else if (data.response_type === 'button_click') {
-        // Button click response - click button on CURRENT page, don't navigate
+      } 
+      else if (data.response_type === 'button_click') {
         if (data.success && data.button_to_click) {
           botMsg.textContent = '🔘 ' + (data.message || 'Clicking button...');
           messagesDiv.appendChild(botMsg);
           messagesDiv.scrollTop = messagesDiv.scrollHeight;
           
-          // Click button on current page
           setTimeout(() => {
             const buttons = document.querySelectorAll('button');
             let found = false;
@@ -738,34 +516,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
               }
             }
-            if (!found) {
-              console.warn(`Button "${data.button_to_click}" not found on page`);
-            }
           }, 300);
         } else {
-          botMsg.textContent = data.message || '❓ Could not click button.';
+          botMsg.textContent = data.message || 'Could not click button.';
           messagesDiv.appendChild(botMsg);
           messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
-      } else if (data.response_type === 'navigation') {
-        // Navigation response - show and redirect
+      } 
+      else if (data.response_type === 'navigation') {
         if (data.success && data.matched_route) {
           botMsg.textContent = '✅ Navigating to: ' + data.matched_route.description;
           messagesDiv.appendChild(botMsg);
           messagesDiv.scrollTop = messagesDiv.scrollHeight;
           
-          // Navigate after a short delay
           setTimeout(() => {
             window.location.href = data.matched_route.path;
           }, 800);
         } else {
-          botMsg.textContent = data.message || '❓ Could not find that page.';
+          botMsg.textContent = data.message || 'Could not find that page.';
           messagesDiv.appendChild(botMsg);
           messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
-      } else {
-        // Fallback for any other response
-        botMsg.textContent = data.message || data.answer || 'Let me help you navigate the app!';
+      } 
+      else {
+        botMsg.textContent = data.message || data.answer || 'How can I help you?';
         messagesDiv.appendChild(botMsg);
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
       }
@@ -790,23 +564,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Close on Escape key
+  // Escape key to close
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && panel.classList.contains('active')) {
       panel.classList.remove('active');
       toggle.classList.remove('active');
-      if (isListening) {
-        try { recognition.stop(); } catch(e) {}
-      }
-      // Resume background listening
-      if (!isBackgroundListening && backgroundListeningEnabled && SpeechRecognition) {
-        setTimeout(() => {
-          try {
-            backgroundRecognition.start();
-          } catch (e) {
-            console.log('Background listening will resume...');
-          }
-        }, 300);
+      if (isRecording && recognition) {
+        recognition.stop();
       }
     }
   });

@@ -1,0 +1,414 @@
+<!-- Global Voice Recorder - Always Listening Across Website -->
+<style>
+  /* Global Voice Recorder Styles */
+  .global-voice-recorder {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 9999;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .voice-recorder-button {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .voice-recorder-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+  }
+
+  .voice-recorder-button.listening {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    animation: pulse-button 1.5s infinite;
+  }
+
+  @keyframes pulse-button {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(245, 87, 108, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 0 10px rgba(245, 87, 108, 0.3);
+    }
+  }
+
+  .voice-status-indicator {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 14px;
+    height: 14px;
+    background: #4CAF50;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+    z-index: 10001;
+  }
+
+  .voice-status-indicator.listening {
+    background: #f5576c;
+    box-shadow: 0 0 12px rgba(245, 87, 108, 0.8);
+  }
+
+  /* Toast Notification */
+  .voice-toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+    font-size: 14px;
+    animation: slideInToast 0.3s ease;
+    max-width: 300px;
+  }
+
+  @keyframes slideInToast {
+    from {
+      transform: translateX(400px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  .voice-toast.success {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .voice-toast.error {
+    background: linear-gradient(135deg, #f5576c 0%, #ff6b6b 100%);
+  }
+
+  .voice-toast.listening {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 480px) {
+    .global-voice-recorder {
+      top: 10px;
+      left: 10px;
+    }
+
+    .voice-recorder-button {
+      width: 50px;
+      height: 50px;
+      font-size: 20px;
+    }
+
+    .voice-toast {
+      bottom: 10px;
+      right: 10px;
+      max-width: calc(100vw - 40px);
+    }
+  }
+</style>
+
+<div class="global-voice-recorder">
+  <button class="voice-recorder-button" id="global-voice-btn" title="Click to start/stop voice recording">
+    <i class="fas fa-microphone"></i>
+  </button>
+  <div class="voice-status-indicator" id="voice-status-indicator"></div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const voiceBtn = document.getElementById('global-voice-btn');
+  const statusIndicator = document.getElementById('voice-status-indicator');
+  
+  let isListening = false;
+  let recognition = null;
+  let isProcessing = false;
+
+  // Check for Web Speech API support
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  
+  if (!SpeechRecognition) {
+    console.warn('⚠️ Speech Recognition not supported in this browser');
+    voiceBtn.disabled = true;
+    voiceBtn.title = 'Speech Recognition not supported in your browser. Please use Chrome or Edge.';
+    voiceBtn.style.opacity = '0.5';
+    voiceBtn.style.cursor = 'not-allowed';
+  } else {
+    // Initialize Speech Recognition
+    recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.language = 'en-US';
+
+    recognition.onstart = function() {
+      isListening = true;
+      voiceBtn.classList.add('listening');
+      statusIndicator.classList.add('listening');
+      showVoiceToast('🎤 Listening... Speak now!', 'listening');
+      console.log('🎤 Global voice recording started');
+    };
+
+    recognition.onend = function() {
+      isListening = false;
+      voiceBtn.classList.remove('listening');
+      statusIndicator.classList.remove('listening');
+      console.log('⏹️ Voice recording stopped');
+    };
+
+    recognition.onresult = function(event) {
+      let transcript = '';
+      
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+      
+      if (transcript.trim() && event.results[event.results.length - 1].isFinal) {
+        console.log('✅ Speech recognized:', transcript.trim());
+        voiceBtn.classList.remove('listening');
+        statusIndicator.classList.remove('listening');
+        
+        // Send to chatbot API
+        sendVoiceCommand(transcript.trim());
+      }
+    };
+
+    recognition.onerror = function(event) {
+      console.error('❌ Speech recognition error:', event.error);
+      voiceBtn.classList.remove('listening');
+      statusIndicator.classList.remove('listening');
+      
+      if (event.error === 'no-speech') {
+        showVoiceToast('❌ No speech detected. Please try again.', 'error');
+      } else if (event.error === 'network') {
+        showVoiceToast('❌ Network error. Please check your connection.', 'error');
+      } else {
+        showVoiceToast('❌ Error: ' + event.error, 'error');
+      }
+    };
+  }
+
+  // Voice button click handler
+  voiceBtn.addEventListener('click', () => {
+    if (!recognition) {
+      alert('⚠️ Speech Recognition not supported. Please use Chrome or Edge browser.');
+      return;
+    }
+
+    if (isListening) {
+      // Stop recording
+      console.log('🛑 Stopping voice recording');
+      recognition.stop();
+    } else {
+      // Start recording
+      console.log('🎤 Starting voice recording');
+      recognition.start();
+    }
+  });
+
+  // Send voice command to chatbot API
+  async function sendVoiceCommand(transcript) {
+    if (isProcessing) return;
+    
+    isProcessing = true;
+    showVoiceToast('📤 Sending command: "' + transcript + '"...', 'listening');
+    
+    try {
+      const response = await fetch('/api/chatbot/query/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({ query: transcript })
+      });
+
+      if (!response.ok) {
+        throw new Error('API request failed');
+      }
+
+      const data = await response.json();
+      console.log('📨 API Response:', data);
+
+      // Handle different response types
+      if (data.response_type === 'navigation') {
+        if (data.success && data.matched_route) {
+          showVoiceToast('✅ Navigating to: ' + data.matched_route.description, 'success');
+          setTimeout(() => {
+            window.location.href = data.matched_route.path;
+          }, 1000);
+        } else {
+          showVoiceToast('❌ ' + (data.message || 'Could not find that page'), 'error');
+        }
+      }
+      else if (data.response_type === 'scroll') {
+        if (data.success && data.scroll_direction) {
+          const scrollAmount = 500;
+          const scrollY = data.scroll_direction === 'down' 
+            ? window.scrollY + scrollAmount 
+            : Math.max(0, window.scrollY - scrollAmount);
+          
+          window.scrollTo({
+            top: scrollY,
+            behavior: 'smooth'
+          });
+          
+          showVoiceToast('✅ ' + (data.scroll_direction === 'down' ? '⬇️ Scrolling down' : '⬆️ Scrolling up'), 'success');
+        } else {
+          showVoiceToast('❌ ' + (data.message || 'Could not scroll'), 'error');
+        }
+      }
+      else if (data.response_type === 'form_fill') {
+        if (data.success && data.form_fields) {
+          showVoiceToast('✅ ' + (data.message || 'Form filled successfully'), 'success');
+          fillFormFields(data.form_schema, data.form_fields, data.button_to_click);
+        } else {
+          showVoiceToast('❌ ' + (data.message || 'Could not fill form'), 'error');
+        }
+      } 
+      else if (data.response_type === 'button_click') {
+        if (data.success && data.button_to_click) {
+          showVoiceToast('✅ ' + (data.message || 'Button clicked'), 'success');
+          clickButton(data.button_to_click);
+        } else {
+          showVoiceToast('❌ ' + (data.message || 'Could not click button'), 'error');
+        }
+      } 
+      else if (data.response_type === 'conversation') {
+        showVoiceToast('🤖 ' + (data.answer || data.message || 'Response received'), 'success');
+      }
+      else {
+        showVoiceToast('✅ ' + (data.message || 'Command processed'), 'success');
+      }
+    } catch (error) {
+      console.error('❌ Error sending voice command:', error);
+      showVoiceToast('❌ Error: Could not connect to API', 'error');
+    } finally {
+      isProcessing = false;
+    }
+  }
+
+  // Fill form fields utility
+  function fillFormFields(formSchema, formFields, buttonToClick) {
+    if (!formFields || Object.keys(formFields).length === 0) return;
+
+    try {
+      Object.keys(formFields).forEach(fieldName => {
+        const fieldValue = formFields[fieldName];
+        let inputElement = document.querySelector(`input[name="${fieldName}"], select[name="${fieldName}"], textarea[name="${fieldName}"]`);
+        
+        if (!inputElement && formSchema && formSchema.fields) {
+          const fieldSchema = formSchema.fields.find(f => f.name === fieldName);
+          if (fieldSchema && fieldSchema.id) {
+            inputElement = document.getElementById(fieldSchema.id);
+          }
+        }
+        
+        if (inputElement) {
+          const inputType = inputElement.type || inputElement.tagName.toLowerCase();
+          
+          if (inputType === 'checkbox') {
+            inputElement.checked = (fieldValue === true || fieldValue === 'true');
+          } else if (inputType === 'radio') {
+            const radioGroup = document.querySelectorAll(`input[name="${fieldName}"][value="${fieldValue}"]`);
+            if (radioGroup.length > 0) {
+              radioGroup[0].checked = true;
+            }
+          } else if (inputType === 'select' || inputElement.tagName === 'SELECT') {
+            inputElement.value = fieldValue;
+            inputElement.dispatchEvent(new Event('change', { bubbles: true }));
+          } else {
+            inputElement.value = fieldValue;
+            inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+        }
+      });
+      
+      if (buttonToClick && buttonToClick.toLowerCase() !== 'null') {
+        setTimeout(() => {
+          clickButton(buttonToClick);
+        }, 200);
+      }
+    } catch (error) {
+      console.error('Error filling form:', error);
+    }
+  }
+
+  // Click button utility
+  function clickButton(buttonText) {
+    const buttons = document.querySelectorAll('button, input[type="submit"]');
+    let foundButton = Array.from(buttons).find(btn => 
+      btn.textContent.trim().toLowerCase() === buttonText.toLowerCase() || 
+      btn.value.toLowerCase() === buttonText.toLowerCase()
+    );
+    
+    if (!foundButton) {
+      foundButton = document.querySelector('button[type="submit"]');
+    }
+    
+    if (foundButton) {
+      foundButton.click();
+    }
+  }
+
+  // Show toast notification
+  function showVoiceToast(message, type = 'listening') {
+    const existingToast = document.querySelector('.voice-toast');
+    if (existingToast) {
+      existingToast.remove();
+    }
+
+    const toast = document.createElement('div');
+    toast.className = 'voice-toast ' + type;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    // Auto remove after 4 seconds
+    setTimeout(() => {
+      toast.style.animation = 'slideOutToast 0.3s ease';
+      setTimeout(() => {
+        toast.remove();
+      }, 300);
+    }, 4000);
+  }
+
+  // Get CSRF token
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+});
+</script>
+
+<style>
+  @keyframes slideOutToast {
+    to {
+      transform: translateX(400px);
+      opacity: 0;
+    }
+  }
+</style>
