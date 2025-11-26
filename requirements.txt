@@ -1,6 +1,6 @@
 # Django and Web Framework
-Django
-
+Django>=5.0
+python-decouple
 
 # Flask APIs
 Flask
@@ -21,6 +21,29 @@ scipy
 pandas
 scikit-learn
 
+# AI and LLM Integration
+google-generativeai>=0.3.0
+
+# YAML Configuration
+PyYAML
+
 # Utilities
-requests
+requests>=2.31.0
 python-dotenv
+Pillow
+markdown
+
+# Email and Communication
+python-dateutil
+
+# Database
+psycopg2-binary
+
+# API and Serialization
+djangorestframework
+
+# Security
+cryptography
+
+# Development
+gunicorn

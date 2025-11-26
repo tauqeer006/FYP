@@ -60,6 +60,14 @@ urlpatterns = [
     path("patient_data/" , views.patients_data , name="patient_work"),
     path("patient_reports/" , views.All_patient_reports , name= "patient_report"),
     
+    ### new changes...
+    # Chatbot API
+    path('api/chatbot/query/', views.chatbot_query, name='chatbot_query'),
+    
+    # Password Reset API
+    path('api/password-reset/request/', views.request_password_reset, name='request_password_reset'),
+    path('api/password-reset/verify/', views.verify_reset_token, name='verify_reset_token'),
+    path('api/password-reset/confirm/', views.reset_password, name='reset_password'),
     
 ]
 if settings.DEBUG:  # Only serve media files in development

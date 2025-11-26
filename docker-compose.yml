@@ -53,10 +53,21 @@ services:
       dockerfile: Dockerfile.pose-api
     ports:
       - "5003:5003"
+    volumes:
+      - ./pose_cv:/app/pose_cv
     environment:
       - API_ENV=production
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - django-app
     networks:
       - fyp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5003/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   
 

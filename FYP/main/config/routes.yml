@@ -1,0 +1,719 @@
+# ============================================================================
+# FYP Django Project - COMPLETE Routes Configuration for Voice Chatbot
+# ============================================================================
+# This YAML file defines ALL available routes in the FYP medical system
+# with metadata for the AI voice chatbot to understand and navigate.
+#
+# Format:
+#   route_id:
+#     keywords: ["keyword1", "keyword2", ...] - Voice queries to match
+#     description: "What this page does"
+#     path: "/django-url-path/" - The actual URL to navigate to
+#     required_auth: true/false - Whether login is required
+#     user_roles: ["admin", "doctor", "patient"] - Who can access
+#     category: "Category Name" - For organization
+#     http_method: "GET|POST" - HTTP method
+#     icon: "icon-name" - For UI display
+# ============================================================================
+
+routes:
+  # ╔═══════════════════════════════════════════════════════════════════════╗
+  # ║              AUTHENTICATION & PUBLIC ROUTES (7 routes)               ║
+  # ╚═══════════════════════════════════════════════════════════════════════╝
+
+  homepage:
+    keywords: 
+      - "home"
+      - "main page"
+      - "welcome"
+      - "start"
+      - "homepage"
+      - "landing page"
+    description: "Main landing page of the FYP medical system"
+    path: "/"
+    required_auth: false
+    user_roles: ["admin", "doctor", "patient", "anonymous"]
+    category: "Authentication"
+    http_method: "GET"
+    icon: "home"
+
+  admin_login:
+    keywords: 
+      - "admin login"
+      - "administrator login"
+      - "admin sign in"
+      - "login as admin"
+    description: "Login page for administrators to access system management panel"
+    path: "/admin_login1/"
+    required_auth: false
+    user_roles: ["admin"]
+    category: "Authentication"
+    http_method: "GET|POST"
+    icon: "login"
+    form_schema:
+      action: "/admin_login1/"
+      method: "POST"
+      fields:
+        - name: "username"
+          type: "text"
+          label: "Username"
+          placeholder: "Enter username"
+          required: true
+        - name: "password"
+          type: "password"
+          label: "Password"
+          placeholder: "Password"
+          required: true
+      buttons:
+        - text: "Login"
+          type: "submit"
+          id: null
+
+  doctor_login:
+    keywords:
+      - "doctor login"
+      - "doctor sign in"
+      - "healthcare provider login"
+      - "physician login"
+      - "doctor access"
+    description: "Login for doctors and healthcare professionals to access diagnosis tools"
+    path: "/login/"
+    required_auth: false
+    user_roles: ["doctor"]
+    category: "Authentication"
+    http_method: "GET|POST"
+    icon: "medical"
+    form_schema:
+      action: "/login/"
+      method: "POST"
+      fields:
+        - name: "username"
+          id: "username"
+          type: "text"
+          label: "Username"
+          placeholder: "Enter email"
+          required: true
+        - name: "password"
+          id: "password"
+          type: "password"
+          label: "Password"
+          placeholder: "Password"
+          required: true
+      buttons:
+        - text: "Login"
+          type: "submit"
+          id: null
+
+  patient_login:
+    keywords:
+      - "patient login"
+      - "patient sign in"
+      - "patient portal"
+      - "patient access"
+    description: "Login for patients to access health records and exercise programs"
+    path: "/patient_login/"
+    required_auth: false
+    user_roles: ["patient"]
+    category: "Authentication"
+    http_method: "GET|POST"
+    icon: "patient"
+
+  signup:
+    keywords:
+      - "sign up"
+      - "register"
+      - "create account"
+      - "new account"
+      - "join the system"
+    description: "Create a new user account in the FYP system"
+    path: "/signup/"
+    required_auth: false
+    user_roles: ["all"]
+    category: "Authentication"
+    http_method: "GET|POST"
+    icon: "signup"
+    form_schema:
+      action: "/signup/"
+      method: "POST"
+      fields:
+        - name: "username"
+          type: "text"
+          label: "Full Name"
+          placeholder: "Full name"
+          required: true
+        - name: "email"
+          type: "email"
+          label: "Email Address"
+          placeholder: "Email address"
+          required: true
+        - name: "password"
+          type: "password"
+          label: "Password"
+          placeholder: "Password"
+          required: true
+        - name: "signupCheck"
+          id: "signupCheck"
+          type: "checkbox"
+          label: "I accept all terms & conditions"
+          required: false
+      buttons:
+        - text: "Signup"
+          type: "submit"
+          id: null
+
+  logout:
+    keywords:
+      - "logout"
+      - "sign out"
+      - "exit"
+      - "disconnect"
+      - "goodbye"
+    description: "Logout from the current session and return to home"
+    path: "/logout/"
+    required_auth: true
+    user_roles: ["admin", "doctor", "patient"]
+    category: "Authentication"
+    http_method: "GET"
+    icon: "logout"
+
+  logout_doctor:
+    keywords:
+      - "logout doctor"
+      - "doctor logout"
+      - "exit doctor session"
+    description: "Logout from doctor session"
+    path: "/logout_doctor/"
+    required_auth: true
+    user_roles: ["doctor"]
+    category: "Authentication"
+    http_method: "GET"
+    icon: "logout"
+
+  patient_logout:
+    keywords:
+      - "patient logout"
+      - "exit patient"
+      - "logout from patient"
+    description: "Logout from patient session"
+    path: "/patient_logouts"
+    required_auth: true
+    user_roles: ["patient"]
+    category: "Authentication"
+    http_method: "GET"
+    icon: "logout"
+
+  # ╔═══════════════════════════════════════════════════════════════════════╗
+  # ║                  ADMIN ROUTES (7 routes)                             ║
+  # ╚═══════════════════════════════════════════════════════════════════════╝
+
+  admin_dashboard:
+    keywords:
+      - "admin dashboard"
+      - "dashboard"
+      - "admin panel"
+      - "show dashboard"
+      - "admin home"
+    description: "Admin dashboard with user management, analytics, and system control"
+    path: "/index_admin/"
+    required_auth: true
+    user_roles: ["admin"]
+    category: "Admin"
+    http_method: "GET"
+    icon: "dashboard"
+
+  add_user:
+    keywords:
+      - "add user"
+      - "add doctor"
+      - "add patient"
+      - "create user"
+      - "new user"
+      - "register user"
+    description: "Add a new user (doctor or patient) to the system"
+    path: "/add_user/"
+    required_auth: true
+    user_roles: ["admin"]
+    category: "Admin"
+    http_method: "GET|POST"
+    icon: "add-user"
+
+  manage_users:
+    keywords:
+      - "manage users"
+      - "user management"
+      - "manage accounts"
+      - "view users"
+      - "all users"
+      - "user list"
+    description: "View and manage all users in the system (doctors, patients, admins)"
+    path: "/manage_user/"
+    required_auth: true
+    user_roles: ["admin"]
+    category: "Admin"
+    http_method: "GET"
+    icon: "manage"
+
+  analytics:
+    keywords:
+      - "analytics"
+      - "graphs"
+      - "statistics"
+      - "charts"
+      - "data analysis"
+      - "metrics"
+    description: "View system analytics, statistical graphs and performance metrics"
+    path: "/graphs"
+    required_auth: true
+    user_roles: ["admin"]
+    category: "Admin"
+    http_method: "GET"
+    icon: "chart"
+
+  all_records:
+    keywords:
+      - "all records"
+      - "all data"
+      - "view all records"
+      - "data records"
+      - "system records"
+    description: "View all records and data stored in the system"
+    path: "/records/"
+    required_auth: true
+    user_roles: ["admin"]
+    category: "Admin"
+    http_method: "GET"
+    icon: "records"
+
+  remove_doctor:
+    keywords:
+      - "remove doctor"
+      - "delete doctor"
+      - "doctor removal"
+      - "delete physician"
+    description: "Remove or delete a doctor from the system"
+    path: "/delete-doctor/{doctor_id}/"
+    required_auth: true
+    user_roles: ["admin"]
+    category: "Admin"
+    http_method: "GET"
+    icon: "delete"
+    parameters:
+      doctor_id: "Numeric doctor ID"
+
+  toggle_patient_dashboard:
+    keywords:
+      - "toggle patient"
+      - "toggle visibility"
+      - "show hide patient"
+    description: "Toggle patient visibility on dashboard"
+    path: "/toggle_dashboard/{patient_idx}/"
+    required_auth: true
+    user_roles: ["admin"]
+    category: "Admin"
+    http_method: "GET"
+    icon: "toggle"
+    parameters:
+      patient_idx: "Numeric patient ID"
+
+  # ╔═══════════════════════════════════════════════════════════════════════╗
+  # ║                DOCTOR ROUTES (8 routes)                              ║
+  # ╚═══════════════════════════════════════════════════════════════════════╝
+
+  diagnosis:
+    keywords:
+      - "diagnosis"
+      - "diagnose"
+      - "fracture detection"
+      - "x-ray analysis"
+      - "medical diagnosis"
+      - "analyze"
+      - "detection"
+    description: "Doctor's main page to analyze X-ray images and detect shoulder fractures"
+    path: "/diagnosis/"
+    required_auth: true
+    user_roles: ["doctor"]
+    category: "Doctor"
+    http_method: "GET"
+    icon: "diagnosis"
+
+  add_patient_record:
+    keywords:
+      - "add patient"
+      - "new patient"
+      - "register patient"
+      - "patient record"
+      - "create patient"
+      - "patient registration"
+    description: "Add a new patient record with medical history and contact details"
+    path: "/add_patient_record/"
+    required_auth: true
+    user_roles: ["doctor"]
+    category: "Doctor"
+    http_method: "GET|POST"
+    icon: "patient"
+    form_schema:
+      action: "/add_patient_record/"
+      method: "POST"
+      fields:
+        - name: "fname"
+          id: "firstName"
+          type: "text"
+          label: "Username"
+          placeholder: "Enter first name"
+          required: true
+        - name: "lname"
+          id: "lastName"
+          type: "text"
+          label: "Password"
+          placeholder: "Enter last name"
+          required: true
+        - name: "dob"
+          id: "dateOfBirth"
+          type: "date"
+          label: "Date of Birth"
+          required: true
+        - name: "gender"
+          id: "gender"
+          type: "select"
+          label: "Gender"
+          options: ["M", "F", "O"]
+          option_labels: ["Male", "Female", "Other"]
+          required: true
+        - name: "parents"
+          id: "parentName"
+          type: "text"
+          label: "Parent/Guardian Name"
+          placeholder: "Enter parent/guardian name"
+          required: true
+        - name: "contact_number"
+          id: "contactNumber"
+          type: "tel"
+          label: "Contact Number"
+          placeholder: "Enter contact number"
+          required: true
+        - name: "email"
+          id: "email"
+          type: "email"
+          label: "Email Address"
+          placeholder: "Enter email"
+          required: false
+        - name: "address"
+          id: "address"
+          type: "text"
+          label: "Address"
+          placeholder: "Enter address"
+          required: false
+        - name: "medical_history"
+          id: "medicalHistory"
+          type: "textarea"
+          label: "Medical History"
+          placeholder: "Any relevant medical history, allergies, or conditions..."
+          required: false
+      buttons:
+        - text: "Add Patient"
+          type: "submit"
+          id: null
+
+  patients_list:
+    keywords:
+      - "patients list"
+      - "view patients"
+      - "all patients"
+      - "patient directory"
+      - "my patients"
+      - "show patients"
+    description: "View list of all patients assigned to this doctor"
+    path: "/patients/"
+    required_auth: true
+    user_roles: ["doctor"]
+    category: "Doctor"
+    http_method: "GET"
+    icon: "list"
+
+  predict_diagnosis:
+    keywords:
+      - "predict"
+      - "fracture prediction"
+      - "predict fracture"
+      - "analyze x-ray"
+      - "detect fracture"
+      - "upload x-ray"
+    description: "Predict and analyze fracture type from uploaded X-ray images"
+    path: "/predict/"
+    required_auth: true
+    user_roles: ["doctor"]
+    category: "Doctor"
+    http_method: "GET|POST"
+    icon: "predict"
+    form_schema:
+      action: "/predict/"
+      method: "POST"
+      enctype: "multipart/form-data"
+      fields:
+        - name: "patient_id"
+          id: "patientSelect"
+          type: "select"
+          label: "Select Patient"
+          required: true
+          options: "dynamic_from_context"
+          dynamic_data_source: "patients"
+        - name: "patient_name"
+          id: "patientName"
+          type: "text"
+          label: "Patient Name"
+          readonly: true
+          required: false
+        - name: "patient_age"
+          id: "patientAge"
+          type: "text"
+          label: "Age"
+          readonly: true
+          required: false
+        - name: "patient_id_display"
+          id: "patientId"
+          type: "text"
+          label: "Patient ID"
+          readonly: true
+          required: false
+        - name: "xray_images"
+          type: "file"
+          label: "Upload X-Ray Images"
+          accept: "image/*"
+          multiple: true
+          required: true
+          helper_text: "You can upload multiple X-ray image files (JPG, PNG, etc.)"
+      buttons:
+        - text: "Predict Diagnosis"
+          type: "submit"
+          id: null
+      dynamic_fill_scripts:
+        - trigger: "on_select_change"
+          selector: "#patientSelect"
+          fill_fields: ["#patientName", "#patientAge", "#patientId"]
+          data_attributes: ["data-name", "data-age"]
+
+  generate_report:
+    keywords:
+      - "generate report"
+      - "medical report"
+      - "create report"
+      - "diagnostic report"
+      - "fracture report"
+    description: "Generate comprehensive AI-powered medical diagnostic report"
+    path: "/Report/"
+    required_auth: true
+    user_roles: ["doctor"]
+    category: "Doctor"
+    http_method: "GET|POST"
+    icon: "report"
+
+  exercise_videos:
+    keywords:
+      - "exercise videos"
+      - "rehabilitation videos"
+      - "therapy videos"
+      - "exercise guide"
+      - "show videos"
+      - "video recommendations"
+    description: "View rehabilitation exercise videos and recommendations for patients"
+    path: "/video_Recommendation"
+    required_auth: true
+    user_roles: ["doctor", "patient"]
+    category: "Exercise"
+    http_method: "GET"
+    icon: "video"
+
+  exercise_monitoring:
+    keywords:
+      - "exercise monitoring"
+      - "monitor exercise"
+      - "pose detection"
+      - "form check"
+      - "real-time monitoring"
+      - "watch exercise"
+    description: "Real-time monitoring of patient exercise form and posture"
+    path: "/Montoring_Exericse/"
+    required_auth: true
+    user_roles: ["doctor"]
+    category: "Exercise"
+    http_method: "GET"
+    icon: "monitor"
+
+  process_frame:
+    keywords:
+      - "process frame"
+      - "frame processing"
+      - "analyze frame"
+      - "process video"
+    description: "Process video frames for exercise analysis"
+    path: "/process_frame/"
+    required_auth: true
+    user_roles: ["doctor"]
+    category: "Exercise"
+    http_method: "POST"
+    icon: "process"
+
+  display_videos:
+    keywords:
+      - "display video"
+      - "show video"
+      - "video by disease"
+      - "exercise video"
+    description: "Display exercise videos for specific disease category"
+    path: "/Recommend_video/{disease}/"
+    required_auth: true
+    user_roles: ["doctor", "patient"]
+    category: "Exercise"
+    http_method: "GET"
+    icon: "video"
+    parameters:
+      disease: "Disease type (fracture, boneanomaly, etc.)"
+
+  # ╔═══════════════════════════════════════════════════════════════════════╗
+  # ║                PATIENT ROUTES (6 routes)                             ║
+  # ╚═══════════════════════════════════════════════════════════════════════╝
+
+  patient_dashboard:
+    keywords:
+      - "patient dashboard"
+      - "my dashboard"
+      - "dashboard"
+      - "patient home"
+      - "my home"
+    description: "Patient's main dashboard showing health information and progress"
+    path: "/Patient_dashboard/"
+    required_auth: true
+    user_roles: ["patient"]
+    category: "Patient"
+    http_method: "GET"
+    icon: "dashboard"
+
+  user_profile:
+    keywords:
+      - "user profile"
+      - "my profile"
+      - "edit profile"
+      - "patient data"
+      - "my information"
+      - "profile settings"
+    description: "View and edit patient profile information and medical history"
+    path: "/patient_Data"
+    required_auth: true
+    user_roles: ["patient"]
+    category: "Patient"
+    http_method: "GET|POST"
+    icon: "profile"
+
+  patient_reports:
+    keywords:
+      - "patient reports"
+      - "my reports"
+      - "medical records"
+      - "health history"
+      - "generated reports"
+      - "my documents"
+    description: "View all generated medical reports and health documents"
+    path: "/patient_reports/"
+    required_auth: true
+    user_roles: ["patient"]
+    category: "Patient"
+    http_method: "GET"
+    icon: "report"
+
+  user_report_detail:
+    keywords:
+      - "user report"
+      - "complete report"
+      - "detailed report"
+      - "full report"
+    description: "View detailed patient report information"
+    path: "/patient_complete_report"
+    required_auth: true
+    user_roles: ["patient"]
+    category: "Patient"
+    http_method: "GET"
+    icon: "detail"
+
+  detailed_history:
+    keywords:
+      - "detailed history"
+      - "complete history"
+      - "medical history"
+      - "past records"
+      - "history"
+    description: "View detailed medical history and past treatment records"
+    path: "/patient_complete_report"
+    required_auth: true
+    user_roles: ["patient"]
+    category: "Patient"
+    http_method: "POST"
+    icon: "history"
+
+  patient_exercise_videos:
+    keywords:
+      - "patient exercise videos"
+      - "my exercise videos"
+      - "rehabilitation"
+      - "my therapy"
+      - "exercise program"
+    description: "View assigned exercise videos and rehabilitation program"
+    path: "/video_Recommendation"
+    required_auth: true
+    user_roles: ["patient"]
+    category: "Exercise"
+    http_method: "GET"
+    icon: "video"
+
+  # ╔═══════════════════════════════════════════════════════════════════════╗
+  # ║                  API ROUTES (3 routes)                               ║
+  # ╚═══════════════════════════════════════════════════════════════════════╝
+
+  api_patients:
+    keywords:
+      - "api patients"
+      - "patients api"
+      - "patient data api"
+      - "api data"
+    description: "API endpoint to fetch all patients in JSON format"
+    path: "/api/patients/"
+    required_auth: true
+    user_roles: ["doctor", "admin"]
+    category: "API"
+    http_method: "GET"
+    icon: "api"
+
+  api_patient_data:
+    keywords:
+      - "patient data api"
+      - "api patient data"
+      - "get patient data"
+      - "patient data json"
+    description: "API endpoint to fetch patient data in JSON format"
+    path: "/patient_data/"
+    required_auth: true
+    user_roles: ["doctor", "admin"]
+    category: "API"
+    http_method: "GET"
+    icon: "api"
+
+  # ╔═══════════════════════════════════════════════════════════════════════╗
+  # ║                 SUMMARY OF ALL ROUTES                                ║
+  # ╚═══════════════════════════════════════════════════════════════════════╝
+
+# TOTAL ROUTES: 35
+# Categories:
+#   Authentication: 8 routes (homepage, admin_login, doctor_login, patient_login, signup, logout, logout_doctor, patient_logout)
+#   Admin: 7 routes (admin_dashboard, add_user, manage_users, analytics, all_records, remove_doctor, toggle_patient_dashboard)
+#   Doctor: 9 routes (diagnosis, add_patient_record, patients_list, predict_diagnosis, generate_report, exercise_videos, exercise_monitoring, process_frame, display_videos)
+#   Patient: 6 routes (patient_dashboard, user_profile, patient_reports, user_report_detail, detailed_history, patient_exercise_videos)
+#   Exercise: Shared between Doctor and Patient
+#   API: 2 routes (api_patients, api_patient_data)
+#
+# USAGE EXAMPLES:
+#   "Show me the admin dashboard" → admin_dashboard → /index_admin/
+#   "Patient login" → patient_login → /patient_login/
+#   "Add new patient" → add_patient_record → /add_patient_record/
+#   "Analyze x-ray" → predict_diagnosis → /predict/
+#   "Show my reports" → patient_reports → /patient_reports/
+#   "Exercise videos" → exercise_videos → /video_Recommendation
+#   "Logout" → logout → /logout/

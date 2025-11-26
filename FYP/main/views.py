@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model , login
 from django.contrib.auth import authenticate,login as auth_login , logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
 import os
 from django.conf import settings
 from django.http import JsonResponse
@@ -16,7 +18,14 @@ from django.core.mail import send_mail
 import requests
 import markdown
 import logging
+import json
 import matplotlib.pyplot as plt
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.urls import reverse
+import uuid
 import io
 import urllib, base64
 from datetime import datetime
@@ -617,7 +626,7 @@ def Report(request):
         this fracture ocurrs and in how many week it takes to get good 
         """
 
-        api_key = "AIzaSyBXyZU6rOgwXtMSywB1ku-bAfq1JiIjsPM"
+        api_key = "AIzaSyAw0_LNo3c1dLn0CHh0C0tEbe2-DBmerv8"
         url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
 
         headers = {
@@ -738,7 +747,7 @@ def Report(request):
         result = response.json()
         summary = result['candidates'][0]['content']['parts'][0]['text']
         logging.info("My Summary is:")
-        #logging.info(summary)
+        logging.info(summary)
 
 
 
@@ -802,26 +811,32 @@ def Report(request):
             ContentFile(buffer.getvalue())
         )
         logging.info("Insetion has been done")
-        
 
 
+        return render(request, 'Report.html', {
+            'report': latest_report,
+            'prompt1': markdown.markdown(generated_report),
+            'test_results': test_results,
+            'summary': markdown.markdown(summary),
+            'recommendation' : markdown.markdown(recommendation)
+        })
     except PatientXRayInfo.DoesNotExist:
-        latest_report = None
-        generated_report = "No report found."
+        return render(request, 'Report.html', {
+            'report': None,
+            'prompt1': "No report found.",
+            'test_results': [],
+            'summary': "",
+            'recommendation': ""
+        })
 
     except Exception as e:
-        generated_report = f"Error generating report: {str(e)}"
-
-
-
-
-    return render(request, 'Report.html', {
-        'report': latest_report,
-        'prompt1': markdown.markdown(generated_report),
-        'test_results': test_results,
-        'summary': markdown.markdown(summary),
-        'recommendation' : markdown.markdown(recommendation)
-    })
+        return render(request, 'Report.html', {
+            'report': None,
+            'prompt1': f"Error generating report: {str(e)}",
+            'test_results': [],
+            'summary': "",
+            'recommendation': ""
+        })
 
 
 def list_all_doctors(requests):
@@ -1002,8 +1017,326 @@ def process_frame(request):
             sequence = np.array(frame_buffer)
             feedback, confidence, error = check_exercise_quality(sequence)
 
+
         return JsonResponse({
             'feedback': feedback,
             'confidence': float(confidence),
             'error': float(error)
         })
+
+
+# =====================================================
+# CHATBOT API ENDPOINT
+# =====================================================
+
+from main.services.chatbot_service import get_chatbot_service
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def chatbot_query(request):
+    """
+    API endpoint for chatbot query processing
+    
+    Receives a user query, processes it through Gemini AI with RAG on routes.yml,
+    and returns the matched route path
+    
+    Request:
+        POST /api/chatbot/query/
+        {
+            "query": "user text query"
+        }
+    
+    Response:
+        {
+            "success": true/false,
+            "matched_route": {...route info...},
+            "path": "/url/path/",
+            "message": "Navigation message",
+            "reason": "Why this route was matched"
+        }
+    """
+    try:
+        # Parse request JSON
+        data = json.loads(request.body)
+        user_query = data.get('query', '').strip()
+        
+        if not user_query:
+            return JsonResponse({
+                'success': False,
+                'message': 'Query cannot be empty',
+                'matched_route': None,
+                'path': None
+            }, status=400)
+        
+        # Get user roles (if user is authenticated)
+        user_roles = ['anonymous']
+        if request.user.is_authenticated:
+            if request.user.is_staff or request.user.is_superuser:
+                user_roles = ['admin']
+            else:
+                # Check if user is a doctor or patient (based on your models)
+                user_roles = ['doctor', 'patient']  # You may need to adjust this based on your User model
+        
+        # Get chatbot service and process query
+        chatbot_service = get_chatbot_service()
+        result = chatbot_service.process_query(user_query, user_roles)
+        
+        # Return result
+        status_code = 200 if result.get('success') else 206  # 206 = Partial Content (fallback used)
+        return JsonResponse(result, status=status_code)
+    
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'message': 'Invalid JSON in request body',
+            'matched_route': None,
+            'path': None
+        }, status=400)
+    
+    except Exception as e:
+        logger.error(f"Error in chatbot_query endpoint: {str(e)}")
+        return JsonResponse({
+            'success': False,
+            'message': 'An error occurred while processing your request',
+            'matched_route': None,
+            'path': None,
+            'error': str(e)
+        }, status=500)
+
+
+# =====================================================
+# PASSWORD RESET FUNCTIONALITY
+# =====================================================
+
+import logging
+logger = logging.getLogger(__name__)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def request_password_reset(request):
+    """
+    Handle password reset request
+    Request: POST /api/password-reset/request/
+    Body: {"email": "user@example.com"}
+    """
+    try:
+        data = json.loads(request.body)
+        email = data.get('email', '').strip()
+        
+        if not email:
+            return JsonResponse({
+                'success': False,
+                'message': 'Email is required'
+            }, status=400)
+        
+        # Check if user exists by email in User model
+        try:
+            user = User.objects.get(email=email)
+            logger.info(f"Password reset requested for user: {user.username} ({email})")
+        except User.DoesNotExist:
+            # For security, don't reveal if email exists
+            logger.warning(f"Password reset requested for non-existent email: {email}")
+            return JsonResponse({
+                'success': True,
+                'message': 'If an account exists with this email, you will receive a password reset link shortly.'
+            }, status=200)
+        
+        # Generate reset token
+        reset_token = str(uuid.uuid4())
+        user.reset_token = reset_token
+        user.reset_token_created = datetime.now()
+        user.save()
+        logger.info(f"Reset token generated for user: {user.username}")
+        
+        # Send reset email with token
+        subject = "Password Reset Request - X-Ai Medical Center"
+        message = f"""
+Hello {user.username},
+
+You have requested to reset your password. Use the token below to reset your password:
+
+PASSWORD RESET TOKEN:
+{reset_token}
+
+Copy this token and enter it in the password reset form to set your new password.
+
+This token will expire in 24 hours.
+
+If you did not request this, please ignore this email.
+
+Best regards,
+X-Ai Medical Center Team
+"""
+        
+        try:
+            send_mail(
+                subject, 
+                message, 
+                'tauqeerqureshi112@gmail.com', 
+                [email],
+                fail_silently=False
+            )
+            logger.info(f"Password reset email sent successfully to: {email}")
+        except Exception as email_error:
+            logger.error(f"Failed to send password reset email to {email}: {email_error}")
+            # Still return success to not reveal email configuration issues
+            # But log it for debugging
+            pass
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Check your email for the password reset token. You will need to enter it in the next step.'
+        }, status=200)
+    
+    except json.JSONDecodeError:
+        logger.error("Invalid JSON in password reset request")
+        return JsonResponse({
+            'success': False,
+            'message': 'Invalid JSON in request'
+        }, status=400)
+    except Exception as e:
+        logger.error(f"Unexpected error in password reset request: {e}")
+        return JsonResponse({
+            'success': False,
+            'message': 'An error occurred while processing your request'
+        }, status=500)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def verify_reset_token(request):
+    """
+    Verify if reset token is valid
+    Request: POST /api/password-reset/verify/
+    Body: {"token": "reset_token"}
+    """
+    try:
+        data = json.loads(request.body)
+        token = data.get('token', '').strip()
+        
+        if not token:
+            return JsonResponse({
+                'success': False,
+                'message': 'Token is required'
+            }, status=400)
+        
+        # Check if token exists and is not expired (24 hour validity)
+        try:
+            user = User.objects.get(reset_token=token)
+            
+            # Check if token is still valid (24 hours)
+            if user.reset_token_created:
+                time_diff = datetime.now() - user.reset_token_created
+                if time_diff.total_seconds() > 86400:  # 24 hours in seconds
+                    return JsonResponse({
+                        'success': False,
+                        'message': 'Reset token has expired. Please request a new one.'
+                    }, status=400)
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Token is valid',
+                'username': user.username
+            }, status=200)
+        
+        except User.DoesNotExist:
+            return JsonResponse({
+                'success': False,
+                'message': 'Invalid reset token'
+            }, status=400)
+    
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'message': 'An error occurred'
+        }, status=500)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def reset_password(request):
+    """
+    Reset password with valid token
+    Request: POST /api/password-reset/confirm/
+    Body: {"token": "reset_token", "new_password": "password", "confirm_password": "password"}
+    """
+    try:
+        data = json.loads(request.body)
+        token = data.get('token', '').strip()
+        new_password = data.get('new_password', '').strip()
+        confirm_password = data.get('confirm_password', '').strip()
+        
+        # Validate inputs
+        if not token or not new_password or not confirm_password:
+            return JsonResponse({
+                'success': False,
+                'message': 'All fields are required'
+            }, status=400)
+        
+        if new_password != confirm_password:
+            return JsonResponse({
+                'success': False,
+                'message': 'Passwords do not match'
+            }, status=400)
+        
+        if len(new_password) < 6:
+            return JsonResponse({
+                'success': False,
+                'message': 'Password must be at least 6 characters long'
+            }, status=400)
+        
+        # Find user with reset token
+        try:
+            user = User.objects.get(reset_token=token)
+            
+            # Check token expiry again
+            if user.reset_token_created:
+                time_diff = datetime.now() - user.reset_token_created
+                if time_diff.total_seconds() > 86400:
+                    return JsonResponse({
+                        'success': False,
+                        'message': 'Reset token has expired'
+                    }, status=400)
+            
+            # Update password
+            user.set_password(new_password)
+            user.reset_token = None
+            user.reset_token_created = None
+            user.save()
+            
+            # Send confirmation email
+            subject = "Password Reset Successful - X-Ai Medical Center"
+            message = f"""
+Hello {user.username},
+
+Your password has been successfully reset. You can now log in with your new password.
+
+If you did not perform this action, please contact support immediately.
+
+Best regards,
+X-Ai Medical Center Team
+"""
+            send_mail(subject, message, 'tauqeerqureshi112@gmail.com', [user.email])
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Password has been reset successfully. You can now log in.'
+            }, status=200)
+        
+        except User.DoesNotExist:
+            return JsonResponse({
+                'success': False,
+                'message': 'Invalid reset token'
+            }, status=400)
+    
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'message': 'Invalid JSON in request'
+        }, status=400)
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'message': f'An error occurred: {str(e)}'
+        }, status=500)
+

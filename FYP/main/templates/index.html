@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
-    <title>X-Ai Pediatric Diagnostic System</title>
+    <title>X-Ai Medical Center - Pakistan | Advanced Diagnostic Services</title>
 
     <!-- Favicon -->
     <link rel="icon" href="{% static 'img/favicon.png' %}">
@@ -34,9 +34,10 @@
     <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'main_page/main-page-styles.css' %}">
 </head>
 
-<body>
+<body style="background-color: #f8f9fa;">
 
     <!-- Preloader -->
     <div class="preloader">
@@ -51,20 +52,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Chat Bot Panel -->
-    <ul class="pro-features chat-bot-box">
-        <li class="big-title">💬 AI Voice Chat Bot</li>
-        <li class="title">Your Virtual Health Assistant</li>
-        <li>Ask health questions in real-time</li>
-        <li>Get voice-based diagnostic guidance</li>
-        <li>Instant answers using AI-powered voice</li>
-        <li>24/7 patient support with natural conversation</li>
-        <li>Seamless interaction via microphone</li>
-        <div class="button">
-            <a class="get-pro" href="#">🎤 Let's Talk</a>
-        </div>
-    </ul>
 
     <!-- Header Area -->
     <header class="header">
@@ -82,8 +69,9 @@
                     </div>
                     <div class="col-lg-6 col-md-7 col-12">
                         <ul class="top-contact">
-                            <li><i class="fa fa-phone"></i>+880 1234 56789</li>
-                            <li><i class="fa fa-envelope"></i><a href="mailto:support@yourmail.com">support@yourmail.com</a></li>
+                            <li><i class="fa fa-phone"></i><strong>0304-5450049</strong></li>
+                            <li><i class="fa fa-envelope"></i><a href="mailto:tauqeerqureshi112@gmail.com">tauqeerqureshi112@gmail.com</a></li>
+                            <li><i class="fa fa-map-marker"></i><strong>Pakistan</strong></li>
                         </ul>
                     </div>
                 </div>
@@ -144,16 +132,52 @@
         </div>
     </header>
 
+    <!-- Hospital Info Section -->
+    <section class="hospital-info" style="background: linear-gradient(135deg, #f1f1f1 0%, #e6e5e8 100%); padding: 40px 0; color: white;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 style="margin: 0 0 20px 0; font-size: 2.5em;">Welcome to X-Ai Medical Center</h2>
+                    <p style="font-size: 1.1em; margin-bottom: 15px;">
+                        🏥 Advanced Diagnostic & Rehabilitation Services in Pakistan
+                    </p>
+                    <p style="margin-bottom: 20px;">
+                        We combine cutting-edge AI technology with compassionate healthcare to provide you with the best medical services. 
+                        Our team of dedicated doctors and healthcare professionals are committed to your wellness.
+                    </p>
+                    <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+                        <div>
+                            <h4 style="margin: 0;">📞 Phone</h4>
+                            <p style="margin: 5px 0 0 0; font-size: 1.1em;"><strong>0304-5450049</strong></p>
+                        </div>
+                        <div>
+                            <h4 style="margin: 0;">📧 Email</h4>
+                            <p style="margin: 5px 0 0 0; font-size: 1.1em;"><strong>tauqeerqureshi112@gmail.com</strong></p>
+                        </div>
+                        <div>
+                            <h4 style="margin: 0;">📍 Location</h4>
+                            <p style="margin: 5px 0 0 0; font-size: 1.1em;"><strong>Pakistan</strong></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" style="text-align: center;">
+                    <img src="{% static 'main_page/hospital.jpg' %}" alt="X-Ai Medical Center" style="max-width: 100%; height: auto; max-height: 350px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Slider Area -->
     <section class="slider">
         <div class="hero-slider">
-<div class="single-slider" style="background-image:url('{% static 'img/slider2.jpg' %}');">
+            <!-- Slide 1: Doctor 1 -->
+            <div class="single-slider" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.7) 0%, rgba(118, 75, 162, 0.7) 100%), url('{% static 'main_page/doc 1.jpg' %}'); background-size: cover; background-position: center;">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-7">
                             <div class="text">
-                                <h1>We Provide <span>Medical</span> Services You Can <span>Trust</span></h1>
-                                <p>We offer reliable healthcare with skilled professionals dedicated to your well-being.</p>
+                                <h1>Welcome to <span>X-Ai Medical</span> Center <span>Pakistan</span></h1>
+                                <p>🏥 Expert Pakistani Medical Team - State-of-the-art AI diagnostic services for your complete healthcare needs.</p>
                                 <div class="button">
                                     <a href="#" class="btn primary">Learn More</a>
                                 </div>
@@ -162,47 +186,43 @@
                     </div>
                 </div>
             </div>
-			<!-- End Single Slider -->
-			<!-- Start Single Slider -->
-            <div class="single-slider" style="background-image:url('{% static 'img/slider.jpg' %}')">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-7">
-							<div class="text">
-								<h1>We Provide <span>Medical</span> Services That You Can <span>Trust!</span></h1>
-<p>We offer reliable healthcare with skilled professionals dedicated to your well-being.</p>
-
-								<div class="button">
-									<!-- <a href="#" class="btn">Get Appointment</a> -->
-									<a href="#" class="btn primary">About Us</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- Start End Slider -->
-			<!-- Start Single Slider -->
-            <div class="single-slider" style="background-image:url('{% static 'img/slider3.jpg' %}')">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-7">
-							<div class="text">
-								<h1>We Provide <span>Medical</span> Services That You Can <span>Trust!</span></h1>
-<p>We offer reliable healthcare with skilled professionals dedicated to your well-being.</p>
-
-								<div class="button">
-									<!-- <a href="#" class="btn">Get Appointment</a> -->
-									<a href="#" class="btn primary">Conatct Now</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- End Single Slider -->
-		</div>
-	</section>
+            <!-- End Single Slider -->
+            <!-- Start Single Slider -->
+            <div class="single-slider" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.7) 0%, rgba(118, 75, 162, 0.7) 100%), url('{% static 'main_page/doc 2.jpg' %}'); background-size: cover; background-position: center;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div class="text">
+                                <h1>Advanced <span>AI Technology</span> Meets <span>Expert Care</span></h1>
+                                <p>💡 Our team of experienced Pakistani doctors combines cutting-edge artificial intelligence with compassionate medical expertise.</p>
+                                <div class="button">
+                                    <a href="#" class="btn primary">About Our Doctors</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Single Slider -->
+            <!-- Start Single Slider -->
+            <div class="single-slider" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.7) 0%, rgba(118, 75, 162, 0.7) 100%), url('{% static 'main_page/doc 1.jpg' %}'); background-size: cover; background-position: center;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div class="text">
+                                <h1>Precision <span>Diagnostics</span> with <span>AI Power</span></h1>
+                                <p>🔬 Rapid and accurate fracture detection and medical imaging analysis by our qualified Pakistani medical professionals.</p>
+                                <div class="button">
+                                    <a href="#" class="btn primary">Book Consultation</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Single Slider -->
+        </div>
+    </section>
 	<!--/ End Slider Area -->
 
 	<!-- Start Schedule Area -->
@@ -287,8 +307,8 @@
 						<div class="signle-icon">
 							<i class="icofont icofont-ambulance-cross"></i>
 						</div>
-						<h3>Better Diagnosis</h3>
-						<p>"Detect More. Diagnose Better. Treat Smarter.</p>
+						<h3>Advanced AI Diagnosis</h3>
+						<p>Detect fractures and abnormalities with cutting-edge artificial intelligence technology for faster and more accurate diagnosis.</p>
 					</div>
 					<!-- End Single features -->
 				</div>
@@ -298,8 +318,8 @@
 						<div class="signle-icon">
 							<i class="icofont icofont-medical-sign-alt"></i>
 						</div>
-						<h3>Improve Care</h3>
-						<p>"Bringing Clarity to Diagnosis with Intelligent X-ray Analysis..</p>
+						<h3>Comprehensive Care</h3>
+						<p>We provide complete diagnostic services combined with personalized treatment plans and professional medical guidance from our expert team.</p>
 					</div>
 					<!-- End Single features -->
 				</div>
@@ -309,8 +329,8 @@
 						<div class="signle-icon">
 							<i class="icofont icofont-stethoscope"></i>
 						</div>
-						<h3>Care For You</h3>
-						<p>"From Image to Insight – Advancing Diagnostic Accuracy.".</p>
+						<h3>Patient Support</h3>
+						<p>From initial consultation to recovery, we stand by you at every step with compassionate care and professional expertise.</p>
 					</div>
 					<!-- End Single features -->
 				</div>
@@ -378,10 +398,10 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="section-title">
-						<h2>We Offer Different Services To Improve Your Health</h2>
+						<h2>Your Trusted Partner in Health & Wellness</h2>
 
                         <img src="{% static 'img/section-img.png' %}" alt="#">
-						<p>Lorem ipsum dolor sit amet consectetur adipiscing elit praesent aliquet. pretiumts</p>
+						<p>Advanced AI-powered diagnostic and rehabilitation services for your complete health journey</p>
 					</div>
 				</div>
 			</div>
@@ -389,24 +409,23 @@
 				<div class="col-lg-6 col-12">
 					<!-- Start Choose Left -->
 					<div class="choose-left">
-						<h3>Who We Are</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas pharetra antege vel est
-							lobortis, a commodo magna rhoncus. In quis nisi non emet quam pharetra commodo. </p>
-						<p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+						<h3>About X-Ai Medical Center</h3>
+						<p>X-Ai Medical Center is a state-of-the-art healthcare facility dedicated to providing world-class diagnostic and therapeutic services. We combine advanced AI technology with expert medical professionals to deliver exceptional patient care.</p>
+						<p>Our mission is to make quality healthcare accessible, affordable, and effective for every patient. We believe in compassionate care, precise diagnosis, and successful rehabilitation.
 						</p>
 						<div class="row">
 							<div class="col-lg-6">
 								<ul class="list">
-									<li><i class="fa fa-caret-right"></i>Maecenas vitae luctus nibh. </li>
-									<li><i class="fa fa-caret-right"></i>Duis massa massa.</li>
-									<li><i class="fa fa-caret-right"></i>Aliquam feugiat interdum.</li>
+									<li><i class="fa fa-caret-right"></i>AI-Powered Diagnostics</li>
+									<li><i class="fa fa-caret-right"></i>Expert Medical Team</li>
+									<li><i class="fa fa-caret-right"></i>Advanced Technology</li>
 								</ul>
 							</div>
 							<div class="col-lg-6">
 								<ul class="list">
-									<li><i class="fa fa-caret-right"></i>Maecenas vitae luctus nibh. </li>
-									<li><i class="fa fa-caret-right"></i>Duis massa massa.</li>
-									<li><i class="fa fa-caret-right"></i>Aliquam feugiat interdum.</li>
+									<li><i class="fa fa-caret-right"></i>24/7 Patient Support</li>
+									<li><i class="fa fa-caret-right"></i>Personalized Treatment</li>
+									<li><i class="fa fa-caret-right"></i>Proven Results</li>
 								</ul>
 							</div>
 						</div>
@@ -417,14 +436,8 @@
 					<!-- Start Choose Rights -->
 					<div class="choose-right">
 						<div class="video-image">
-							<!-- Video Animation -->
-							<div class="promo-video">
-								<div class="waves-block">
-									<div class="waves wave-1"></div>
-									<div class="waves wave-2"></div>
-									<div class="waves wave-3"></div>
-								</div>
-							</div>
+							<img src="{% static 'main_page/ai based tech.jpg' %}" alt="Advanced Medical Technology" style="width: 100%; height: auto; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.15);">
+						</div>
 							<!--/ End Video Animation -->
 							<a href="https://youtu.be/6tAgXvQrOqk?si=JEuZHlFMEElfGI72"
 								class="video video-popup mfp-iframe"><i class="fa fa-play"></i></a>
@@ -438,17 +451,17 @@
 	<!--/ End Why choose -->
 
 	<!-- Start Call to action -->
-	<section class="call-action overlay" data-stellar-background-ratio="0.5">
+	<section class="call-action overlay" data-stellar-background-ratio="0.5" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%), url('{% static 'img/call-bg.png' %}'); background-size: cover; background-position: center;">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12 col-md-12 col-12">
 					<div class="content">
-						<h2>Do you need Emergency Medical Care? Call @ 1234 56789</h2>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque porttitor dictum turpis nec
-							gravida.</p>
+						<h2>Do You Need Emergency Medical Care?</h2>
+						<p style="font-size: 1.2em; margin: 20px 0;">Call us immediately at <strong>0304-5450049</strong> | Email: <strong>tauqeerqureshi112@gmail.com</strong></p>
+						<p>X-Ai Medical Center - Pakistan is available 24/7 for your medical emergencies and consultations.</p>
 						<div class="button">
-							<a href="#" class="btn">Contact Now</a>
-							<a href="#" class="btn second">Learn More<i class="fa fa-long-arrow-right"></i></a>
+							<a href="tel:03045450049" class="btn" style="background: #667eea;">📞 Call Now</a>
+							<a href="mailto:tauqeerqureshi112@gmail.com" class="btn second">📧 Email Us<i class="fa fa-long-arrow-right"></i></a>
 						</div>
 					</div>
 				</div>
@@ -458,15 +471,13 @@
 	<!--/ End Call to action -->
 
 	<!-- Start portfolio -->
-	<section class="portfolio section">
+	<section class="portfolio section" style="background-color: #f8f9fa;">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="section-title">
-						<h2>We Maintain Cleanliness Rules Inside Our Hospital</h2>
-
-                                                <img src="{% static 'img/section-img.png' %}" alt="#">
-						<p>Lorem ipsum dolor sit amet consectetur adipiscing elit praesent aliquet. pretiumts</p>
+						<h2>Our Facilities & Infrastructure</h2>
+						<p>State-of-the-art medical facilities equipped with advanced AI technology for optimal patient care and accurate diagnostics</p>
 					</div>
 				</div>
 			</div>
@@ -476,36 +487,36 @@
 				<div class="col-lg-12 col-12">
 					<div class="owl-carousel portfolio-slider">
 						<div class="single-pf">
-                        <img src="{% static 'img/pf1.jpg' %}" alt="#">
+                        <img src="{% static 'main_page/hospital.jpg' %}" alt="Hospital Building" style="width: 100%; height: auto; border-radius: 8px;">
 
 							<a href="portfolio-details.html" class="btn">View Details</a>
 						</div>
 						<div class="single-pf">
-                        <img src="{% static 'img/pf2.jpg' %}" alt="#">
+                        <img src="{% static 'main_page/ai based tech.jpg' %}" alt="AI Technology" style="width: 100%; height: auto; border-radius: 8px;">
 							<a href="portfolio-details.html" class="btn">View Details</a>
 						</div>
 						<div class="single-pf">
-                        <img src="{% static 'img/pf3.jpg' %}" alt="#">
+                        <img src="{% static 'main_page/ai based system.jpg' %}" alt="AI System" style="width: 100%; height: auto; border-radius: 8px;">
 							<a href="portfolio-details.html" class="btn">View Details</a>
 						</div>
 						<div class="single-pf">
-                        <img src="{% static 'img/pf4.jpg' %}" alt="#">
+                        <img src="{% static 'main_page/fracture detections.jpg' %}" alt="Fracture Detection" style="width: 100%; height: auto; border-radius: 8px;">
 							<a href="portfolio-details.html" class="btn">View Details</a>
 						</div>
 						<div class="single-pf">
-                        <img src="{% static 'img/pf1.jpg' %}" alt="#">
+                        <img src="{% static 'main_page/fracture operation threader.jpg' %}" alt="Orthopedic Surgery" style="width: 100%; height: auto; border-radius: 8px;">
 							<a href="portfolio-details.html" class="btn">View Details</a>
 						</div>
 						<div class="single-pf">
-                        <img src="{% static 'img/pf2.jpg' %}" alt="#">
+                        <img src="{% static 'main_page/hospital.jpg' %}" alt="Hospital Building" style="width: 100%; height: auto; border-radius: 8px;">
 							<a href="portfolio-details.html" class="btn">View Details</a>
 						</div>
 						<div class="single-pf">
-                        <img src="{% static 'img/pf3.jpg' %}" alt="#">
+                        <img src="{% static 'main_page/ai based tech.jpg' %}" alt="AI Technology" style="width: 100%; height: auto; border-radius: 8px;">
 							<a href="portfolio-details.html" class="btn">View Details</a>
 						</div>
 						<div class="single-pf">
-                        <img src="{% static 'img/pf4.jpg' %}" alt="#">
+                        <img src="{% static 'main_page/fracture detections.jpg' %}" alt="Fracture Detection" style="width: 100%; height: auto; border-radius: 8px;">
 							<a href="portfolio-details.html" class="btn">View Details</a>
 						</div>
 					</div>
@@ -516,15 +527,15 @@
 	<!--/ End portfolio -->
 
 	<!-- Start service -->
-	<section class="services section">
+	<section class="services section" style="background-color: #ffffff;">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="section-title">
-						<h2>We Offer Different Services To Improve Your Health</h2>
+						<h2>Our Comprehensive Healthcare Services</h2>
 
                         <img src="{% static 'img/section-img.png' %}" alt="#">
-						<p>Lorem ipsum dolor sit amet consectetur adipiscing elit praesent aliquet. pretiumts</p>
+						<p>We provide a full range of medical services designed to diagnose, treat, and support your complete health recovery</p>
 					</div>
 				</div>
 			</div>
@@ -533,19 +544,17 @@
 					<!-- Start Single Service -->
 					<div class="single-service">
 						<i class="icofont icofont-prescription"></i>
-						<h4><a href="service-details.html">General Treatment</a></h4>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum eros ut
-							imperdiet. </p>
+						<h4><a href="service-details.html">X-Ray Diagnosis</a></h4>
+						<p>Advanced AI-powered X-ray analysis for accurate fracture detection and bone abnormality diagnosis. Fast results with professional interpretation.</p>
 					</div>
 					<!-- End Single Service -->
 				</div>
 				<div class="col-lg-4 col-md-6 col-12">
 					<!-- Start Single Service -->
 					<div class="single-service">
-						<i class="icofont icofont-tooth"></i>
-						<h4><a href="service-details.html">Teeth Whitening</a></h4>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum eros ut
-							imperdiet. </p>
+						<i class="icofont icofont-stethoscope"></i>
+						<h4><a href="service-details.html">Medical Consultation</a></h4>
+						<p>Expert consultation with our experienced doctors. Personalized medical advice, second opinions, and comprehensive treatment planning.</p>
 					</div>
 					<!-- End Single Service -->
 				</div>
@@ -553,32 +562,42 @@
 					<!-- Start Single Service -->
 					<div class="single-service">
 						<i class="icofont icofont-heart-alt"></i>
-						<h4><a href="service-details.html">Heart Surgery</a></h4>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum eros ut
-							imperdiet. </p>
+						<h4><a href="service-details.html">Orthopedic Care</a></h4>
+						<p>Specialized treatment for bone and joint conditions. From diagnosis through rehabilitation, comprehensive orthopedic care for all ages.</p>
 					</div>
 					<!-- End Single Service -->
 				</div>
 				<div class="col-lg-4 col-md-6 col-12">
 					<!-- Start Single Service -->
 					<div class="single-service">
-						<i class="icofont icofont-listening"></i>
-						<h4><a href="service-details.html">Ear Treatment</a></h4>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum eros ut
-							imperdiet. </p>
+						<i class="icofont icofont-ui-clock"></i>
+						<h4><a href="service-details.html">Exercise Rehabilitation</a></h4>
+						<p>Guided rehabilitation exercises with real-time posture correction. AI-monitored movement analysis to ensure proper recovery technique.</p>
 					</div>
 					<!-- End Single Service -->
 				</div>
 				<div class="col-lg-4 col-md-6 col-12">
 					<!-- Start Single Service -->
 					<div class="single-service">
-						<i class="icofont icofont-eye-alt"></i>
-						<h4><a href="service-details.html">Vision Problems</a></h4>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus dictum eros ut
-							imperdiet. </p>
+						<i class="icofont icofont-heartbeat"></i>
+						<h4><a href="service-details.html">Voice-Enabled Assistance</a></h4>
+						<p>AI chatbot for hands-free guidance. Ask questions, get medical information, and navigate services using natural voice commands.</p>
 					</div>
 					<!-- End Single Service -->
 				</div>
+				<div class="col-lg-4 col-md-6 col-12">
+					<!-- Start Single Service -->
+					<div class="single-service">
+						<i class="icofont icofont-doctor-alt"></i>
+						<h4><a href="service-details.html">24/7 Support</a></h4>
+						<p>Round-the-clock patient support and emergency assistance. Always available when you need professional medical guidance and care.</p>
+					</div>
+					<!-- End Single Service -->
+				</div>
+			</div>
+		</div>
+	</section>
+	<!--/ End service -->
 				<div class="col-lg-4 col-md-6 col-12">
 					<!-- Start Single Service -->
 					<div class="single-service">
@@ -681,6 +700,86 @@
 	</section>
  -->
 
+	<!-- Start Doctors Section -->
+	<section class="doctors-section" style="padding: 80px 0; background: #f9f9f9;">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="section-title">
+						<h2>Meet Our Expert Medical Team</h2>
+						<img src="{% static 'img/section-img.png' %}" alt="#">
+						<p>Dedicated Healthcare Professionals Committed to Your Recovery</p>
+					</div>
+				</div>
+			</div>
+			<div class="row" style="gap: 30px; display: flex; justify-content: center; flex-wrap: wrap;">
+				<!-- Doctor 1 -->
+				<div class="col-lg-3 col-md-4 col-sm-6 col-12" style="flex: 0 0 calc(25% - 23px);">
+					<div style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+						<img src="{% static 'main_page/doc 1.jpg' %}" alt="Dr. Tauqeer" style="width: 100%; height: 300px; object-fit: cover;">
+						<div style="padding: 25px;">
+							<h3 style="margin: 0 0 10px 0; color: #667eea; font-size: 1.5em;">Dr. Tauqeer</h3>
+							<p style="color: #764ba2; font-weight: bold; margin: 0 0 10px 0;">Orthopedic Specialist</p>
+							<p style="color: #666; font-size: 0.9em; margin: 0 0 15px 0;">Age: 45 years</p>
+							<p style="color: #999; font-size: 0.85em; margin: 0;">Specializing in shoulder fracture diagnosis and rehabilitation with 15+ years experience.</p>
+							<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
+								<small style="color: #667eea; font-weight: bold;">📞 Available for Consultation</small>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Doctor 2 -->
+				<div class="col-lg-3 col-md-4 col-sm-6 col-12" style="flex: 0 0 calc(25% - 23px);">
+					<div style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+						<img src="{% static 'main_page/doc 2.jpg' %}" alt="Dr. Ahtisham Asif" style="width: 100%; height: 300px; object-fit: cover;">
+						<div style="padding: 25px;">
+							<h3 style="margin: 0 0 10px 0; color: #667eea; font-size: 1.5em;">Dr. Ahtisham Asif</h3>
+							<p style="color: #764ba2; font-weight: bold; margin: 0 0 10px 0;">Sports Medicine</p>
+							<p style="color: #666; font-size: 0.9em; margin: 0 0 15px 0;">Age: 38 years</p>
+							<p style="color: #999; font-size: 0.85em; margin: 0;">Expert in athletic injuries and exercise rehabilitation programs for optimal recovery.</p>
+							<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
+								<small style="color: #667eea; font-weight: bold;">📞 Available for Consultation</small>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Doctor 3 -->
+				<div class="col-lg-3 col-md-4 col-sm-6 col-12" style="flex: 0 0 calc(25% - 23px);">
+					<div style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+						<img src="{% static 'main_page/doc 1.jpg' %}" alt="Dr. Asif" style="width: 100%; height: 300px; object-fit: cover;">
+						<div style="padding: 25px;">
+							<h3 style="margin: 0 0 10px 0; color: #667eea; font-size: 1.5em;">Dr. Asif</h3>
+							<p style="color: #764ba2; font-weight: bold; margin: 0 0 10px 0;">Radiology & Imaging</p>
+							<p style="color: #666; font-size: 0.9em; margin: 0 0 15px 0;">Age: 42 years</p>
+							<p style="color: #999; font-size: 0.85em; margin: 0;">Specialist in X-ray analysis and medical imaging interpretation using latest AI technology.</p>
+							<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
+								<small style="color: #667eea; font-weight: bold;">📞 Available for Consultation</small>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Doctor 4 -->
+				<div class="col-lg-3 col-md-4 col-sm-6 col-12" style="flex: 0 0 calc(25% - 23px);">
+					<div style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+						<img src="{% static 'main_page/doc 2.jpg' %}" alt="Dr. Ahmed Khan" style="width: 100%; height: 300px; object-fit: cover;">
+						<div style="padding: 25px;">
+							<h3 style="margin: 0 0 10px 0; color: #667eea; font-size: 1.5em;">Dr. Ahmed Khan</h3>
+							<p style="color: #764ba2; font-weight: bold; margin: 0 0 10px 0;">Physical Therapy</p>
+							<p style="color: #666; font-size: 0.9em; margin: 0 0 15px 0;">Age: 35 years</p>
+							<p style="color: #999; font-size: 0.85em; margin: 0;">Licensed PT specializing in post-fracture rehabilitation and exercise guidance programs.</p>
+							<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
+								<small style="color: #667eea; font-weight: bold;">📞 Available for Consultation</small>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!--/ End Doctors Section -->
 
 	<!-- Start Blog Area -->
 	
@@ -731,10 +830,10 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="section-title">
-						<h2>We Are Always Ready to Help You. Contact Us </h2>
+						<h2>Connect With Our Medical Team</h2>
 
                      <img src="{% static 'img/section-img.png' %}" alt="#">
-						<p>Join us as Doctor or Can Connect with us.</p>
+						<p>Schedule a consultation, ask questions, or learn more about our services. We're here to help you on your health journey.</p>
 					</div>
 				</div>
 			</div>
@@ -811,8 +910,7 @@
 				</div>
 				<div class="col-lg-6 col-md-12 ">
 					<div class="appointment-image">
-
-                    <img src="{% static 'img/contact-img.png' %}" alt="#">
+                    <img src="{% static 'main_page/fracture detections.jpg' %}" alt="Fracture Detection Technology" style="width: 100%; height: auto; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.15);">
 					</div>
 				</div>
 			</div>
@@ -971,6 +1069,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/main.js' %}"></script>
+
+<!-- Chatbot Widget -->
+{% include 'components/chatbot_widget.html' %}
 </body>
 
 </html>

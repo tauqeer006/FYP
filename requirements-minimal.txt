@@ -1,10 +1,15 @@
 # Django Web Framework
-Django
+Django>=5.0
+python-decouple
 
 # Utilities
-requests
+requests>=2.31.0
 python-dotenv
 markdown
+
+# Chatbot & AI Integration
+google-generativeai>=0.3.0
+PyYAML
 
 # Minimal ML dependencies - only what's actually used in views.py
 # TensorFlow CPU only (compatible with existing model)
@@ -20,6 +25,11 @@ mediapipe
 numpy
 matplotlib
 Pillow
+
+# Additional utilities
+python-dateutil
+cryptography
+djangorestframework
 
 # No ultralytics, no torch, no scikit-learn, no pandas
 # These were causing the 900MB+ downloads

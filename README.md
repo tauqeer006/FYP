@@ -120,6 +120,7 @@ password = tauqeer056
 patient:
 sameer3456
 sameer123
+username: sameer34 password: 1234
 
 Tauqeerqureshi
 Qureshi
@@ -127,3 +128,5 @@ Qureshi
 doctor:
 bilal
 bilal1234
+
+hey bot for bot to listen......

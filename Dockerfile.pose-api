@@ -1,32 +1,51 @@
-# ------------------------------
-#   FASTAPI – Pose Tracking API
-# ------------------------------
+# -----------------------------------------------------------------------
+#   FASTAPI – Shoulder Rehabilitation Exercise System with Real-time Pose Detection
+# -----------------------------------------------------------------------
 FROM python:3.10-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install Linux dependencies required for OpenCV & Mediapipe
+# Install Linux dependencies required for OpenCV, Mediapipe & Audio
 RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     libgl1 \
     libopencv-dev \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
     ffmpeg \
+    libespeak1 \
+    espeak-ng \
+    libportaudio2 \
     && rm -rf /var/lib/apt/lists/*
 
 # Create work directory
 WORKDIR /app
 
-# Copy requirement file
-COPY requirements-pose.txt /app/requirements-pose.txt
+# Copy requirements file
+COPY pose_cv/requirements_api.txt /app/requirements_api.txt
 
+# Install Python dependencies
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements-pose.txt
+RUN pip install --no-cache-dir -r requirements_api.txt
 
-# Copy all pose api files
-COPY new_pose/ /app/
+# Copy all shoulder rehab exercise files
+COPY pose_cv/app.py /app/
+COPY pose_cv/new_exercise.yml /app/
+COPY pose_cv/config.json /app/
+COPY pose_cv/realtime_work.py /app/
+COPY pose_cv/calculate_angles.py /app/
 
-# Expose FastAPI port
+# Create necessary directories
+
+# Copy static files if they exist
+
+# Expose FastAPI port (same as previous pose API)
 EXPOSE 5003
 
-# Start FastAPI server
-CMD ["uvicorn", "pose_api:app", "--host", "0.0.0.0", "--port", "5003"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import requests; requests.get('http://localhost:5003/api/health', timeout=5)" || exit 1
+
+# Start FastAPI server with static file serving
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5003"]

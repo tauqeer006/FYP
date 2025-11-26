@@ -9,9 +9,11 @@
   <!-- Fonts and Icons -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap">
   <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
 
   <!-- Your custom CSS -->
-  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">>
 </head>
 <body>
 
@@ -67,13 +69,20 @@
             <button type="submit" class="btn-primary">Login</button>
 
             <p class="text-center mt-3 mb-0">
-              <a href="#">Forgot password?</a>
+              <a href="#" data-toggle="modal" data-target="#forgotPasswordModal">Forgot password?</a>
             </p>
           </form>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Include Forgot Password Modal -->
+  {% include 'components/forgot_password_modal.html' %}
+
+  <!-- jQuery and Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
     window.addEventListener('load', function() {
@@ -85,5 +94,8 @@
     
     
   </script>
+
+<!-- Chatbot Widget -->
+{% include 'components/chatbot_widget.html' %}
 </body>
 </html>

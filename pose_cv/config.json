@@ -1,0 +1,63 @@
+{
+  "app": {
+    "name": "Shoulder Rehabilitation Exercise System",
+    "version": "1.0.0",
+    "description": "Interactive web-based shoulder rehabilitation exercises with AI pose detection"
+  },
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8000,
+    "reload": true,
+    "log_level": "info"
+  },
+  "pose_detection": {
+    "tolerance": 7,
+    "detection_confidence": 0.5,
+    "tracking_confidence": 0.5,
+    "model_complexity": 1,
+    "smooth_landmarks": true
+  },
+  "webcam": {
+    "width": 640,
+    "height": 480,
+    "fps": 30,
+    "frame_skip": 10
+  },
+  "text_to_speech": {
+    "enabled": true,
+    "rate": 150,
+    "volume": 0.9,
+    "language": "en"
+  },
+  "ui": {
+    "theme": "modern",
+    "animations": true,
+    "responsive": true,
+    "dark_mode": false
+  },
+  "landmarks": {
+    "left_shoulder": 11,
+    "right_shoulder": 12,
+    "left_elbow": 13,
+    "right_elbow": 14,
+    "left_wrist": 15,
+    "right_wrist": 16
+  },
+  "exercises": {
+    "yaml_file": "new_exercise.yml",
+    "auto_load": true,
+    "cache_enabled": true
+  },
+  "api": {
+    "cors_enabled": true,
+    "cors_origins": ["*"],
+    "documentation": true,
+    "swagger_ui": "/docs",
+    "redoc": "/redoc"
+  },
+  "debug": {
+    "enabled": false,
+    "verbose": false,
+    "show_poses": false
+  }
+}

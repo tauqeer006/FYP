@@ -1,414 +1,2177 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medical Exercise Recommendations</title>
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    <title>Shoulder Rehabilitation Exercises</title>
     <style>
         * {
-            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1e40af;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --light-bg: #f9fafb;
+            --border-color: #e5e7eb;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
         }
 
         body {
-            background: linear-gradient(135deg, #007BFF 0%, #007BFF 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            padding: 20px;
+            color: var(--text-dark);
         }
 
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .video-card {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: slideDown 0.6s ease-out;
         }
 
-        .video-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-            border-color: #667eea;
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        .video-thumbnail {
-            position: relative;
-            overflow: hidden;
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .filter-section {
+            background: white;
+            padding: 25px;
             border-radius: 12px;
-            background: linear-gradient(45deg, #f0f2f5, #e4e7eb);
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
-        .play-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(102, 126, 234, 0.9);
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            font-size: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .exercises-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .exercise-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            height: 100%;
         }
 
-        .play-button:hover {
-            background: rgba(102, 126, 234, 1);
-            transform: translate(-50%, -50%) scale(1.1);
+        .exercise-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
-        .duration-badge {
+        .video-container {
+            width: 100%;
+            padding-bottom: 56.25%;
+            position: relative;
+            background: #000;
+            cursor: pointer;
+        }
+
+        .video-container iframe {
             position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .difficulty-badge {
-            background: linear-gradient(45deg, #4facfe, #00f2fe);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .difficulty-intermediate {
-            background: linear-gradient(45deg, #fa709a, #fee140);
-        }
-
-        .difficulty-advanced {
-            background: linear-gradient(45deg, #ff9a9e, #fecfef);
-        }
-
-        .stats-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            color: #6b7280;
-            font-size: 13px;
-        }
-
-        .video-player {
-            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            display: none;
+            border: none;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .video-container {
-            position: relative;
-            max-width: 900px;
-            width: 90%;
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .close-button {
-            position: absolute;
-            top: -50px;
-            right: 0;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .close-button:hover {
-            background: rgba(255, 255, 255, 0.3);
+        .video-overlay:hover {
+            background: rgba(0, 0, 0, 0.4);
         }
 
-        .header-gradient {
-            background: linear-gradient(135deg, #007BFF 0%, #007BFF 100%);
+        .play-btn {
+            width: 70px;
+            height: 70px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        .play-btn::after {
+            content: '▶';
+            color: white;
+            font-size: 28px;
+            margin-left: 3px;
+        }
+
+        .exercise-content {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .exercise-name {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .exercise-description {
+            font-size: 0.9em;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .angles-section {
+            background: var(--light-bg);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.85em;
+        }
+
+        .angle-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 5px 0;
+        }
+
+        .angle-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .angle-label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .angle-value {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .feedback-section {
+            background: #fef3c7;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .feedback-label {
+            font-weight: 600;
+            color: #92400e;
+            font-size: 0.85em;
+            margin-bottom: 8px;
+        }
+
+        .feedback-tips {
+            font-size: 0.8em;
+            color: #b45309;
+            list-style: none;
+        }
+
+        .feedback-tips li {
+            padding: 4px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .feedback-tips li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+            text-align: center;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
             color: white;
         }
 
-        .pulse {
-            animation: pulse 2s infinite;
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
         }
 
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.7;
-            }
+        .btn-secondary {
+            background: var(--light-bg);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
         }
 
-        .fade-in {
-            animation: fadeIn 0.6s ease-out forwards;
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
         }
 
-        @keyframes fadeIn {
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 900px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .modal-header {
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5em;
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 30px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .modal-video {
+            width: 100%;
+            height: 500px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .exercise-details {
+            margin-bottom: 25px;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-section h3 {
+            color: var(--primary-color);
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .btn-lg {
+            padding: 15px 30px;
+            font-size: 1em;
+            flex: 1;
+        }
+
+        .webcam-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        #webcam {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background: #000;
+        }
+
+        .status-indicator {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .status-success {
+            background: #d1fae5;
+            color: #065f46;
+            display: block;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+            display: block;
+        }
+
+        .status-loading {
+            background: #dbeafe;
+            color: #1e3a8a;
+            display: block;
+        }
+
+        .feedback-live {
+            background: var(--light-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            min-height: 100px;
+            border: 2px dashed var(--border-color);
+        }
+
+        .feedback-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+
+        .feedback-item.correct {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .feedback-item.incorrect {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .exercise-counter {
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 15px 0;
+        }
+
+        @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(-30px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 12px;
+            color: var(--text-light);
+        }
+
+        .no-results h3 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
         @media (max-width: 768px) {
-            .video-container {
-                width: 95%;
-                height: 250px;
+            header h1 {
+                font-size: 2em;
             }
 
-            .play-button {
-                width: 50px;
-                height: 50px;
-                font-size: 16px;
+            .exercises-grid {
+                grid-template-columns: 1fr;
             }
+
+            .filter-section {
+                flex-direction: column;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 20% auto;
+            }
+
+            .modal-video {
+                height: 300px;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+        }
+
+        .loading-spinner {
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .difficulty-easy {
+            background: var(--success-color);
+        }
+
+        .difficulty-medium {
+            background: var(--warning-color);
+        }
+
+        .difficulty-hard {
+            background: var(--danger-color);
+        }
+
+        /* Webcam Exercise Enhancement Styles */
+        .exercise-feedback-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 650px;
+        }
+
+        .webcam-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        #webcam {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 12px;
+            background: #000;
+            border: 3px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .webcam-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .conversation-panel {
+            background: #f0f4f8;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .conversation-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 15px;
+            font-weight: 600;
+            font-size: 0.95em;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .conversation-header::before {
+            content: '💬';
+            font-size: 1.2em;
+        }
+
+        .conversation-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .conversation-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .conversation-messages::-webkit-scrollbar-track {
+            background: var(--light-bg);
+        }
+
+        .conversation-messages::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 3px;
+        }
+
+        .conversation-messages::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        .message {
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            line-height: 1.4;
+            word-wrap: break-word;
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .message.success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .message.info {
+            background: #dbeafe;
+            color: #1e3a8a;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .message.feedback {
+            background: #fef3c7;
+            color: #92400e;
+            border-left: 4px solid var(--warning-color);
+            font-size: 0.8em;
+        }
+
+        .message-timestamp {
+            font-size: 0.7em;
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+
+        .message-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-right: 4px;
+            font-weight: 600;
+        }
+
+        .conversation-empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            height: 100%;
+            text-align: center;
+            font-size: 0.85em;
+        }
+
+        .angle-display {
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.9em;
+            font-family: 'Courier New', monospace;
+        }
+
+        .angle-value-item {
+            display: inline-block;
+            margin: 0 8px;
+        }
+
+        .angle-value-item.success {
+            color: var(--success-color);
+            font-weight: 700;
+        }
+
+        .angle-value-item.warning {
+            color: var(--warning-color);
+            font-weight: 700;
+        }
+
+        .pose-status-badge {
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .pose-status-badge.correct {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .pose-status-badge.incorrect {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .pose-status-badge.waiting {
+            background: #dbeafe;
+            color: #1e3a8a;
+        }
+
+        @media (max-width: 1024px) {
+            .exercise-feedback-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            .conversation-panel {
+                max-height: 300px;
+            }
+        }
+
+        /* Audio Controls Styles */
+        .audio-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 10px 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-bottom: 2px solid var(--border-color);
+            justify-content: space-between;
+        }
+
+        .audio-controls-left {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .audio-toggle-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .audio-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .audio-toggle-btn.muted {
+            background: #ef4444;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+        }
+
+        .volume-slider {
+            width: 100px;
+            height: 4px;
+            cursor: pointer;
+            accent-color: white;
+        }
+
+        .audio-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 1.5s infinite;
+        }
+
+        .audio-indicator.inactive {
+            background: #6b7280;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .message.with-audio {
+            position: relative;
+        }
+
+        .message.with-audio::after {
+            content: '🔊';
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            font-size: 0.9em;
         }
     </style>
 </head>
-
 <body>
-    <!-- Header -->
-    <div class="header-gradient py-5 mb-5">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1 class="display-4 fw-bold mb-2">
-                        <i class="fas fa-heart-pulse me-3"></i>
-                        Medical Exercise Videos
-                    </h1>
-                    <p class="lead mb-0 opacity-90">
-                        Professional Pediatric exercises recommended by medical experts
-                    </p>
-                </div>
-                <div class="col-md-4 text-md-end">
-                    <div class="d-flex flex-column align-items-md-end gap-2">
-                        <div class="stats-item text-white">
-                            <i class="fas fa-video"></i>
-                            <span>Expert Exercises Suggested</span>
-                        </div>
-                        <div class="stats-item text-white">
-                            <i class="fas fa-clock"></i>
-                            <span>10 Clips</span>
-                        </div>
-                    </div>
-                </div>
+    <div class="container">
+        <header>
+            <h1>💪 Shoulder Rehabilitation Exercises</h1>
+            <p>Interactive guide with real-time pose detection and feedback</p>
+        </header>
+
+        <div class="filter-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search exercises by name...">
             </div>
+            <button class="filter-btn" onclick="filterExercises()">Search</button>
+            <button class="filter-btn" onclick="resetFilters()">Reset</button>
+        </div>
+
+        <div class="exercises-grid" id="exercisesGrid">
+            <!-- Exercises will be populated here by JavaScript -->
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="container pb-5">
-        <div class="glass-effect rounded-4 p-4 mb-4">
-            <div class="row align-items-center mb-4">
-                <div class="col-md-6">
-                    <h3 class="h4 fw-semibold mb-2 text-gray-800">Recommended for You</h3>
-                    <p class="text-gray-600 mb-0">Curated exercises based on your health profile</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <div class="dropdown">
-                        <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button"
-                            data-bs-toggle="dropdown">
-                            <i class="fas fa-list me-1"></i> Select Type
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#" onclick="loadVideos('boneanomaly')">boneanomaly</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="loadVideos('bonelesion')">bonelesion</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="loadVideos('foreignbody')">foreignbody</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="loadVideos('fracture')">fracture</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="loadVideos('metal')">metal</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="loadVideos('periostealreaction')">periostealreaction</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="loadVideos('pronatorsign')">pronatorsign</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="loadVideos('softtissue')">softtissue</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="loadVideos('text')">text</a></li>
-                        </ul>
+    <!-- Exercise Details Modal -->
+    <div id="exerciseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalExerciseName"></h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <iframe id="modalVideo" class="modal-video" allowfullscreen></iframe>
+
+                <div class="exercise-details">
+                    <div class="detail-section">
+                        <h3>Description</h3>
+                        <p id="modalDescription"></p>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>🎯 Target Form - How to Perform</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center;">
+                            <div>
+                                <canvas id="modalSkeletonCanvas" width="280" height="380" style="border: 2px solid #e5e7eb; border-radius: 8px; background: #f9fafb;"></canvas>
+                            </div>
+                            <div id="modalAngles"></div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>Feedback Tips</h3>
+                        <div id="modalFeedback"></div>
                     </div>
                 </div>
 
-            </div>
-
-            <!-- Videos Grid -->
-            <div class="row g-4" id="videosGrid">
-                <!-- Videos will be inserted here by JavaScript -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Video Player Modal -->
-    <div class="video-player" id="videoPlayer">
-        <div class="video-container">
-            <button class="close-button" id="closeVideo">
-                <i class="fas fa-times"></i>
-            </button>
-            <video id="videoElement" controls width="100%" height="500">
-                Your browser does not support the video tag.
-            </video>
-            <div class="p-4 bg-white">
-                <h4 id="videoTitle" class="fw-bold mb-2"></h4>
-                <p id="videoDescription" class="text-gray-600 mb-3"></p>
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex gap-3">
-                        <span class="stats-item">
-                            <i class="fas fa-eye text-primary"></i>
-                            <span id="videoViews"></span>
-                        </span>
-                        <span class="stats-item">
-                            <i class="fas fa-thumbs-up text-success"></i>
-                            <span id="videoLikes"></span>
-                        </span>
-                    </div>
-                    <button class="btn btn-primary btn-sm">
-                        <i class="fas fa-bookmark me-1"></i>Save to Playlist
+                <div class="modal-actions">
+                    <button class="btn btn-primary btn-lg" onclick="startExercising()">
+                        🎥 Start Exercising (Webcam)
                     </button>
+                    <a id="openYoutubeLink" class="btn btn-secondary btn-lg" target="_blank">
+                        ▶ Open YouTube
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
-<script>
-    // Fetch videos from Django endpoint
-    function loadVideos(diseaseType) {
-    fetch(`/Recommend_video/${diseaseType}/`)   // Django API endpoint
-        .then(response => response.json())
-        .then(data => renderVideos(data.videos))  // ✅ Corrected
-        .catch(err => console.error("Error loading videos:", err));
-}
-
-
-    // Render videos dynamically
-    function renderVideos(videos) {
-        const grid = document.getElementById('videosGrid');
-        grid.innerHTML = "";  // clear old videos
-
-        videos.forEach((video, index) => {
-            const videoCard = document.createElement('div');
-            videoCard.className = 'col-lg-6 fade-in';
-            videoCard.style.animationDelay = `${index * 0.1}s`;
-
-            videoCard.innerHTML = `
-                <div class="video-card rounded-4 p-3 h-100">
-                    <div class="row g-3">
-                        <div class="col-5">
-                            <div class="video-thumbnail position-relative" style="height: 120px;">
-                                <img src="${video.thumbnail}" alt="${video.title}" 
-                                     class="w-100 h-100 object-cover rounded-3"
-                                     style="object-fit: cover;">
-                                <button class="play-button pulse" onclick="playVideo('${video.videoUrl}', '${video.title}', '${video.description}')">
-                                    <i class="fas fa-play"></i>
-                                </button>
-                                <div class="duration-badge">${video.duration}</div>
+    <!-- Webcam Exercise Modal -->
+    <div id="webcamModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🎥 Live Exercise Feedback</h2>
+                <button class="close-btn" onclick="closeWebcamModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="exercise-feedback-container">
+                    <div class="webcam-wrapper">
+                        <div class="pose-status-badge waiting" id="poseBadge">⏳ Waiting for pose detection...</div>
+                        <div style="position: relative;">
+                            <video id="webcam" autoplay playsinline></video>
+                            <canvas id="canvas" style="display:none;"></canvas>
+                            <div class="angle-display" id="angleDisplay" style="display: none;">
+                                <div>Left Shoulder: <span class="angle-value-item" id="leftShoulderAngle">--</span>°</div>
+                                <div>Right Shoulder: <span class="angle-value-item" id="rightShoulderAngle">--</span>°</div>
                             </div>
                         </div>
-                        <div class="col-7">
-                            <div class="h-100 d-flex flex-column">
-                                <div class="mb-2">
-                                    <span class="difficulty-badge">${video.difficulty}</span>
-                                </div>
-                                <h5 class="fw-semibold mb-2 text-gray-800 lh-sm">${video.title}</h5>
-                                <p class="text-gray-600 mb-3 small lh-sm">${video.description}</p>
-                                <div class="mt-auto">
-                                    <button class="btn btn-primary btn-sm w-100" onclick="playVideo('${video.videoUrl}', '${video.title}', '${video.description}')">
-                                        <i class="fas fa-play me-1"></i>
-                                        Start Exercise
+                        <div class="webcam-controls">
+                            <button class="btn btn-primary" onclick="stopExercising()" style="flex: 1;">
+                                Stop Exercise
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearConversation()" style="flex: 1;">
+                                Clear Messages
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-rows: 1fr auto; gap: 15px; height: 600px;">
+                        <div class="conversation-panel">
+                            <div class="conversation-header">Feedback & Messages</div>
+                            <div class="audio-controls">
+                                <div class="audio-controls-left">
+                                    <button class="audio-toggle-btn" id="audioToggleBtn" onclick="toggleAudio()">
+                                        <span id="audioToggleIcon">🔊</span>
+                                        <span id="audioToggleText">Audio On</span>
                                     </button>
+                                    <div class="audio-indicator" id="audioIndicator"></div>
                                 </div>
+                                <div class="volume-control">
+                                    <span style="font-size: 0.85em;">🔊</span>
+                                    <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="80" onchange="setVolume(this.value)">
+                                </div>
+                            </div>
+                            <div class="conversation-messages" id="conversationMessages">
+                                <div class="conversation-empty">Messages will appear here...</div>
+                            </div>
+                        </div>
+
+                        <div style="background: #f0f4f8; border-radius: 12px; border: 2px solid var(--border-color); padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                            <div style="font-weight: 600; color: #1f2937; margin-bottom: 10px;">📊 Your Form vs Target</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: center;">
+                                <div>
+                                    <div style="font-size: 0.75em; color: #6b7280; margin-bottom: 5px; text-align: center;">Your Position</div>
+                                    <canvas id="liveSkeletonCanvas" width="140" height="190" style="border: 1px solid #e5e7eb; border-radius: 6px; background: white; display: block; margin: 0 auto;"></canvas>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.75em; color: #6b7280; margin-bottom: 5px; text-align: center;">Target Position</div>
+                                    <canvas id="targetSkeletonCanvas" width="140" height="190" style="border: 1px solid #d1d5db; border-radius: 6px; background: #f3f4f6; display: block; margin: 0 auto; opacity: 0.7;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Exercise data from YAML
+        const exercises = [
+            {
+                name: "Pendulum Swing",
+                description: "Lean forward and let the injured arm hang, then gently swing it in small circles to mobilize the shoulder.",
+                video: "https://www.youtube.com/embed/S4H_rZA2kSM",
+                youtubeLink: "https://www.youtube.com/watch?v=S4H_rZA2kSM",
+                leftArm: { shoulderAngle: 45, elbowAngle: 90 },
+                rightArm: { shoulderAngle: 45, elbowAngle: 90 },
+                feedbackLeft: ["Let left arm hang relaxed", "Use body movement, not left shoulder muscles"],
+                feedbackRight: ["Let right arm hang relaxed", "Use body movement, not right shoulder muscles"]
+            },
+            {
+                name: "Active Shoulder Flexion (Wall Slide)",
+                description: "Face a wall, slide the arm up the wall slowly to shoulder height or above, control motion.",
+                video: "https://www.youtube.com/embed/AMqT-3l0I6k",
+                youtubeLink: "https://www.youtube.com/watch?v=AMqT-3l0I6k",
+                leftArm: { shoulderAngle: 90, elbowAngle: 180 },
+                rightArm: { shoulderAngle: 90, elbowAngle: 180 },
+                feedbackLeft: ["Raise left arm slowly up the wall", "Keep left elbow and wrist on the wall"],
+                feedbackRight: ["Raise right arm slowly up the wall", "Keep right elbow and wrist on the wall"]
+            },
+            {
+                name: "Shoulder Abduction (Assisted)",
+                description: "Using a cane or stick, assist the arm out to the side to shoulder height to improve range.",
+                video: "https://www.youtube.com/embed/1Wy8jh4QQH8k",
+                youtubeLink: "https://www.youtube.com/watch?v=1Wy8jh4QQH8k",
+                leftArm: { shoulderAngle: 90, elbowAngle: 180 },
+                rightArm: { shoulderAngle: 90, elbowAngle: 180 },
+                feedbackLeft: ["Move left arm out sideways to shoulder height", "Use stick to gently guide left arm"],
+                feedbackRight: ["Move right arm out sideways to shoulder height", "Use stick to gently guide right arm"]
+            },
+            {
+                name: "External Rotation with Band (Elbow at Side)",
+                description: "With elbow tucked and forearm rotating outwards using a light band to activate rotator‑cuff safely.",
+                video: "https://www.youtube.com/embed/IzTFCZv0--E",
+                youtubeLink: "https://www.youtube.com/watch?v=IzTFCZv0--E",
+                leftArm: { shoulderAngle: 20, elbowAngle: 90 },
+                rightArm: { shoulderAngle: 20, elbowAngle: 90 },
+                feedbackLeft: ["Keep left elbow close to torso", "Rotate left forearm outward slowly"],
+                feedbackRight: ["Keep right elbow close to torso", "Rotate right forearm outward slowly"]
+            },
+            {
+                name: "Internal Rotation with Band (Elbow at Side)",
+                description: "With elbow tucked and forearm rotating inward using a band, building internal shoulder stability.",
+                video: "https://www.youtube.com/embed/S4H_rZA2kSM",
+                youtubeLink: "https://www.youtube.com/watch?v=S4H_rZA2kSM",
+                leftArm: { shoulderAngle: 20, elbowAngle: 90 },
+                rightArm: { shoulderAngle: 20, elbowAngle: 90 },
+                feedbackLeft: ["Keep left elbow at side", "Rotate left forearm inward slowly"],
+                feedbackRight: ["Keep right elbow at side", "Rotate right forearm inward slowly"]
+            },
+            {
+                name: "Scapular Retraction/Depression (Wall Slide Variation)",
+                description: "While sliding arms up the wall, focus on pulling shoulder blades down and back to activate scapular stabilizers.",
+                video: "https://www.youtube.com/embed/PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
+                youtubeLink: "https://www.youtube.com/playlist?list=PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
+                leftArm: { shoulderAngle: 90, elbowAngle: 180 },
+                rightArm: { shoulderAngle: 90, elbowAngle: 180 },
+                feedbackLeft: ["Pull left shoulder blade down and back", "Slide left arm up the wall smoothly"],
+                feedbackRight: ["Pull right shoulder blade down and back", "Slide right arm up the wall smoothly"]
+            },
+            {
+                name: "Prone Y Raise (on bed or table)",
+                description: "Lying face down on a table with arms raised into a \"Y\" shape to strengthen rear delts and scapular stabilizers.",
+                video: "https://www.youtube.com/embed/AMqT-3l0I6k",
+                youtubeLink: "https://www.youtube.com/watch?v=AMqT-3l0I6k",
+                leftArm: { shoulderAngle: 135, elbowAngle: 160 },
+                rightArm: { shoulderAngle: 135, elbowAngle: 160 },
+                feedbackLeft: ["Lift left arm in Y shape", "Keep left elbow slightly bent"],
+                feedbackRight: ["Lift right arm in Y shape", "Keep right elbow slightly bent"]
+            },
+            {
+                name: "Wall Angel (with scapular control)",
+                description: "Standing back against wall, slide arms up and down in \"snow‑angel\" motion while keeping back and shoulders flat to wall.",
+                video: "https://www.youtube.com/embed/S4H_rZA2kSM",
+                youtubeLink: "https://www.youtube.com/watch?v=S4H_rZA2kSM",
+                leftArm: { shoulderAngle: 135, elbowAngle: 150 },
+                rightArm: { shoulderAngle: 135, elbowAngle: 150 },
+                feedbackLeft: ["Keep left back and shoulder flat to wall", "Slide left arms up and down slowly"],
+                feedbackRight: ["Keep right back and shoulder flat to wall", "Slide right arms up and down slowly"]
+            },
+            {
+                name: "Seated Shoulder Flexion (Using Assistive Device)",
+                description: "Sitting upright, raise arm(s) forward with assistance or support to the shoulder height range.",
+                video: "https://www.youtube.com/embed/PLMnHlHoq4yFQAFSO9CNx_3b25993iytL",
+                youtubeLink: "https://www.youtube.com/playlist?list=PLMnHlHoq4yFQAFSO9CNx_3b25993iytL",
+                leftArm: { shoulderAngle: 90, elbowAngle: 180 },
+                rightArm: { shoulderAngle: 90, elbowAngle: 180 },
+                feedbackLeft: ["Raise left arm forward to shoulder height", "Keep left elbow straight and controlled"],
+                feedbackRight: ["Raise right arm forward to shoulder height", "Keep right elbow straight and controlled"]
+            },
+            {
+                name: "Side‑lying External Rotation (Low Load)",
+                description: "Lie on side, elbow bent 90°, keep upper arm supported and rotate forearm upward slowly to work rotator cuff.",
+                video: "https://www.youtube.com/embed/AMqT-3l0I6k",
+                youtubeLink: "https://www.youtube.com/watch?v=AMqT-3l0I6k",
+                leftArm: { shoulderAngle: 30, elbowAngle: 90 },
+                rightArm: { shoulderAngle: 30, elbowAngle: 90 },
+                feedbackLeft: ["Keep left upper arm supported", "Rotate left forearm upward slowly"],
+                feedbackRight: ["Keep right upper arm supported", "Rotate right forearm upward slowly"]
+            },
+            {
+                name: "Isometric Shoulder Flexion",
+                description: "Stand near wall, press fist or forearm into wall at shoulder level and hold to activate without movement.",
+                video: "https://www.youtube.com/embed/S4H_rZA2kSM",
+                youtubeLink: "https://www.youtube.com/watch?v=S4H_rZA2kSM",
+                leftArm: { shoulderAngle: 90, elbowAngle: 90 },
+                rightArm: { shoulderAngle: 90, elbowAngle: 90 },
+                feedbackLeft: ["Press left forearm into wall and hold", "Do not raise left arm yet"],
+                feedbackRight: ["Press right forearm into wall and hold", "Do not raise right arm yet"]
+            },
+            {
+                name: "Scaption (Scapular‑Plane Elevation)",
+                description: "Raise arms in front at about 30° from the body (in scapular plane) to shoulder height with thumbs up.",
+                video: "https://www.youtube.com/embed/PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
+                youtubeLink: "https://www.youtube.com/playlist?list=PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
+                leftArm: { shoulderAngle: 90, elbowAngle: 160 },
+                rightArm: { shoulderAngle: 90, elbowAngle: 160 },
+                feedbackLeft: ["Raise left arm in front at 30° angle", "Keep left elbow slightly bent"],
+                feedbackRight: ["Raise right arm in front at 30° angle", "Keep right elbow slightly bent"]
+            },
+            {
+                name: "External Rotation in 90° Abduction",
+                description: "In 90° shoulder abduction position (arm to side), rotate forearm upward/outward to strengthen rotator cuff in abducted posture.",
+                video: "https://www.youtube.com/embed/IzTFCZv0--E",
+                youtubeLink: "https://www.youtube.com/watch?v=IzTFCZv0--E",
+                leftArm: { shoulderAngle: 90, elbowAngle: 90 },
+                rightArm: { shoulderAngle: 90, elbowAngle: 90 },
+                feedbackLeft: ["Keep left upper arm out to side at shoulder height", "Rotate left forearm upward slowly"],
+                feedbackRight: ["Keep right upper arm out to side at shoulder height", "Rotate right forearm upward slowly"]
+            },
+            {
+                name: "Shoulder Horizontal Abduction (Prone)",
+                description: "Lie face down on table with arms out front, then move arms horizontally out to sides to shoulder height.",
+                video: "https://www.youtube.com/embed/1Wy8jh4QQH8k",
+                youtubeLink: "https://www.youtube.com/watch?v=1Wy8jh4QQH8k",
+                leftArm: { shoulderAngle: 90, elbowAngle: 150 },
+                rightArm: { shoulderAngle: 90, elbowAngle: 150 },
+                feedbackLeft: ["Lift left arm out sideways from prone position", "Keep left elbow slightly bent"],
+                feedbackRight: ["Lift right arm out sideways from prone position", "Keep right elbow slightly bent"]
+            },
+            {
+                name: "Shoulder Extension (Standing Assisted)",
+                description: "In standing, use a stick or assistive device to move arm backward (extension) behind body to activate posterior shoulder.",
+                video: "https://www.youtube.com/embed/PLMnHlHoq4yFQAFSO9CNx_3b25993iytL",
+                youtubeLink: "https://www.youtube.com/playlist?list=PLMnHlHoq4yFQAFSO9CNx_3b25993iytL",
+                leftArm: { shoulderAngle: 40, elbowAngle: 180 },
+                rightArm: { shoulderAngle: 40, elbowAngle: 180 },
+                feedbackLeft: ["Move left arm backward gently", "Keep left elbow straight"],
+                feedbackRight: ["Move right arm backward gently", "Keep right elbow straight"]
+            },
+            {
+                name: "Chair Push‑Up for Shoulder (Mini)",
+                description: "Place hands on chair or table, do mini push‑ups that activate scapular stability without full load.",
+                video: "https://www.youtube.com/embed/AMqT-3l0I6k",
+                youtubeLink: "https://www.youtube.com/watch?v=AMqT-3l0I6k",
+                leftArm: { shoulderAngle: 60, elbowAngle: 140 },
+                rightArm: { shoulderAngle: 60, elbowAngle: 140 },
+                feedbackLeft: ["Keep left shoulder stable", "Lower left body slowly"],
+                feedbackRight: ["Keep right shoulder stable", "Lower right body slowly"]
+            },
+            {
+                name: "I‑Y‑T Raise (Scapular Activation)",
+                description: "Lie prone or stand bent forward and move arms in I, Y, and T shapes to activate scapular stabilizers and correct posture.",
+                video: "https://www.youtube.com/embed/AMqT-3l0I6k",
+                youtubeLink: "https://www.youtube.com/watch?v=AMqT-3l0I6k",
+                leftArm: { shoulderAngle: 135, elbowAngle: 160 },
+                rightArm: { shoulderAngle: 135, elbowAngle: 160 },
+                feedbackLeft: ["Lift left arm in I shape then Y then T", "Control left elbow path"],
+                feedbackRight: ["Lift right arm in I shape then Y then T", "Control right elbow path"]
+            },
+            {
+                name: "Serratus Punch",
+                description: "Standing or lying, punch forward upward at about 120° to activate serratus anterior and improve shoulder blade control.",
+                video: "https://www.youtube.com/embed/AMqT-3l0I6k",
+                youtubeLink: "https://www.youtube.com/watch?v=AMqT-3l0I6k",
+                leftArm: { shoulderAngle: 120, elbowAngle: 160 },
+                rightArm: { shoulderAngle: 120, elbowAngle: 160 },
+                feedbackLeft: ["Extend left arm forward and upward", "Keep left scapula sliding smoothly"],
+                feedbackRight: ["Extend right arm forward and upward", "Keep right scapula sliding smoothly"]
+            },
+            {
+                name: "Shoulder Flexion in Side‑lying (Low Load)",
+                description: "Lie on side with unaffected arm down, lift affected arm in front to about 90° flexion using minimal load.",
+                video: "https://www.youtube.com/embed/PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
+                youtubeLink: "https://www.youtube.com/playlist?list=PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
+                leftArm: { shoulderAngle: 90, elbowAngle: 180 },
+                rightArm: { shoulderAngle: 0, elbowAngle: 180 },
+                feedbackLeft: ["Lift left arm forward to shoulder height", "Keep left elbow straight and slow motion"],
+                feedbackRight: ["Keep right arm relaxed at side"]
+            },
+            {
+                name: "Arm Across Chest Stretch (Post‑Mobility)",
+                description: "Bring one arm across the chest and use other to support it, stretch posterior‑deltoid and scapular region.",
+                video: "https://www.youtube.com/embed/S4H_rZA2kSM",
+                youtubeLink: "https://www.youtube.com/watch?v=S4H_rZA2kSM",
+                leftArm: { shoulderAngle: 45, elbowAngle: 135 },
+                rightArm: { shoulderAngle: 45, elbowAngle: 135 },
+                feedbackLeft: ["Pull left arm across chest gently", "Avoid left shoulder shrugging"],
+                feedbackRight: ["Pull right arm across chest gently", "Avoid right shoulder shrugging"]
+            },
+            {
+                name: "Assisted Overhead Reach (Seated or Supported)",
+                description: "Seated with back support, use stick or cane to gently assist overhead reach to improve flexion safely.",
+                video: "https://www.youtube.com/embed/PLMnHlHoq4yFQAFSO9CNx_3b25993iytL",
+                youtubeLink: "https://www.youtube.com/playlist?list=PLMnHlHoq4yFQAFSO9CNx_3b25993iytL",
+                leftArm: { shoulderAngle: 150, elbowAngle: 180 },
+                rightArm: { shoulderAngle: 150, elbowAngle: 180 },
+                feedbackLeft: ["Assist left arm overhead to target height", "Keep left elbow straight"],
+                feedbackRight: ["Assist right arm overhead to target height", "Keep right elbow straight"]
+            },
+            {
+                name: "Gentle Shoulder Abduction from Side‑lying",
+                description: "Lie on opposite side and lift arm out to side to about 70‑90°, using minimal load and controlled motion.",
+                video: "https://www.youtube.com/embed/AMqT-3l0I6k",
+                youtubeLink: "https://www.youtube.com/watch?v=AMqT-3l0I6k",
+                leftArm: { shoulderAngle: 80, elbowAngle: 160 },
+                rightArm: { shoulderAngle: 0, elbowAngle: 180 },
+                feedbackLeft: ["Raise left arm out sideways to ~80°", "Keep left elbow slightly bent"],
+                feedbackRight: ["Relax right arm at side"]
+            },
+            {
+                name: "Wall Walks – Finger Walks Up Wall",
+                description: "Face wall and \"walk\" fingers up the wall as high as comfortable to improve flexion/abduction safely.",
+                video: "https://www.youtube.com/embed/PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
+                youtubeLink: "https://www.youtube.com/playlist?list=PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
+                leftArm: { shoulderAngle: 110, elbowAngle: 180 },
+                rightArm: { shoulderAngle: 110, elbowAngle: 180 },
+                feedbackLeft: ["Walk left fingers up the wall slowly", "Avoid left shoulder hiking"],
+                feedbackRight: ["Walk right fingers up the wall slowly", "Avoid right shoulder hiking"]
+            }
+        ];
+
+        let currentExercise = null;
+        let isExercising = false;
+        let messageCount = 0;
+        let audioEnabled = true;
+        let currentAudio = null;
+        let volumeLevel = 0.8;
+        
+        // Speech queue system
+        let speechQueue = [];
+        let isSpeaking = false;
+        
+        // Skeleton visualization
+        const SKELETON_WIDTH = 280;
+        const SKELETON_HEIGHT = 380;
+        const TOLERANCE = 7; // ±7 degrees
+        
+        // Animation state
+        let animationState = {
+            isAnimating: false,
+            startTime: 0,
+            duration: 2500, // 2.5 seconds
+            startAngles: {},
+            targetAngles: {},
+            currentAngles: {}
+        };
+
+        // Add message to conversation panel
+        function addMessage(text, type = 'info', details = null) {
+            const messagesDiv = document.getElementById('conversationMessages');
+            
+            // Remove empty message if exists
+            if (messagesDiv.querySelector('.conversation-empty')) {
+                messagesDiv.innerHTML = '';
+            }
+
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${type}`;
+            
+            const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const badgeText = type === 'success' ? '✓' : type === 'error' ? '✗' : type === 'feedback' ? '💡' : 'ℹ️';
+            
+            let content = `<span class="message-badge">${badgeText}</span>${text}`;
+            if (details) {
+                content += `<div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.85em; opacity: 0.9;">${details}</div>`;
+            }
+            content += `<div class="message-timestamp">${timestamp}</div>`;
+            
+            messageEl.innerHTML = content;
+            messagesDiv.appendChild(messageEl);
+            
+            // Auto-scroll to bottom
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            messageCount++;
+        }
+
+        // Toggle audio on/off
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const btn = document.getElementById('audioToggleBtn');
+            const icon = document.getElementById('audioToggleIcon');
+            const text = document.getElementById('audioToggleText');
+            const indicator = document.getElementById('audioIndicator');
+            
+            if (audioEnabled) {
+                btn.classList.remove('muted');
+                icon.textContent = '🔊';
+                text.textContent = 'Audio On';
+                indicator.classList.remove('inactive');
+            } else {
+                btn.classList.add('muted');
+                icon.textContent = '🔇';
+                text.textContent = 'Audio Off';
+                indicator.classList.add('inactive');
+                // Stop current audio and clear queue
+                window.speechSynthesis.cancel();
+                isSpeaking = false;
+                speechQueue = [];
+                if (currentAudio) {
+                    currentAudio.pause();
+                }
+            }
+        }
+
+        // Set volume level
+        function setVolume(value) {
+            volumeLevel = value / 100;
+            if (currentAudio) {
+                currentAudio.volume = volumeLevel;
+            }
+        }
+
+        // Play audio from base64
+        function playAudio(audioBase64) {
+            // Audio feature disabled - using Web Speech API instead
+            return;
+        }
+
+        // Fallback: Use Web Speech API with queue system (PRIMARY METHOD)
+        function speakMessageFallback(text) {
+            if (!audioEnabled) return;
+
+            // Add to queue instead of playing immediately
+            speechQueue.push(text);
+            processQueue();
+        }
+
+        // Process speech queue - plays messages sequentially
+        function processQueue() {
+            if (isSpeaking || speechQueue.length === 0) return;
+
+            isSpeaking = true;
+            const text = speechQueue.shift();
+
+            try {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9;      // Speed
+                utterance.pitch = 1;        // Pitch
+                utterance.volume = volumeLevel;
+                
+                // When speech ends, process next in queue
+                utterance.onend = () => {
+                    isSpeaking = false;
+                    processQueue();
+                };
+                
+                utterance.onerror = () => {
+                    isSpeaking = false;
+                    processQueue();
+                };
+
+                window.speechSynthesis.speak(utterance);
+            } catch (error) {
+                console.error('Speech synthesis error:', error);
+                isSpeaking = false;
+                processQueue();
+            }
+        }
+
+        // Clear conversation
+        function clearConversation() {
+            const messagesDiv = document.getElementById('conversationMessages');
+            messagesDiv.innerHTML = '<div class="conversation-empty">Messages cleared. Messages will appear here...</div>';
+            messageCount = 0;
+        }
+
+        // Update pose badge
+        function updatePoseBadge(isCorrect, message) {
+            const badge = document.getElementById('poseBadge');
+            if (isCorrect) {
+                badge.className = 'pose-status-badge correct';
+                badge.textContent = '✓ ' + message;
+            } else {
+                badge.className = 'pose-status-badge incorrect';
+                badge.textContent = '✗ ' + message;
+            }
+        }
+
+        // Initialize exercises grid
+        function initializeExercises() {
+            renderExercises(exercises);
+        }
+
+        // Render exercises in grid
+        function renderExercises(exerciseList) {
+            const grid = document.getElementById('exercisesGrid');
+            
+            if (exerciseList.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-results">
+                        <h3>No exercises found</h3>
+                        <p>Try a different search term</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = exerciseList.map((exercise, index) => `
+                <div class="exercise-card">
+                    <div class="video-container">
+                        <iframe src="${exercise.video}" style="display:none;"></iframe>
+                        <img src="https://img.youtube.com/vi/${extractYoutubeId(exercise.youtubeLink)}/maxresdefault.jpg" 
+                             style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="video-overlay" onclick="openModal(${index})">
+                            <div class="play-btn"></div>
+                        </div>
+                    </div>
+                    <div class="exercise-content">
+                        <h3 class="exercise-name">${exercise.name}</h3>
+                        <p class="exercise-description">${exercise.description}</p>
+                        
+                        <div class="angles-section">
+                            <div style="margin-bottom: 12px;">
+                                <strong style="color: var(--primary-color); font-size: 0.95em;">💪 Left Arm Position</strong>
+                                <div style="margin-top: 8px; font-size: 0.85em; line-height: 1.6; color: var(--text-light);">
+                                    Shoulder: ${getArmPositionLabel(exercise.leftArm.shoulderAngle)}<br>
+                                    Elbow: ${getElbowPositionLabel(exercise.leftArm.elbowAngle)}
+                                </div>
+                            </div>
+                            <div style="border-top: 1px solid rgba(0,0,0,0.1); padding-top: 12px;">
+                                <strong style="color: var(--primary-color); font-size: 0.95em;">💪 Right Arm Position</strong>
+                                <div style="margin-top: 8px; font-size: 0.85em; line-height: 1.6; color: var(--text-light);">
+                                    Shoulder: ${getArmPositionLabel(exercise.rightArm.shoulderAngle)}<br>
+                                    Elbow: ${getElbowPositionLabel(exercise.rightArm.elbowAngle)}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="feedback-section">
+                            <div class="feedback-label">📌 Key Tips</div>
+                            <ul class="feedback-tips">
+                                ${[...exercise.feedbackLeft, ...exercise.feedbackRight]
+                                    .slice(0, 2)
+                                    .map(tip => `<li>${tip}</li>`)
+                                    .join('')}
+                            </ul>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="openModal(${index})">View Details</button>
+                            <a href="${exercise.youtubeLink}" target="_blank" class="btn btn-secondary">YouTube</a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Helper function to convert shoulder angle to descriptive label
+        function getArmPositionLabel(angle) {
+            if (angle <= 20) return `↓ Arm at side (${angle}°)`;
+            if (angle <= 45) return `↙ Arm slightly up (${angle}°)`;
+            if (angle <= 70) return `← Arm forward-down (${angle}°)`;
+            if (angle <= 110) return `← Arm forward/out (${angle}°)`;
+            if (angle <= 150) return `↑ Arm elevated (${angle}°)`;
+            return `⬆ Arm overhead (${angle}°)`;
+        }
+
+        // Helper function to convert elbow angle to descriptive label
+        function getElbowPositionLabel(angle) {
+            if (angle <= 90) return `⌐ Elbow bent (${angle}°)`;
+            if (angle <= 150) return `─ Elbow semi-extended (${angle}°)`;
+            return `→ Elbow fully extended (${angle}°)`;
+        }
+
+        // Draw complete human skeleton with animation support
+        function drawCompleteSkeleton(canvasId, leftShoulderAngle, leftElbowAngle, rightShoulderAngle, rightElbowAngle, status = 'neutral', isAnimating = false) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+            
+            // Clear canvas
+            ctx.fillStyle = '#f9fafb';
+            ctx.fillRect(0, 0, w, h);
+            
+            // Center positions
+            const centerX = w / 2;
+            const headY = h * 0.12;
+            const neckY = h * 0.20;
+            const shoulderY = h * 0.28;
+            const elbowOffsetY = h * 0.22;
+            const wristOffsetY = h * 0.22;
+            const torsoY = h * 0.45;
+            const hipY = h * 0.55;
+            const kneeY = h * 0.75;
+            const ankleY = h * 0.92;
+            
+            // Determine color based on status
+            let mainColor = '#1f2937'; // neutral black
+            let accentColor = '#2563eb'; // blue for joints
+            
+            if (status === 'correct') {
+                mainColor = '#10b981'; // green
+                accentColor = '#059669';
+            } else if (status === 'warning') {
+                mainColor = '#f59e0b'; // orange
+                accentColor = '#d97706';
+            } else if (status === 'error') {
+                mainColor = '#ef4444'; // red
+                accentColor = '#dc2626';
+            }
+            
+            // Draw head
+            ctx.fillStyle = accentColor;
+            ctx.beginPath();
+            ctx.arc(centerX, headY, 14, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = mainColor;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Draw neck
+            ctx.strokeStyle = mainColor;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(centerX, headY + 14);
+            ctx.lineTo(centerX, neckY);
+            ctx.stroke();
+            
+            // Draw torso (main body)
+            ctx.strokeStyle = mainColor;
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(centerX, neckY);
+            ctx.lineTo(centerX, torsoY);
+            ctx.stroke();
+            
+            // Draw pelvis
+            ctx.strokeStyle = mainColor;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(centerX - 18, torsoY);
+            ctx.lineTo(centerX + 18, torsoY);
+            ctx.stroke();
+            
+            // Draw left arm
+            const leftShoulderRad = (leftShoulderAngle - 90) * (Math.PI / 180);
+            const leftElbowRad = (leftElbowAngle - 90) * (Math.PI / 180);
+            
+            const leftShoulderX = centerX - 20;
+            const leftShoulderY = shoulderY;
+            
+            const leftElbowX = leftShoulderX + Math.cos(leftShoulderRad) * 55;
+            const leftElbowY = leftShoulderY + Math.sin(leftShoulderRad) * 55;
+            
+            const leftWristX = leftElbowX + Math.cos(leftElbowRad) * 50;
+            const leftWristY = leftElbowY + Math.sin(leftElbowRad) * 50;
+            
+            // Draw left arm segments
+            ctx.strokeStyle = mainColor;
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(leftShoulderX, leftShoulderY);
+            ctx.lineTo(leftElbowX, leftElbowY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(leftElbowX, leftElbowY);
+            ctx.lineTo(leftWristX, leftWristY);
+            ctx.stroke();
+            
+            // Draw left arm joints
+            ctx.fillStyle = accentColor;
+            ctx.beginPath();
+            ctx.arc(leftShoulderX, leftShoulderY, 7, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(leftElbowX, leftElbowY, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(leftWristX, leftWristY, 5, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw right arm
+            const rightShoulderRad = (rightShoulderAngle - 90) * (Math.PI / 180);
+            const rightElbowRad = (rightElbowAngle - 90) * (Math.PI / 180);
+            
+            const rightShoulderX = centerX + 20;
+            const rightShoulderY = shoulderY;
+            
+            const rightElbowX = rightShoulderX + Math.cos(rightShoulderRad) * 55;
+            const rightElbowY = rightShoulderY + Math.sin(rightShoulderRad) * 55;
+            
+            const rightWristX = rightElbowX + Math.cos(rightElbowRad) * 50;
+            const rightWristY = rightElbowY + Math.sin(rightElbowRad) * 50;
+            
+            // Draw right arm segments
+            ctx.strokeStyle = mainColor;
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(rightShoulderX, rightShoulderY);
+            ctx.lineTo(rightElbowX, rightElbowY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(rightElbowX, rightElbowY);
+            ctx.lineTo(rightWristX, rightWristY);
+            ctx.stroke();
+            
+            // Draw right arm joints
+            ctx.fillStyle = accentColor;
+            ctx.beginPath();
+            ctx.arc(rightShoulderX, rightShoulderY, 7, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(rightElbowX, rightElbowY, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(rightWristX, rightWristY, 5, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw left leg
+            ctx.strokeStyle = mainColor;
+            ctx.lineWidth = 3;
+            const leftHipX = centerX - 12;
+            const leftKneeX = centerX - 15;
+            ctx.beginPath();
+            ctx.moveTo(leftHipX, torsoY);
+            ctx.lineTo(leftKneeX, kneeY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(leftKneeX, kneeY);
+            ctx.lineTo(leftKneeX - 5, ankleY);
+            ctx.stroke();
+            
+            // Draw left leg joints
+            ctx.fillStyle = accentColor;
+            ctx.beginPath();
+            ctx.arc(leftHipX, torsoY, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(leftKneeX, kneeY, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(leftKneeX - 5, ankleY, 4, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw right leg
+            ctx.strokeStyle = mainColor;
+            ctx.lineWidth = 3;
+            const rightHipX = centerX + 12;
+            const rightKneeX = centerX + 15;
+            ctx.beginPath();
+            ctx.moveTo(rightHipX, torsoY);
+            ctx.lineTo(rightKneeX, kneeY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(rightKneeX, kneeY);
+            ctx.lineTo(rightKneeX + 5, ankleY);
+            ctx.stroke();
+            
+            // Draw right leg joints
+            ctx.fillStyle = accentColor;
+            ctx.beginPath();
+            ctx.arc(rightHipX, torsoY, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(rightKneeX, kneeY, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(rightKneeX + 5, ankleY, 4, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw angle labels
+            ctx.fillStyle = '#1f2937';
+            ctx.font = 'bold 10px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(Math.round(leftShoulderAngle) + '°', leftShoulderX - 28, leftShoulderY - 12);
+            ctx.fillText(Math.round(leftElbowAngle) + '°', leftElbowX - 22, leftElbowY - 8);
+            ctx.fillText(Math.round(rightShoulderAngle) + '°', rightShoulderX + 28, rightShoulderY - 12);
+            ctx.fillText(Math.round(rightElbowAngle) + '°', rightElbowX + 22, rightElbowY - 8);
+        }
+
+        // Easing function for smooth animation
+        function easeInOutCubic(t) {
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+
+        // Animate skeleton from current to target position
+        function animateSkeleton(canvasId, fromAngles, toAngles) {
+            animationState.isAnimating = true;
+            animationState.startTime = Date.now();
+            animationState.startAngles = { ...fromAngles };
+            animationState.targetAngles = { ...toAngles };
+            
+            function animate() {
+                const now = Date.now();
+                const elapsed = now - animationState.startTime;
+                const progress = Math.min(elapsed / animationState.duration, 1);
+                const easeProgress = easeInOutCubic(progress);
+                
+                // Interpolate angles
+                const currentAngles = {
+                    leftShoulder: animationState.startAngles.leftShoulder + 
+                        (animationState.targetAngles.leftShoulder - animationState.startAngles.leftShoulder) * easeProgress,
+                    leftElbow: animationState.startAngles.leftElbow + 
+                        (animationState.targetAngles.leftElbow - animationState.startAngles.leftElbow) * easeProgress,
+                    rightShoulder: animationState.startAngles.rightShoulder + 
+                        (animationState.targetAngles.rightShoulder - animationState.startAngles.rightShoulder) * easeProgress,
+                    rightElbow: animationState.startAngles.rightElbow + 
+                        (animationState.targetAngles.rightElbow - animationState.startAngles.rightElbow) * easeProgress
+                };
+                
+                // Determine color based on progress (red → green)
+                let status = 'error';
+                if (progress > 0.5) {
+                    status = 'warning';
+                }
+                if (progress === 1) {
+                    status = 'correct';
+                }
+                
+                // Draw animated skeleton
+                drawCompleteSkeleton(canvasId,
+                    currentAngles.leftShoulder,
+                    currentAngles.leftElbow,
+                    currentAngles.rightShoulder,
+                    currentAngles.rightElbow,
+                    status,
+                    true);
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    animationState.isAnimating = false;
+                }
+            }
+            
+            animate();
+        }
+
+        // Draw skeleton on canvas (original function - now uses drawCompleteSkeleton)
+        function drawSkeleton(canvasId, leftShoulderAngle, leftElbowAngle, rightShoulderAngle, rightElbowAngle, status = 'neutral') {
+            drawCompleteSkeleton(canvasId, leftShoulderAngle, leftElbowAngle, rightShoulderAngle, rightElbowAngle, status, false);
+        }
+
+        // Extract YouTube video ID
+        function extractYoutubeId(url) {
+            const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+            return match ? match[1] : '';
+        }
+
+        // Open exercise details modal
+        function openModal(index) {
+            currentExercise = exercises[index];
+            document.getElementById('modalExerciseName').textContent = currentExercise.name;
+            document.getElementById('modalDescription').textContent = currentExercise.description;
+            document.getElementById('modalVideo').src = currentExercise.video;
+            document.getElementById('openYoutubeLink').href = currentExercise.youtubeLink;
+
+            const anglesHtml = `
+                <div style="display: grid; gap: 15px;">
+                    <div style="background: var(--light-bg); padding: 15px; border-radius: 8px;">
+                        <strong>💪 Left Arm</strong>
+                        <div style="margin-top: 10px; font-size: 0.9em;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Shoulder:</span>
+                                <span style="color: var(--primary-color); font-weight: 700;">${currentExercise.leftArm.shoulderAngle}°</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Elbow:</span>
+                                <span style="color: var(--primary-color); font-weight: 700;">${currentExercise.leftArm.elbowAngle}°</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background: var(--light-bg); padding: 15px; border-radius: 8px;">
+                        <strong>💪 Right Arm</strong>
+                        <div style="margin-top: 10px; font-size: 0.9em;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Shoulder:</span>
+                                <span style="color: var(--primary-color); font-weight: 700;">${currentExercise.rightArm.shoulderAngle}°</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Elbow:</span>
+                                <span style="color: var(--primary-color); font-weight: 700;">${currentExercise.rightArm.elbowAngle}°</span>
                             </div>
                         </div>
                     </div>
                 </div>
             `;
+            document.getElementById('modalAngles').innerHTML = anglesHtml;
+            
+            // Draw target skeleton in modal
+            setTimeout(() => {
+                drawSkeleton('modalSkeletonCanvas', 
+                    currentExercise.leftArm.shoulderAngle, 
+                    currentExercise.leftArm.elbowAngle,
+                    currentExercise.rightArm.shoulderAngle, 
+                    currentExercise.rightArm.elbowAngle, 
+                    'neutral');
+            }, 100);
 
-            grid.appendChild(videoCard);
+            const feedbackHtml = `
+                <div style="display: grid; gap: 15px;">
+                    <div>
+                        <strong style="color: var(--primary-color);">💡 Left Arm Tips</strong>
+                        <ul class="feedback-tips" style="margin-top: 10px;">
+                            ${currentExercise.feedbackLeft.map(tip => `<li>${tip}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div>
+                        <strong style="color: var(--primary-color);">💡 Right Arm Tips</strong>
+                        <ul class="feedback-tips" style="margin-top: 10px;">
+                            ${currentExercise.feedbackRight.map(tip => `<li>${tip}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modalFeedback').innerHTML = feedbackHtml;
+
+            document.getElementById('exerciseModal').style.display = 'block';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('exerciseModal').style.display = 'none';
+            document.getElementById('modalVideo').src = '';
+        }
+
+        // Start exercising with webcam
+        async function startExercising() {
+            closeModal();
+            isExercising = true;
+            messageCount = 0;
+            document.getElementById('webcamModal').style.display = 'block';
+            
+            // Clear conversation and reinitialize
+            clearConversation();
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        width: { ideal: 640 }, 
+                        height: { ideal: 480 } 
+                    } 
+                });
+                const video = document.getElementById('webcam');
+                video.srcObject = stream;
+
+                // Wait for video to be ready
+                video.onloadedmetadata = () => {
+                    addMessage('✅ Webcam connected successfully', 'success');
+                    startPoseFeedback(video);
+                };
+            } catch (error) {
+                const errorMsg = error.name === 'NotAllowedError' 
+                    ? 'Camera access denied. Please allow webcam access.' 
+                    : error.name === 'NotFoundError'
+                    ? 'No camera found. Please connect a webcam.'
+                    : 'Could not access webcam. ' + error.message;
+                
+                addMessage(errorMsg, 'error');
+                setTimeout(() => {
+                    closeWebcamModal();
+                }, 2000);
+            }
+        }
+
+        // Start pose detection feedback
+        async function startPoseFeedback(video) {
+            let frameCount = 0;
+            let sessionStartTime = Date.now();
+            let lastFeedbackTime = Date.now();
+            const FEEDBACK_INTERVAL = 5000; // Show feedback every 5 seconds
+            
+            // Accumulator for feedback data
+            let feedbackAccumulator = {
+                responses: [],
+                correctCount: 0,
+                incorrectCount: 0,
+                allFeedbackTips: new Set(),
+                lastMessage: '',
+                lastAngles: {}
+            };
+
+            addMessage(`Exercise: "${currentExercise.name}" started`, 'info', 'Initializing pose detection...');
+
+            const processFrame = async () => {
+                if (!isExercising) return;
+
+                frameCount++;
+
+                // Call backend API every 10 frames
+                if (frameCount % 10 === 0) {
+                    try {
+                        const canvas = document.getElementById('canvas');
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(video, 0, 0);
+
+                        const imageData = canvas.toDataURL('image/jpeg', 0.7);
+
+                        const response = await fetch('http://localhost:5003/api/check-pose', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                exercise_name: currentExercise.name,
+                                image: imageData
+                            })
+                        });
+
+                        const data = await response.json();
+                        const currentTime = Date.now();
+
+                        // Always update badge and angles in real-time
+                        updatePoseBadge(data.correct, data.message);
+
+                        // Display angles in real-time
+                        if (data.angles && Object.keys(data.angles).length > 0) {
+                            const angleDisplay = document.getElementById('angleDisplay');
+                            angleDisplay.style.display = 'block';
+                            
+                            if (data.angles.left_shoulder !== undefined) {
+                                const leftEl = document.getElementById('leftShoulderAngle');
+                                const targetLeft = currentExercise.leftArm.shoulderAngle;
+                                const diff = Math.abs(data.angles.left_shoulder - targetLeft);
+                                leftEl.textContent = data.angles.left_shoulder;
+                                leftEl.className = diff <= 7 ? 'angle-value-item success' : 'angle-value-item warning';
+                                feedbackAccumulator.lastAngles.left_shoulder = data.angles.left_shoulder;
+                            }
+                            
+                            if (data.angles.right_shoulder !== undefined) {
+                                const rightEl = document.getElementById('rightShoulderAngle');
+                                const targetRight = currentExercise.rightArm.shoulderAngle;
+                                const diff = Math.abs(data.angles.right_shoulder - targetRight);
+                                rightEl.textContent = data.angles.right_shoulder;
+                                rightEl.className = diff <= 7 ? 'angle-value-item success' : 'angle-value-item warning';
+                                feedbackAccumulator.lastAngles.right_shoulder = data.angles.right_shoulder;
+                            }
+                        }
+
+                        // Accumulate feedback data
+                        feedbackAccumulator.responses.push(data);
+                        if (data.correct) {
+                            feedbackAccumulator.correctCount++;
+                        } else {
+                            feedbackAccumulator.incorrectCount++;
+                        }
+                        feedbackAccumulator.lastMessage = data.message;
+                        
+                        if (data.feedback) {
+                            const tips = data.feedback.split('|').map(tip => tip.trim());
+                            tips.forEach(tip => {
+                                if (tip) feedbackAccumulator.allFeedbackTips.add(tip);
+                            });
+                        }
+
+                        // Display accumulated feedback every 5 seconds
+                        if (currentTime - lastFeedbackTime >= FEEDBACK_INTERVAL) {
+                            displayAccumulatedFeedback(feedbackAccumulator);
+                            
+                            // Reset accumulator for next cycle
+                            feedbackAccumulator = {
+                                responses: [],
+                                correctCount: 0,
+                                incorrectCount: 0,
+                                allFeedbackTips: new Set(),
+                                lastMessage: '',
+                                lastAngles: feedbackAccumulator.lastAngles
+                            };
+                            lastFeedbackTime = currentTime;
+                        }
+                    } catch (error) {
+                        console.error('API Error:', error);
+                        addMessage('Connection error: Unable to reach pose detection API', 'error', error.message);
+                    }
+                }
+
+                if (isExercising) {
+                    requestAnimationFrame(processFrame);
+                }
+            };
+
+            function displayAccumulatedFeedback(accumulator) {
+                if (accumulator.responses.length === 0) return;
+
+                // Determine overall status from accumulated data
+                const isCorrect = accumulator.correctCount >= accumulator.incorrectCount;
+                const status = isCorrect ? 'correct' : 'error';
+
+                if (isCorrect) {
+                    addMessage(accumulator.lastMessage, 'success');
+                    // Queue the message for speech (will play sequentially)
+                    speakMessageFallback(accumulator.lastMessage);
+                } else {
+                    // Show main message
+                    addMessage(accumulator.lastMessage, 'error');
+                    
+                    // Queue the main message for speech
+                    speakMessageFallback(accumulator.lastMessage);
+                    
+                    // Show all accumulated feedback tips and queue them for speech
+                    if (accumulator.allFeedbackTips.size > 0) {
+                        // Add each feedback tip as a message and queue for speech
+                        accumulator.allFeedbackTips.forEach((tip) => {
+                            addMessage(tip, 'feedback');
+                            // Queue each tip for speech - they'll play in sequence
+                            speakMessageFallback(tip);
+                        });
+                    }
+                    
+                    // Trigger animation from current to target when exercise is WRONG
+                    if (!animationState.isAnimating && accumulator.lastAngles.left_shoulder !== undefined) {
+                        const fromAngles = {
+                            leftShoulder: accumulator.lastAngles.left_shoulder || currentExercise.leftArm.shoulderAngle,
+                            leftElbow: accumulator.lastAngles.left_elbow || currentExercise.leftArm.elbowAngle,
+                            rightShoulder: accumulator.lastAngles.right_shoulder || currentExercise.rightArm.shoulderAngle,
+                            rightElbow: accumulator.lastAngles.right_elbow || currentExercise.rightArm.elbowAngle
+                        };
+                        
+                        const toAngles = {
+                            leftShoulder: currentExercise.leftArm.shoulderAngle,
+                            leftElbow: currentExercise.leftArm.elbowAngle,
+                            rightShoulder: currentExercise.rightArm.shoulderAngle,
+                            rightElbow: currentExercise.rightArm.elbowAngle
+                        };
+                        
+                        // Start animation on the live skeleton canvas
+                        animateSkeleton('liveSkeletonCanvas', fromAngles, toAngles);
+                    }
+                }
+                
+                // Draw live skeleton with current angles (for correct pose)
+                if (accumulator.lastAngles.left_shoulder !== undefined) {
+                    drawSkeleton('liveSkeletonCanvas',
+                        accumulator.lastAngles.left_shoulder || currentExercise.leftArm.shoulderAngle,
+                        accumulator.lastAngles.left_elbow || currentExercise.leftArm.elbowAngle,
+                        accumulator.lastAngles.right_shoulder || currentExercise.rightArm.shoulderAngle,
+                        accumulator.lastAngles.right_elbow || currentExercise.rightArm.elbowAngle,
+                        status);
+                }
+                
+                // Draw target skeleton
+                drawSkeleton('targetSkeletonCanvas',
+                    currentExercise.leftArm.shoulderAngle,
+                    currentExercise.leftArm.elbowAngle,
+                    currentExercise.rightArm.shoulderAngle,
+                    currentExercise.rightArm.elbowAngle,
+                    'neutral');
+            }
+
+            addMessage('Webcam initialized. Position yourself in frame.', 'info');
+            processFrame();
+        }
+
+        // Stop exercising
+        function stopExercising() {
+            isExercising = false;
+            const video = document.getElementById('webcam');
+            if (video.srcObject) {
+                video.srcObject.getTracks().forEach(track => track.stop());
+            }
+            
+            // Stop audio and clear speech queue
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio = null;
+            }
+            window.speechSynthesis.cancel();
+            isSpeaking = false;
+            speechQueue = [];
+            
+            addMessage(`Exercise session ended. Total messages: ${messageCount}`, 'info', 'You can close this window or start another exercise.');
+            
+            // Disable angle display
+            document.getElementById('angleDisplay').style.display = 'none';
+            
+            setTimeout(() => {
+                closeWebcamModal();
+            }, 1000);
+        }
+
+        // Close webcam modal
+        function closeWebcamModal() {
+            document.getElementById('webcamModal').style.display = 'none';
+            isExercising = false;
+        }
+
+        // Filter exercises
+        function filterExercises() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = exercises.filter(ex => 
+                ex.name.toLowerCase().includes(searchTerm) ||
+                ex.description.toLowerCase().includes(searchTerm)
+            );
+            renderExercises(filtered);
+        }
+
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            renderExercises(exercises);
+        }
+
+        // Search on Enter key
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    filterExercises();
+                }
+            });
+
+            // Close modal when clicking outside
+            window.addEventListener('click', function(e) {
+                const modal = document.getElementById('exerciseModal');
+                const webcamModal = document.getElementById('webcamModal');
+                if (e.target === modal) closeModal();
+                if (e.target === webcamModal) closeWebcamModal();
+            });
+
+            initializeExercises();
         });
-    }
+    </script>
 
-    // Play video
-    function playVideo(videoUrl, title, description) {
-        const videoPlayer = document.getElementById('videoPlayer');
-        const videoElement = document.getElementById('videoElement');
-
-        document.getElementById('videoTitle').textContent = title;
-        document.getElementById('videoDescription').textContent = description;
-
-        videoElement.src = videoUrl;
-        videoElement.play().catch(console.log);
-
-        videoPlayer.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
-
-    // Close video
-    function closeVideo() {
-        const videoPlayer = document.getElementById('videoPlayer');
-        const videoElement = document.getElementById('videoElement');
-
-        videoElement.pause();
-        videoElement.src = '';
-        videoPlayer.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-
-    // Event listeners
-    document.getElementById('closeVideo').addEventListener('click', closeVideo);
-    document.getElementById('videoPlayer').addEventListener('click', function (e) {
-        if (e.target === this) closeVideo();
-    });
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') closeVideo();
-    });
-
-    // Load default disease type when page loads
-    document.addEventListener('DOMContentLoaded', function () {
-        loadVideos('boneanomaly');  // 👈 loads from Django instead of dummy
-    });
-</script>
-
+<!-- Chatbot Widget -->
+{% include 'components/chatbot_widget.html' %}
 </body>
-
 </html>

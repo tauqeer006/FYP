@@ -1,0 +1,391 @@
+shoulder_rehab_exercises:
+  - name: Pendulum Swing
+    description: Lean forward and let the injured arm hang, then gently swing it in small circles to mobilize the shoulder.
+    left_arm:
+      shoulder_angle: 45   # placeholder
+      elbow_angle: 90      # placeholder
+    right_arm:
+      shoulder_angle: 45
+      elbow_angle: 90
+    feedback_tips:
+      left:
+        - "Let left arm hang relaxed"
+        - "Use body movement, not left shoulder muscles"
+      right:
+        - "Let right arm hang relaxed"
+        - "Use body movement, not right shoulder muscles"
+    video: https://www.youtube.com/watch?v=S4H_rZA2kSM  # Beginner Shoulder Rehab Exercises
+
+  - name: Active Shoulder Flexion (Wall Slide)
+    description: Face a wall, slide the arm up the wall slowly to shoulder height or above, control motion.
+    left_arm:
+      shoulder_angle: 90
+      elbow_angle: 180
+    right_arm:
+      shoulder_angle: 90
+      elbow_angle: 180
+    feedback_tips:
+      left:
+        - "Raise left arm slowly up the wall"
+        - "Keep left elbow and wrist on the wall"
+      right:
+        - "Raise right arm slowly up the wall"
+        - "Keep right elbow and wrist on the wall"
+    video: https://www.youtube.com/watch?v=AMqT-3l0I6k  # 5 Exercises For Shoulder Pain Relief
+
+  - name: Shoulder Abduction (Assisted)
+    description: Using a cane or stick, assist the arm out to the side to shoulder height to improve range.
+    left_arm:
+      shoulder_angle: 90
+      elbow_angle: 180
+    right_arm:
+      shoulder_angle: 90
+      elbow_angle: 180
+    feedback_tips:
+      left:
+        - "Move left arm out sideways to shoulder height"
+        - "Use stick to gently guide left arm"
+      right:
+        - "Move right arm out sideways to shoulder height"
+        - "Use stick to gently guide right arm"
+    video: https://www.youtube.com/watch?v=1Wy8jh4QQH8k  # Rotator Cuff Tear Rehab & Exercises
+
+  - name: External Rotation with Band (Elbow at Side)
+    description: With elbow tucked and forearm rotating outwards using a light band to activate rotator‑cuff safely.
+    left_arm:
+      shoulder_angle: 20
+      elbow_angle: 90
+    right_arm:
+      shoulder_angle: 20
+      elbow_angle: 90
+    feedback_tips:
+      left:
+        - "Keep left elbow close to torso"
+        - "Rotate left forearm outward slowly"
+      right:
+        - "Keep right elbow close to torso"
+        - "Rotate right forearm outward slowly"
+    video: https://www.youtube.com/watch?v=IzTFCZv0--E  # Shoulder Strengthening Exercises with a Resistive Band
+
+  - name: Internal Rotation with Band (Elbow at Side)
+    description: With elbow tucked and forearm rotating inward using a band, building internal shoulder stability.
+    left_arm:
+      shoulder_angle: 20
+      elbow_angle: 90
+    right_arm:
+      shoulder_angle: 20
+      elbow_angle: 90
+    feedback_tips:
+      left:
+        - "Keep left elbow at side"
+        - "Rotate left forearm inward slowly"
+      right:
+        - "Keep right elbow at side"
+        - "Rotate right forearm inward slowly"
+    video: https://www.youtube.com/watch?v=S4H_rZA2kSM  # (Use sample from rehab playlist)
+
+  - name: Scapular Retraction/Depression (Wall Slide Variation)
+    description: While sliding arms up the wall, focus on pulling shoulder blades down and back to activate scapular stabilizers.
+    left_arm:
+      shoulder_angle: 90
+      elbow_angle: 180
+    right_arm:
+      shoulder_angle: 90
+      elbow_angle: 180
+    feedback_tips:
+      left:
+        - "Pull left shoulder blade down and back"
+        - "Slide left arm up the wall smoothly"
+      right:
+        - "Pull right shoulder blade down and back"
+        - "Slide right arm up the wall smoothly"
+    video: https://www.youtube.com/playlist?list=PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ  # Shoulder Rehab Exercises playlist
+
+  - name: Prone Y Raise (on bed or table)
+    description: Lying face down on a table with arms raised into a “Y” shape to strengthen rear delts and scapular stabilizers.
+    left_arm:
+      shoulder_angle: 135
+      elbow_angle: 160
+    right_arm:
+      shoulder_angle: 135
+      elbow_angle: 160
+    feedback_tips:
+      left:
+        - "Lift left arm in Y shape"
+        - "Keep left elbow slightly bent"
+      right:
+        - "Lift right arm in Y shape"
+        - "Keep right elbow slightly bent"
+    video: https://www.youtube.com/watch?v=AMqT-3l0I6k  # Sample video for shoulder pain relief
+
+  - name: Wall Angel (with scapular control)
+    description: Standing back against wall, slide arms up and down in “snow‑angel” motion while keeping back and shoulders flat to wall.
+    left_arm:
+      shoulder_angle: 135
+      elbow_angle: 150
+    right_arm:
+      shoulder_angle: 135
+      elbow_angle: 150
+    feedback_tips:
+      left:
+        - "Keep left back and shoulder flat to wall"
+        - "Slide left arms up and down slowly"
+      right:
+        - "Keep right back and shoulder flat to wall"
+        - "Slide right arms up and down slowly"
+    video: https://www.youtube.com/watch?v=S4H_rZA2kSM  # Beginner Shoulder Rehab Exercises
+
+  - name: Seated Shoulder Flexion (Using Assistive Device)
+    description: Sitting upright, raise arm(s) forward with assistance or support to the shoulder height range.
+    left_arm:
+      shoulder_angle: 90
+      elbow_angle: 180
+    right_arm:
+      shoulder_angle: 90
+      elbow_angle: 180
+    feedback_tips:
+      left:
+        - "Raise left arm forward to shoulder height"
+        - "Keep left elbow straight and controlled"
+      right:
+        - "Raise right arm forward to shoulder height"
+        - "Keep right elbow straight and controlled"
+    video: https://www.youtube.com/playlist?list=PLMnHlHoq4yFQAFSO9CNx_3b25993iytL  # Shoulder Surgery Rehab playlist
+
+  - name: Side‑lying External Rotation (Low Load)
+    description: Lie on side, elbow bent 90°, keep upper arm supported and rotate forearm upward slowly to work rotator cuff.
+    left_arm:
+      shoulder_angle: 30
+      elbow_angle: 90
+    right_arm:
+      shoulder_angle: 30
+      elbow_angle: 90
+    feedback_tips:
+      left:
+        - "Keep left upper arm supported"
+        - "Rotate left forearm upward slowly"
+      right:
+        - "Keep right upper arm supported"
+        - "Rotate right forearm upward slowly"
+    video: https://www.youtube.com/watch?v=AMqT-3l0I6k  # Use sample video
+
+  - name: Isometric Shoulder Flexion
+    description: Stand near wall, press fist or forearm into wall at shoulder level and hold to activate without movement.
+    left_arm:
+      shoulder_angle: 90
+      elbow_angle: 90
+    right_arm:
+      shoulder_angle: 90
+      elbow_angle: 90
+    feedback_tips:
+      left:
+        - "Press left forearm into wall and hold"
+        - "Do not raise left arm yet"
+      right:
+        - "Press right forearm into wall and hold"
+        - "Do not raise right arm yet"
+    video: https://www.youtube.com/watch?v=S4H_rZA2kSM
+
+  - name: Scaption (Scapular‑Plane Elevation)
+    description: Raise arms in front at about 30° from the body (in scapular plane) to shoulder height with thumbs up.
+    left_arm:
+      shoulder_angle: 90
+      elbow_angle: 160
+    right_arm:
+      shoulder_angle: 90
+      elbow_angle: 160
+    feedback_tips:
+      left:
+        - "Raise left arm in front at 30° angle"
+        - "Keep left elbow slightly bent"
+      right:
+        - "Raise right arm in front at 30° angle"
+        - "Keep right elbow slightly bent"
+    video: https://www.youtube.com/playlist?list=PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ
+
+  - name: External Rotation in 90° Abduction
+    description: In 90° shoulder abduction position (arm to side), rotate forearm upward/outward to strengthen rotator cuff in abducted posture.
+    left_arm:
+      shoulder_angle: 90
+      elbow_angle: 90
+    right_arm:
+      shoulder_angle: 90
+      elbow_angle: 90
+    feedback_tips:
+      left:
+        - "Keep left upper arm out to side at shoulder height"
+        - "Rotate left forearm upward slowly"
+      right:
+        - "Keep right upper arm out to side at shoulder height"
+        - "Rotate right forearm upward slowly"
+    video: https://www.youtube.com/watch?v=IzTFCZv0--E
+
+  - name: Shoulder Horizontal Abduction (Prone)
+    description: Lie face down on table with arms out front, then move arms horizontally out to sides to shoulder height.
+    left_arm:
+      shoulder_angle: 90
+      elbow_angle: 150
+    right_arm:
+      shoulder_angle: 90
+      elbow_angle: 150
+    feedback_tips:
+      left:
+        - "Lift left arm out sideways from prone position"
+        - "Keep left elbow slightly bent"
+      right:
+        - "Lift right arm out sideways from prone position"
+        - "Keep right elbow slightly bent"
+    video: https://www.youtube.com/watch?v=1Wy8jh4QQH8k
+
+  - name: Shoulder Extension (Standing Assisted)
+    description: In standing, use a stick or assistive device to move arm backward (extension) behind body to activate posterior shoulder.
+    left_arm:
+      shoulder_angle: 40
+      elbow_angle: 180
+    right_arm:
+      shoulder_angle: 40
+      elbow_angle: 180
+    feedback_tips:
+      left:
+        - "Move left arm backward gently"
+        - "Keep left elbow straight"
+      right:
+        - "Move right arm backward gently"
+        - "Keep right elbow straight"
+    video: https://www.youtube.com/playlist?list=PLMnHlHoq4yFQAFSO9CNx_3b25993iytL
+
+  - name: Chair Push‑Up for Shoulder (Mini)
+    description: Place hands on chair or table, do mini push‑ups that activate scapular stability without full load.
+    left_arm:
+      shoulder_angle: 60
+      elbow_angle: 140
+    right_arm:
+      shoulder_angle: 60
+      elbow_angle: 140
+    feedback_tips:
+      left:
+        - "Keep left shoulder stable"
+        - "Lower left body slowly"
+      right:
+        - "Keep right shoulder stable"
+        - "Lower right body slowly"
+    video: https://www.youtube.com/watch?v=AMqT-3l0I6k
+
+  - name: I‑Y‑T Raise (Scapular Activation)
+    description: Lie prone or stand bent forward and move arms in I, Y, and T shapes to activate scapular stabilizers and correct posture.
+    left_arm:
+      shoulder_angle: 135
+      elbow_angle: 160
+    right_arm:
+      shoulder_angle: 135
+      elbow_angle: 160
+    feedback_tips:
+      left:
+        - "Lift left arm in I shape then Y then T"
+        - "Control left elbow path"
+      right:
+        - "Lift right arm in I shape then Y then T"
+        - "Control right elbow path"
+    video: https://www.youtube.com/watch?v=AMqT-3l0I6k
+
+  - name: Serratus Punch
+    description: Standing or lying, punch forward upward at about 120° to activate serratus anterior and improve shoulder blade control.
+    left_arm:
+      shoulder_angle: 120
+      elbow_angle: 160
+    right_arm:
+      shoulder_angle: 120
+      elbow_angle: 160
+    feedback_tips:
+      left:
+        - "Extend left arm forward and upward"
+        - "Keep left scapula sliding smoothly"
+      right:
+        - "Extend right arm forward and upward"
+        - "Keep right scapula sliding smoothly"
+    video: https://www.youtube.com/watch?v=AMqT-3l0I6k
+
+  - name: Shoulder Flexion in Side‑lying (Low Load)
+    description: Lie on side with unaffected arm down, lift affected arm in front to about 90° flexion using minimal load.
+    left_arm:
+      shoulder_angle: 90
+      elbow_angle: 180
+    right_arm:
+      shoulder_angle: 0
+      elbow_angle: 180
+    feedback_tips:
+      left:
+        - "Lift left arm forward to shoulder height"
+        - "Keep left elbow straight and slow motion"
+      right:
+        - "Keep right arm relaxed at side"
+    video: https://www.youtube.com/playlist?list=PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ
+
+  - name: Arm Across Chest Stretch (Post‑Mobility)
+    description: Bring one arm across the chest and use other to support it, stretch posterior‑deltoid and scapular region.
+    left_arm:
+      shoulder_angle: 45
+      elbow_angle: 135
+    right_arm:
+      shoulder_angle: 45
+      elbow_angle: 135
+    feedback_tips:
+      left:
+        - "Pull left arm across chest gently"
+        - "Avoid left shoulder shrugging"
+      right:
+        - "Pull right arm across chest gently"
+        - "Avoid right shoulder shrugging"
+    video: https://www.youtube.com/watch?v=S4H_rZA2kSM
+
+  - name: Assisted Overhead Reach (Seated or Supported)
+    description: Seated with back support, use stick or cane to gently assist overhead reach to improve flexion safely.
+    left_arm:
+      shoulder_angle: 150
+      elbow_angle: 180
+    right_arm:
+      shoulder_angle: 150
+      elbow_angle: 180
+    feedback_tips:
+      left:
+        - "Assist left arm overhead to target height"
+        - "Keep left elbow straight"
+      right:
+        - "Assist right arm overhead to target height"
+        - "Keep right elbow straight"
+    video: https://www.youtube.com/playlist?list=PLMnHlHoq4yFQAFSO9CNx_3b25993iytL
+
+  - name: Gentle Shoulder Abduction from Side‑lying
+    description: Lie on opposite side and lift arm out to side to about 70‑90°, using minimal load and controlled motion.
+    left_arm:
+      shoulder_angle: 80
+      elbow_angle: 160
+    right_arm:
+      shoulder_angle: 0
+      elbow_angle: 180
+    feedback_tips:
+      left:
+        - "Raise left arm out sideways to ~80°"
+        - "Keep left elbow slightly bent"
+      right:
+        - "Relax right arm at side"
+    video: https://www.youtube.com/watch?v=AMqT-3l0I6k
+
+  - name: Wall Walks – Finger Walks Up Wall
+    description: Face wall and “walk” fingers up the wall as high as comfortable to improve flexion/abduction safely.
+    left_arm:
+      shoulder_angle: 110
+      elbow_angle: 180
+    right_arm:
+      shoulder_angle: 110
+      elbow_angle: 180
+    feedback_tips:
+      left:
+        - "Walk left fingers up the wall slowly"
+        - "Avoid left shoulder hiking"
+      right:
+        - "Walk right fingers up the wall slowly"
+        - "Avoid right shoulder hiking"
+    video: https://www.youtube.com/playlist?list=PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ
+
+    

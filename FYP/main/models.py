@@ -27,10 +27,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     username = models.CharField(max_length=100, unique=True)
     user_type = models.CharField(max_length=10, choices=USER_TYPES)
+    email = models.EmailField(max_length=254, blank=True, null=True)
 
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
+    
+    # Password reset fields
+    reset_token = models.CharField(max_length=500, blank=True, null=True)
+    reset_token_created = models.DateTimeField(blank=True, null=True)
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['user_type']
