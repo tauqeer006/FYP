@@ -1,0 +1,255 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="zxx">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content="Contact, Healthcare">
+    <meta name="description" content="Contact X-Ai Medical Center">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Contact Us - X-Ai Medical Center Pakistan</title>
+    <link rel="icon" href="{% static 'img/favicon.png' %}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icofont.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+</head>
+
+<body>
+
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader-outter"></div>
+            <div class="loader-inner"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="topbar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-5 col-12">
+                        <ul class="top-link">
+                            <li><a href="{% url 'about_page' %}">About</a></li>
+                            <li><a href="{% url 'doctors_page' %}">Doctors</a></li>
+                            <li><a href="{% url 'contact_page' %}">Contact</a></li>
+                            <li><a href="{% url 'faq_page' %}">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-6 col-md-7 col-12">
+                        <ul class="top-contact">
+                            <li><i class="fa fa-phone"></i><strong>0304-5450049</strong></li>
+                            <li><i class="fa fa-envelope"></i><a href="mailto:tauqeerqureshi112@gmail.com">tauqeerqureshi112@gmail.com</a></li>
+                            <li><i class="fa fa-map-marker"></i><strong>Rawalpindi, Pakistan</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-inner">
+            <div class="container">
+                <div class="inner">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-12">
+                            <div class="logo">
+                                <a href="{% url 'MainPage' %}"><img src="{% static 'img/blue.png' %}" alt="X-Ai"></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-7 col-md-9 col-12">
+                            <div class="main-menu">
+                                <nav class="navigation">
+                                    <ul class="nav menu">
+                                        <li><a href="{% url 'MainPage' %}">Home</a></li>
+                                        <li><a href="{% url 'about_page' %}">About</a></li>
+                                        <li><a href="{% url 'services_page' %}">Services</a></li>
+                                        <li><a href="{% url 'doctors_page' %}">Doctors</a></li>
+                                        <li class="active"><a href="{% url 'contact_page' %}">Contact Us</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-12">
+                            <div class="get-quote dropdown">
+                                <button class="btn dropdown-toggle" type="button" id="loginDropdown" data-toggle="dropdown">
+                                    Login
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{% url 'admin_login' %}">Admin</a>
+                                    <a class="dropdown-item" href="{% url 'patient_logins' %}">Patient</a>
+                                    <a class="dropdown-item" href="{% url 'loginSystem' %}">Doctor</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Title -->
+    <div class="page-title" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%); padding: 80px 0; color: white; text-align: center;">
+        <div class="container">
+            <h1 style="font-size: 3em; margin-bottom: 10px;">Contact Us</h1>
+            <p style="font-size: 1.2em;">We're here to help - Reach out to us anytime</p>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <section class="contact-section" style="padding: 80px 0; background: #f9f9f9;">
+        <div class="container">
+            <div class="row">
+                <!-- Contact Info -->
+                <div class="col-lg-4 col-md-6 col-12" style="margin-bottom: 40px;">
+                    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); margin-bottom: 20px;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <i class="icofont icofont-location-pin" style="font-size: 2.5em; color: #667eea;"></i>
+                        </div>
+                        <h3 style="text-align: center; margin-bottom: 10px;">📍 Location</h3>
+                        <p style="text-align: center; color: #666; margin: 0;">Range Road, Rawalpindi, Pakistan</p>
+                    </div>
+
+                    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); margin-bottom: 20px;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <i class="icofont icofont-phone" style="font-size: 2.5em; color: #667eea;"></i>
+                        </div>
+                        <h3 style="text-align: center; margin-bottom: 10px;">📞 Phone</h3>
+                        <p style="text-align: center; color: #666; margin: 0;"><a href="tel:03045450049" style="color: #667eea; text-decoration: none;">0304-5450049</a></p>
+                    </div>
+
+                    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); margin-bottom: 20px;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <i class="icofont icofont-email" style="font-size: 2.5em; color: #667eea;"></i>
+                        </div>
+                        <h3 style="text-align: center; margin-bottom: 10px;">📧 Email</h3>
+                        <p style="text-align: center; color: #666; margin: 0;"><a href="mailto:tauqeerqureshi112@gmail.com" style="color: #667eea; text-decoration: none;">tauqeerqureshi112@gmail.com</a></p>
+                    </div>
+
+                    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08);">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <i class="icofont icofont-clock-time" style="font-size: 2.5em; color: #667eea;"></i>
+                        </div>
+                        <h3 style="text-align: center; margin-bottom: 10px;">⏰ Hours</h3>
+                        <p style="text-align: center; color: #666; margin: 0;">10:00 AM – 10:00 PM<br><small>Daily</small></p>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="col-lg-8 col-md-6 col-12">
+                    <div style="background: white; padding: 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08);">
+                        <h2 style="margin-bottom: 30px; color: #333;">Send us a Message</h2>
+                        <form method="POST" action="#">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label style="margin-bottom: 8px; color: #333; font-weight: 500;">Name <span style="color: red;">*</span></label>
+                                        <input type="text" name="name" class="form-control" placeholder="Your Full Name" required style="border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label style="margin-bottom: 8px; color: #333; font-weight: 500;">Email <span style="color: red;">*</span></label>
+                                        <input type="email" name="email" class="form-control" placeholder="Your Email" required style="border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label style="margin-bottom: 8px; color: #333; font-weight: 500;">Phone</label>
+                                        <input type="text" name="phone" class="form-control" placeholder="Your Phone Number" style="border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label style="margin-bottom: 8px; color: #333; font-weight: 500;">Subject <span style="color: red;">*</span></label>
+                                        <input type="text" name="subject" class="form-control" placeholder="Message Subject" required style="border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                <label style="margin-bottom: 8px; color: #333; font-weight: 500;">Message <span style="color: red;">*</span></label>
+                                <textarea name="message" class="form-control" rows="5" placeholder="Your Message" required style="border: 1px solid #ddd; padding: 10px; border-radius: 5px; font-family: Poppins;"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 40px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section style="padding: 40px 0;">
+        <div class="container-fluid">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3318.9833849364697!2d72.80207!3d33.58097!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38dfc16de5c5b8db%3A0x7c8f8f8f8f8f8f8f!2sRawalpindi%2C%20Punjab%2C%20Pakistan!5e0!3m2!1sen!2s!4v1234567890" width="100%" height="400" style="border: none;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer" class="footer" style="background: #1a1a1a; color: #999; padding: 40px 0 20px; margin-top: 40px;">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="single-footer">
+                            <h2 style="color: white; margin-bottom: 20px;">X-Ai Medical Center</h2>
+                            <p>Your trusted partner in AI-powered healthcare.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="single-footer f-link">
+                            <h2 style="color: white; margin-bottom: 20px;">Quick Links</h2>
+                            <ul>
+                                <li><a href="{% url 'MainPage' %}" style="color: #999;"><i class="fa fa-caret-right"></i>Home</a></li>
+                                <li><a href="{% url 'about_page' %}" style="color: #999;"><i class="fa fa-caret-right"></i>About</a></li>
+                                <li><a href="{% url 'services_page' %}" style="color: #999;"><i class="fa fa-caret-right"></i>Services</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright" style="border-top: 1px solid #333; padding-top: 20px;">
+            <div class="container">
+                <p style="text-align: center; margin: 0;">© 2024 X-Ai Medical Center | All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery-migrate-3.0.0.js' %}"></script>
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/easing.js' %}"></script>
+    <script src="{% static 'js/colors.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'js/jquery.nav.js' %}"></script>
+    <script src="{% static 'js/slicknav.min.js' %}"></script>
+    <script src="{% static 'js/jquery.scrollUp.min.js' %}"></script>
+    <script src="{% static 'js/niceselect.js' %}"></script>
+    <script src="{% static 'js/tilt.jquery.min.js' %}"></script>
+    <script src="{% static 'js/owl-carousel.js' %}"></script>
+    <script src="{% static 'js/jquery.counterup.min.js' %}"></script>
+    <script src="{% static 'js/steller.js' %}"></script>
+    <script src="{% static 'js/wow.min.js' %}"></script>
+    <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+
+</html>

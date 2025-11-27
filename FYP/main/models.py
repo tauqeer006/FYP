@@ -4,21 +4,29 @@ from django.db.models import Q
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, password=None, user_type=None):
+    def create_user(self, username, email=None, password=None, user_type=None):
         if not username or not user_type:
             raise ValueError("Username and user type required")
-        user = self.model(username=username, user_type=user_type)
+
+        email = self.normalize_email(email)
+
+        user = self.model(
+            username=username,
+            email=email,
+            user_type=user_type
+        )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, password, user_type='admin'):
-        user = self.create_user(username, password, user_type)
+    def create_superuser(self, username, email=None, password=None, user_type='admin'):
+        user = self.create_user(username, email, password, user_type)
         user.is_staff = True
         user.is_superuser = True
         user.is_active = True
         user.save(using=self._db)
         return user
+
 
 class User(AbstractBaseUser, PermissionsMixin):  
     USER_TYPES = (
@@ -38,7 +46,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     reset_token_created = models.DateTimeField(blank=True, null=True)
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['user_type']
+    REQUIRED_FIELDS = ['email', 'user_type']
 
     objects = UserManager()
 

@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Medical Report - X-AI Medical System</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&family=Montserrat:wght@400;600;700&display=swap');
+
+        :root {
+            --primary-blue: #1e90ff;
+            --light-blue: #e3f2fd;
+            --dark-blue: #0d47a1;
+            --accent-blue: #64b5f6;
+            --white: #ffffff;
+            --gray-light: #f5f7fa;
+            --gray-dark: #333333;
+            --success-green: #4caf50;
+            --warning-orange: #ff9800;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background: var(--gray-light);
+            font-family: 'Montserrat', sans-serif;
+            color: var(--gray-dark);
+            padding: 30px 0;
+        }
+
+        .container-report {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .report-wrapper {
+            background: var(--white);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        /* Header Section */
+        .report-header {
+            background: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary-blue) 100%);
+            color: var(--white);
+            padding: 40px 30px;
+            text-align: center;
+            border-bottom: 5px solid var(--accent-blue);
+        }
+
+        .hospital-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .hospital-tagline {
+            font-size: 13px;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .report-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 20px 0 10px 0;
+        }
+
+        .report-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Content Section */
+        .report-content {
+            padding: 40px;
+        }
+
+        /* Patient Information Section */
+        .patient-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--light-blue);
+            border-radius: 8px;
+            border-left: 5px solid var(--primary-blue);
+        }
+
+        .section-header {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark-blue);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-header i {
+            font-size: 18px;
+            color: var(--primary-blue);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .info-item {
+            background: var(--white);
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        .info-label {
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-dark);
+        }
+
+        /* Analysis Results Section */
+        .analysis-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 152, 0, 0.05);
+            border-radius: 8px;
+            border-left: 5px solid var(--warning-orange);
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .analysis-item {
+            background: var(--white);
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            border-top: 3px solid var(--warning-orange);
+        }
+
+        .analysis-label {
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .analysis-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark-blue);
+        }
+
+        /* Clinical Findings */
+        .clinical-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--white);
+            border-radius: 8px;
+            border: 2px solid var(--light-blue);
+        }
+
+        .clinical-text {
+            line-height: 1.8;
+            color: var(--gray-dark);
+            font-size: 14px;
+            text-align: justify;
+        }
+
+        /* Test Results Table */
+        .table-section {
+            margin-bottom: 30px;
+        }
+
+        .table-wrapper {
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+
+        .table {
+            margin: 0;
+        }
+
+        .table thead {
+            background: linear-gradient(135deg, var(--light-blue), var(--accent-blue));
+        }
+
+        .table thead th {
+            color: var(--dark-blue);
+            font-weight: 700;
+            border: none;
+            padding: 15px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table tbody td {
+            padding: 14px 15px;
+            border-color: #eee;
+            font-size: 13px;
+        }
+
+        .table tbody tr:hover {
+            background: var(--light-blue);
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: 2px solid var(--primary-blue);
+        }
+
+        /* Recommendations */
+        .recommendations-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(76, 175, 80, 0.05);
+            border-radius: 8px;
+            border-left: 5px solid var(--success-green);
+        }
+
+        .recommendations-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+
+        .recommendations-list li {
+            padding: 10px 0 10px 30px;
+            position: relative;
+            color: var(--gray-dark);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .recommendations-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success-green);
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        /* Footer Section */
+        .report-footer {
+            background: var(--light-blue);
+            padding: 20px 30px;
+            border-top: 2px solid var(--primary-blue);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .footer-item {
+            text-align: center;
+        }
+
+        .footer-label {
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .footer-value {
+            font-size: 14px;
+            color: var(--gray-dark);
+            font-weight: 600;
+        }
+
+        .signature-line {
+            border-top: 2px solid var(--gray-dark);
+            margin-top: 20px;
+            padding-top: 8px;
+        }
+
+        /* Action Buttons */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn-large {
+            padding: 12px 30px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(30, 144, 255, 0.3);
+            text-decoration: none;
+            color: var(--white);
+        }
+
+        .btn-secondary {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-blue);
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container-report {
+                max-width: 100%;
+                padding: 0;
+            }
+
+            .report-wrapper {
+                box-shadow: none;
+                border-radius: 0;
+                margin-bottom: 0;
+            }
+
+            .button-group {
+                display: none;
+            }
+
+            .report-content {
+                padding: 0;
+            }
+
+            .page-break {
+                page-break-before: always;
+            }
+        }
+
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+
+        .text-muted {
+            color: #999;
+        }
+
+        .mt-5 {
+            margin-top: 30px;
+        }
+
+        .mb-5 {
+            margin-bottom: 30px;
+        }
+
+        .text-danger {
+            color: var(--warning-orange);
+        }
+
+        .text-success {
+            color: var(--success-green);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-report">
+        <!-- Report Wrapper -->
+        <div class="report-wrapper">
+            <!-- Header -->
+            <div class="report-header">
+                <div class="hospital-name">
+                    <i class="bi bi-hospital"></i>
+                    X-AI Medical Diagnostic Center
+                </div>
+                <div class="hospital-tagline">Advanced AI-Powered Fracture Detection & Diagnosis</div>
+                <div class="report-title">Medical Diagnostic Report</div>
+                <div class="report-subtitle">AI-Assisted Radiological Analysis</div>
+            </div>
+
+            <!-- Content -->
+            <div class="report-content">
+                <!-- Patient Information -->
+                <div class="patient-section">
+                    <div class="section-header">
+                        <i class="bi bi-person-badge"></i>
+                        Patient Information
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Patient Name</div>
+                            <div class="info-value">{{ patient_name }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Age</div>
+                            <div class="info-value">{{ patient_age }} years</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Patient ID</div>
+                            <div class="info-value">{{ patient_code }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">X-ray ID</div>
+                            <div class="info-value">{{ xray_id }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis Results -->
+                <div class="analysis-section">
+                    <div class="section-header">
+                        <i class="bi bi-activity"></i>
+                        Analysis Results
+                    </div>
+                    <div class="analysis-grid">
+                        <div class="analysis-item">
+                            <div class="analysis-label">Fracture Type</div>
+                            <div class="analysis-value text-danger">{{ fracture_type|title }}</div>
+                        </div>
+                        <div class="analysis-item">
+                            <div class="analysis-label">Affected Hand/Side</div>
+                            <div class="analysis-value">{{ affected_hand|title }}</div>
+                        </div>
+                        <div class="analysis-item">
+                            <div class="analysis-label">Finding</div>
+                            <div class="analysis-value">{{ finding|truncatewords:5 }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clinical Findings -->
+                <div class="clinical-section">
+                    <div class="section-header">
+                        <i class="bi bi-file-medical"></i>
+                        Clinical Findings & Diagnosis
+                    </div>
+                    <div class="clinical-text mt-5">
+                        {{ generated_report }}
+                    </div>
+                </div>
+
+                <!-- Diagnostic Test Results -->
+                {% if test_results %}
+                <div class="table-section">
+                    <div class="section-header mb-5">
+                        <i class="bi bi-table"></i>
+                        Diagnostic Test Results & Recommendations
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Examination/Test</th>
+                                    <th style="width: 35%;">Finding/Result</th>
+                                    <th style="width: 40%;">Clinical Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for test in test_results %}
+                                <tr>
+                                    <td><strong>{{ test.test }}</strong></td>
+                                    <td>{{ test.result }}</td>
+                                    <td>{{ test.remarks }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Treatment Recommendations -->
+                {% if treatment_recommendations %}
+                <div class="recommendations-section">
+                    <div class="section-header">
+                        <i class="bi bi-clipboard-check"></i>
+                        Treatment Recommendations
+                    </div>
+                    <ul class="recommendations-list">
+                        {% for recommendation in treatment_recommendations %}
+                        <li>{{ recommendation }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <!-- Footer Section -->
+                <div class="report-footer">
+                    <div class="footer-item">
+                        <div class="footer-label">Reporting Doctor</div>
+                        <div class="footer-value">{{ doctor_name }}</div>
+                        <div class="signature-line"></div>
+                    </div>
+                    <div class="footer-item">
+                        <div class="footer-label">Report Generated</div>
+                        <div class="footer-value">{{ report_date }}</div>
+                        <div class="text-muted" style="font-size: 11px; margin-top: 5px;">
+                            This report is AI-assisted and should be reviewed by a licensed physician.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="button-group">
+                    <button onclick="window.print()" class="btn-large btn-primary">
+                        <i class="bi bi-printer"></i> Print Report
+                    </button>
+                    <a href="{% url 'predict_diagnosis' %}" class="btn-large btn-secondary">
+                        <i class="bi bi-plus-circle"></i> New Analysis
+                    </a>
+                    <a href="{% url 'diagnosis_page' %}" class="btn-large btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Chatbot Widget -->
+    {% include 'components/chatbot_widget.html' %}
+
+    <!-- Global Voice Recorder -->
+    {% include 'components/global_voice_recorder.html' %}
+</body>
+
+</html>

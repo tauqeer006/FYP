@@ -23,6 +23,15 @@ from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.MainPage , name="MainPage"),
+    
+    # New page routes
+    path("about/", views.about_page, name="about_page"),
+    path("services/", views.services_page, name="services_page"),
+    path("doctors/", views.doctors_page, name="doctors_page"),
+    path("contact/", views.contact_page, name="contact_page"),
+    path("faq/", views.faq_page, name="faq_page"),
+    
+    # Existing routes
     path("login/", views.login_doctor , name="loginSystem"),
     path("signup/", views.signup , name="signupSystem"),
     path("index_admin/", views.dashboard , name="index_admin"),
@@ -31,10 +40,11 @@ urlpatterns = [
     path("patient_login/", views.patient_login , name="patient_logins"),
     path("Patient_dashboard/" , views.patient_dashboard , name = "patient_dashboard"),
     path('add_user/', views.add_user, name='add_user'),
-    path("/patient_Data" , views.user_profile , name = "user_profile"),
-    path("/patient_complete_report" , views.user_report , name = "user_report"),
-    path("/patient_complete_report" , views.detailed_history , name = "detailed_history"),
-    path("/patient_logouts" , views.patient_logout , name = "patient_logout"),
+    path('manage_user/', views.manage_user, name='manageuser'),
+    path('user_profile/', views.user_profile, name='user_profile'),
+    path("patient_complete_report" , views.user_report , name = "user_report"),
+    path("patient_complete_report" , views.detailed_history , name = "detailed_history"),
+    path("patient_logouts" , views.patient_logout , name = "patient_logout"),
    
 
     path('diagnosis/', views.diagnosis, name='diagnosis_page'),
@@ -53,7 +63,7 @@ urlpatterns = [
     path("records/" , views.list_all_doctors , name = "all_data"),
     path("delete-doctor/<int:doctor_id>/" , views.remove_doctor , name = "remove_doctor"),
     path("graphs" , views.total_patient_graphs , name="graphs"),
-    path("/video_Recommendation" , views.Videos_Recommendation , name = "Video-Recommendations"),
+    path("video_Recommendation" , views.Videos_Recommendation , name = "Video-Recommendations"),
     path("Recommend_video/<str:disease>/" , views.Displaying_videos , name = "Display_Videos"),
     path("logout_doctor/", views.logoutpage_doctor , name="logout_doctor"),
     ## testing api:
@@ -70,6 +80,9 @@ urlpatterns = [
     path('api/password-reset/request/', views.request_password_reset, name='request_password_reset'),
     path('api/password-reset/verify/', views.verify_reset_token, name='verify_reset_token'),
     path('api/password-reset/confirm/', views.reset_password, name='reset_password'),
+    
+    # Admin Password Change
+    path('change_admin_password/', views.change_admin_password, name='change_admin_password'),
     
 ]
 if settings.DEBUG:  # Only serve media files in development

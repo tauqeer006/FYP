@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>X-ray Diagnosis - X-AI Medical System</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    
+    <style>
+        :root {
+            --primary-blue: #1e90ff;
+            --light-blue: #e3f2fd;
+            --dark-blue: #0d47a1;
+            --accent-blue: #64b5f6;
+            --white: #ffffff;
+            --gray-light: #f5f7fa;
+            --gray-dark: #333333;
+            --success-green: #4caf50;
+            --warning-orange: #ff9800;
+            --danger-red: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e3f2fd 100%);
+            font-family: 'Montserrat', sans-serif;
+            color: var(--gray-dark);
+            min-height: 100vh;
+        }
+
+        .container-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        /* Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+            color: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(30, 144, 255, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-header p {
+            margin: 5px 0 0 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-nav {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-nav:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Two Column Layout */
+        .diagnosis-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .diagnosis-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Card Styling */
+        .card-section {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .card-section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark-blue);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-blue);
+        }
+
+        .card-section-title i {
+            font-size: 22px;
+            color: var(--primary-blue);
+        }
+
+        /* Form Group */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--dark-blue);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.1);
+            outline: none;
+        }
+
+        .form-group select {
+            cursor: pointer;
+            background: var(--white) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"></polyline></svg>') no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
+            padding-right: 35px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .patient-info-box {
+            background: var(--light-blue);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-blue);
+            margin-top: 15px;
+        }
+
+        .patient-info-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .patient-info-item {
+            font-size: 13px;
+        }
+
+        .patient-info-item label {
+            color: #666;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .patient-info-item strong {
+            color: var(--dark-blue);
+            display: block;
+        }
+
+        /* File Upload */
+        .file-upload-area {
+            border: 3px dashed var(--primary-blue);
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: var(--light-blue);
+        }
+
+        .file-upload-area:hover {
+            background: rgba(30, 144, 255, 0.15);
+            border-color: var(--dark-blue);
+        }
+
+        .file-upload-area.dragover {
+            background: rgba(30, 144, 255, 0.2);
+            border-color: var(--dark-blue);
+            transform: scale(1.02);
+        }
+
+        .file-upload-area i {
+            font-size: 48px;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .file-upload-area p {
+            margin: 10px 0;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .file-upload-area .upload-hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 10px;
+        }
+
+        .file-upload-input {
+            display: none;
+        }
+
+        .uploaded-files {
+            margin-top: 20px;
+        }
+
+        .file-item {
+            background: var(--light-blue);
+            padding: 12px 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--success-green);
+        }
+
+        .file-item i {
+            color: var(--success-green);
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .file-item .file-name {
+            flex: 1;
+            font-weight: 600;
+            color: var(--dark-blue);
+            font-size: 14px;
+        }
+
+        .file-item .file-size {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .btn-remove {
+            background: rgba(244, 67, 54, 0.2);
+            color: var(--danger-red);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-remove:hover {
+            background: rgba(244, 67, 54, 0.4);
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn-large {
+            padding: 12px 30px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 150px;
+            justify-content: center;
+        }
+
+        .btn-primary-large {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+            color: var(--white);
+        }
+
+        .btn-primary-large:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(30, 144, 255, 0.3);
+        }
+
+        .btn-primary-large:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary-large {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-secondary-large:hover {
+            background: var(--accent-blue);
+            color: var(--white);
+        }
+
+        /* Loading States */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .processing-message {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success-green);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .alert-error {
+            background: rgba(244, 67, 54, 0.1);
+            color: var(--danger-red);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--danger-red);
+        }
+
+        /* Preview Section */
+        .preview-section {
+            background: var(--light-blue);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 250px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-placeholder {
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: var(--light-blue);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .info-box i {
+            color: var(--primary-blue);
+            margin-right: 10px;
+            font-weight: 600;
+        }
+
+        .info-box p {
+            margin: 0;
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Step Indicator */
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 0;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            color: #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-circle {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(30, 144, 255, 0.3);
+        }
+
+        .step.completed .step-circle {
+            background: var(--success-green);
+            color: var(--white);
+        }
+
+        .step-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .step.active .step-label,
+        .step.completed .step-label {
+            color: var(--dark-blue);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            margin: 0;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-main">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1>
+                    <i class="bi bi-file-earmark-medical"></i>
+                    X-ray Diagnosis Analysis
+                </h1>
+                <p>Upload patient X-ray images for AI-powered fracture detection and analysis</p>
+            </div>
+            <div class="header-nav">
+                <a href="{% url 'diagnosis_page' %}" class="btn-nav">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+            <div class="step active" id="step1">
+                <div class="step-circle">1</div>
+                <div class="step-label">Select Patient</div>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-circle">2</div>
+                <div class="step-label">Upload X-ray</div>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-circle">3</div>
+                <div class="step-label">Analyze & Report</div>
+            </div>
+        </div>
+
+        <!-- Main Form -->
+        <form method="POST" enctype="multipart/form-data" id="diagnosisForm">
+            {% csrf_token %}
+            
+            {% if error %}
+                <div class="alert-error">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <strong>Error:</strong> {{ error }}
+                </div>
+            {% endif %}
+
+            <div class="diagnosis-container">
+                <!-- Left Column: Patient Selection -->
+                <div class="card-section">
+                    <div class="card-section-title">
+                        <i class="bi bi-person-check"></i>
+                        Step 1: Select Patient
+                    </div>
+
+                    <div class="info-box">
+                        <i class="bi bi-info-circle"></i>
+                        <p>Choose a patient from your roster to perform X-ray analysis</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="patientSelect">Patient Name *</label>
+                        <select id="patientSelect" name="patient_id" required onchange="updatePatientInfo()">
+                            <option value="">-- Select a Patient --</option>
+                            {% for patient in patients %}
+                                <option value="{{ patient.id }}" data-dob="{{ patient.dob|date:'Y-m-d' }}" 
+                                        data-gender="{{ patient.gender }}" 
+                                        data-contact="{{ patient.contact_number }}"
+                                        data-email="{{ patient.email }}"
+                                        data-history="{{ patient.medical_history }}">
+                                    {{ patient.fname }} {{ patient.lname }}
+                                </option>
+                            {% empty %}
+                                <option value="">No patients available. <a href="{% url 'add_patient_record1' %}">Add Patient</a></option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Patient Information Display -->
+                    <div id="patientInfoBox" class="patient-info-box" style="display: none;">
+                        <div class="patient-info-row">
+                            <div class="patient-info-item">
+                                <label>Date of Birth</label>
+                                <strong id="patientDOB">-</strong>
+                            </div>
+                            <div class="patient-info-item">
+                                <label>Age</label>
+                                <strong id="patientAge">-</strong>
+                            </div>
+                        </div>
+                        <div class="patient-info-row">
+                            <div class="patient-info-item">
+                                <label>Gender</label>
+                                <strong id="patientGender">-</strong>
+                            </div>
+                            <div class="patient-info-item">
+                                <label>Contact</label>
+                                <strong id="patientContact">-</strong>
+                            </div>
+                        </div>
+                        <div class="patient-info-row">
+                            <div class="patient-info-item">
+                                <label>Email</label>
+                                <strong id="patientEmail">-</strong>
+                            </div>
+                        </div>
+                        <div class="patient-info-item" style="grid-column: 1/-1;">
+                            <label>Medical History</label>
+                            <strong id="patientHistory">-</strong>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd;">
+                        <div style="font-size: 12px; color: #999; margin-bottom: 15px;">
+                            <strong>Total Patients:</strong> {{ patients.count }}
+                        </div>
+                        <a href="{% url 'add_patient_record1' %}" class="btn btn-large btn-secondary-large" style="width: 100%; justify-content: center;">
+                            <i class="bi bi-plus-circle"></i> Add New Patient
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Column: File Upload -->
+                <div class="card-section">
+                    <div class="card-section-title">
+                        <i class="bi bi-file-earmark-arrow-up"></i>
+                        Step 2: Upload X-ray Image
+                    </div>
+
+                    <div class="info-box">
+                        <i class="bi bi-info-circle"></i>
+                        <p>Upload clear X-ray images in JPEG, PNG, or TIFF format</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>X-ray Image *</label>
+                        <div class="file-upload-area" id="uploadArea" onclick="document.getElementById('xrayInput').click()">
+                            <i class="bi bi-cloud-arrow-up"></i>
+                            <p><strong>Click to upload or drag and drop</strong></p>
+                            <p class="upload-hint">PNG, JPEG, or TIFF • Max 10MB</p>
+                        </div>
+                        <input type="file" id="xrayInput" name="xray_images" class="file-upload-input" 
+                               accept="image/jpeg,image/png,image/tiff" onchange="handleFileSelect(event)" />
+                    </div>
+
+                    <!-- Uploaded Files List -->
+                    <div class="uploaded-files" id="uploadedFiles" style="display: none;">
+                        <div style="font-weight: 600; color: var(--dark-blue); margin-bottom: 10px; font-size: 14px;">
+                            <i class="bi bi-check-circle-fill" style="color: var(--success-green);"></i> Uploaded Files
+                        </div>
+                        <div id="filesList"></div>
+                    </div>
+
+                    <!-- Image Preview -->
+                    <div class="preview-section">
+                        <div id="previewContent">
+                            <i class="bi bi-image" style="font-size: 36px; color: var(--accent-blue); opacity: 0.5;"></i>
+                            <p class="preview-placeholder">Image preview will appear here</p>
+                        </div>
+                    </div>
+
+                    <!-- Additional Notes -->
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label for="notes">Additional Notes (Optional)</label>
+                        <textarea id="notes" name="notes" rows="4" placeholder="Add any relevant clinical notes or observations..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <button type="reset" class="btn btn-large btn-secondary-large">
+                    <i class="bi bi-arrow-clockwise"></i> Clear Form
+                </button>
+                <button type="submit" class="btn btn-large btn-primary-large" id="submitBtn" disabled>
+                    <i class="bi bi-check-circle"></i> Analyze & Generate Report
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Drag and drop functionality
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('xrayInput');
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            fileInput.files = e.dataTransfer.files;
+            handleFileSelect({ target: { files: e.dataTransfer.files } });
+        });
+
+        // Handle file selection
+        function handleFileSelect(event) {
+            const files = event.target.files;
+            const filesList = document.getElementById('filesList');
+            const uploadedFilesDiv = document.getElementById('uploadedFiles');
+            const previewContent = document.getElementById('previewContent');
+            const submitBtn = document.getElementById('submitBtn');
+            const patientSelect = document.getElementById('patientSelect');
+
+            if (files.length > 0) {
+                filesList.innerHTML = '';
+                let filesHTML = '';
+
+                for (let file of files) {
+                    const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                    filesHTML += `
+                        <div class="file-item">
+                            <i class="bi bi-file-image"></i>
+                            <div class="file-name">${file.name}</div>
+                            <div class="file-size">${fileSize} MB</div>
+                        </div>
+                    `;
+
+                    // Show image preview
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewContent.innerHTML = `<img src="${e.target.result}" class="preview-image" alt="Preview">`;
+                    };
+                    reader.readAsDataURL(file);
+                }
+
+                filesList.innerHTML = filesHTML;
+                uploadedFilesDiv.style.display = 'block';
+
+                // Enable submit button if patient is selected
+                if (patientSelect.value) {
+                    submitBtn.disabled = false;
+                }
+            }
+        }
+
+        // Calculate age from DOB
+        function calculateAge(dob) {
+            if (!dob) return '-';
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        // Update patient info display
+        function updatePatientInfo() {
+            const select = document.getElementById('patientSelect');
+            const option = select.options[select.selectedIndex];
+            const patientInfoBox = document.getElementById('patientInfoBox');
+            const submitBtn = document.getElementById('submitBtn');
+            const fileInput = document.getElementById('xrayInput');
+
+            if (select.value) {
+                const dob = option.getAttribute('data-dob');
+                const gender = option.getAttribute('data-gender');
+                const contact = option.getAttribute('data-contact');
+                const email = option.getAttribute('data-email');
+                const history = option.getAttribute('data-history');
+
+                document.getElementById('patientDOB').textContent = new Date(dob).toLocaleDateString('en-US', { 
+                    year: 'numeric', month: 'short', day: 'numeric' 
+                });
+                document.getElementById('patientAge').textContent = calculateAge(dob) + ' years';
+                document.getElementById('patientGender').textContent = gender === 'M' ? 'Male' : gender === 'F' ? 'Female' : 'Other';
+                document.getElementById('patientContact').textContent = contact || 'Not provided';
+                document.getElementById('patientEmail').textContent = email || 'Not provided';
+                document.getElementById('patientHistory').textContent = history || 'No medical history provided';
+
+                patientInfoBox.style.display = 'block';
+
+                // Update step indicator
+                document.getElementById('step1').classList.add('completed');
+                document.getElementById('step2').classList.add('active');
+
+                // Enable submit button if file is selected
+                if (fileInput.files.length > 0) {
+                    submitBtn.disabled = false;
+                }
+            } else {
+                patientInfoBox.style.display = 'none';
+                document.getElementById('step1').classList.remove('completed');
+                document.getElementById('step2').classList.remove('active');
+                submitBtn.disabled = true;
+            }
+        }
+
+        // Disable submit button on page load
+        document.getElementById('submitBtn').disabled = true;
+
+        // Form submission
+        document.getElementById('diagnosisForm').addEventListener('submit', function(e) {
+            const patientSelect = document.getElementById('patientSelect');
+            const fileInput = document.getElementById('xrayInput');
+
+            if (!patientSelect.value || fileInput.files.length === 0) {
+                e.preventDefault();
+                alert('Please select a patient and upload an X-ray image');
+                return false;
+            }
+
+            // Optionally show loading state
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading-spinner"></span> Analyzing...';
+        });
+    </script>
+
+    <!-- Chatbot Widget -->
+    {% include 'components/chatbot_widget.html' %}
+
+    <!-- Global Voice Recorder -->
+    {% include 'components/global_voice_recorder.html' %}
+</body>
+
+</html>

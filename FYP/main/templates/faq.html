@@ -1,0 +1,358 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="zxx">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content="FAQ, Questions">
+    <meta name="description" content="Frequently Asked Questions - X-Ai Medical Center">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>FAQ - X-Ai Medical Center Pakistan</title>
+    <link rel="icon" href="{% static 'img/favicon.png' %}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icofont.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+
+    <style>
+        .faq-item {
+            margin-bottom: 15px;
+        }
+        .faq-question {
+            background: #667eea;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+        .faq-question:hover {
+            background: #764ba2;
+        }
+        .faq-answer {
+            display: none;
+            background: #f9f9f9;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+            margin-top: -5px;
+            border-radius: 0 5px 5px 0;
+        }
+        .faq-answer.show {
+            display: block;
+        }
+        .faq-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+        }
+        .faq-question.active .faq-icon {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader-outter"></div>
+            <div class="loader-inner"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="topbar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-5 col-12">
+                        <ul class="top-link">
+                            <li><a href="{% url 'about_page' %}">About</a></li>
+                            <li><a href="{% url 'doctors_page' %}">Doctors</a></li>
+                            <li><a href="{% url 'contact_page' %}">Contact</a></li>
+                            <li><a href="{% url 'faq_page' %}">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-6 col-md-7 col-12">
+                        <ul class="top-contact">
+                            <li><i class="fa fa-phone"></i><strong>0304-5450049</strong></li>
+                            <li><i class="fa fa-envelope"></i><a href="mailto:tauqeerqureshi112@gmail.com">tauqeerqureshi112@gmail.com</a></li>
+                            <li><i class="fa fa-map-marker"></i><strong>Rawalpindi, Pakistan</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-inner">
+            <div class="container">
+                <div class="inner">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-12">
+                            <div class="logo">
+                                <a href="{% url 'MainPage' %}"><img src="{% static 'img/blue.png' %}" alt="X-Ai"></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-7 col-md-9 col-12">
+                            <div class="main-menu">
+                                <nav class="navigation">
+                                    <ul class="nav menu">
+                                        <li><a href="{% url 'MainPage' %}">Home</a></li>
+                                        <li><a href="{% url 'about_page' %}">About</a></li>
+                                        <li><a href="{% url 'services_page' %}">Services</a></li>
+                                        <li><a href="{% url 'doctors_page' %}">Doctors</a></li>
+                                        <li class="active"><a href="{% url 'faq_page' %}">FAQ</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-12">
+                            <div class="get-quote dropdown">
+                                <button class="btn dropdown-toggle" type="button" id="loginDropdown" data-toggle="dropdown">
+                                    Login
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{% url 'admin_login' %}">Admin</a>
+                                    <a class="dropdown-item" href="{% url 'patient_logins' %}">Patient</a>
+                                    <a class="dropdown-item" href="{% url 'loginSystem' %}">Doctor</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Title -->
+    <div class="page-title" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%); padding: 80px 0; color: white; text-align: center;">
+        <div class="container">
+            <h1 style="font-size: 3em; margin-bottom: 10px;">Frequently Asked Questions</h1>
+            <p style="font-size: 1.2em;">Find answers to common questions about our services</p>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" style="padding: 80px 0; background: #f9f9f9;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 col-12">
+                    <h2 style="text-align: center; margin-bottom: 50px; font-size: 2.5em; color: #333;">Common Questions About X-Ai Medical Center</h2>
+
+                    <!-- FAQ Item 1 -->
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>How accurate is the AI diagnosis?</span>
+                            <i class="fa fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Our AI model has been trained on thousands of X-ray images and achieves high accuracy in fracture detection. All AI diagnoses are reviewed and verified by experienced orthopedic specialists and radiologists before reporting to patients. The system is designed as a diagnostic support tool to assist doctors, not to replace professional medical judgment.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 2 -->
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>What file formats are accepted for X-ray uploads?</span>
+                            <i class="fa fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>We accept the following image formats for X-ray uploads: JPEG, PNG, DICOM, and PDF. Please ensure your image is clear and of reasonable quality for accurate analysis. Maximum file size is 50MB. If you have questions about your specific image format, please contact us at <a href="tel:03045450049">0304-5450049</a>.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 3 -->
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>How long does it take to get a diagnosis?</span>
+                            <i class="fa fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>The AI analysis typically takes 2-5 minutes after uploading your X-ray image. Doctor review and verification usually adds another 5-10 minutes. In most cases, you'll have a complete diagnosis within 15-20 minutes. During peak hours, wait times may be slightly longer. Urgent cases can be marked for priority review.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 4 -->
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Can I upload X-rays from other hospitals or diagnostic centers?</span>
+                            <i class="fa fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes, absolutely! You can upload X-ray images from any diagnostic center or hospital. Our system analyzes the images regardless of where they were taken. We recommend having original or high-quality copies of your X-rays for the best analysis results.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 5 -->
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>What is the exercise monitoring feature?</span>
+                            <i class="fa fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Our exercise monitoring feature uses your webcam to track your body movements and posture during rehabilitation exercises. The AI provides real-time feedback to ensure you're performing exercises correctly. This helps prevent re-injury and accelerates recovery. The system records your progress for doctors to review.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 6 -->
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Is my medical data secure and private?</span>
+                            <i class="fa fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes, we take patient privacy very seriously. All your medical data is encrypted and stored securely on protected servers. Only authorized medical professionals can access your information. We comply with healthcare data protection standards and never share your data without explicit consent. For detailed information about our privacy practices, please see our Privacy Policy.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 7 -->
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Do you have an age restriction for patients?</span>
+                            <i class="fa fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>There is no age restriction for fracture diagnosis. Our services are available for patients of all ages, from children to elderly individuals. However, for patients under 18, parental/guardian consent is required. Exercise rehabilitation programs may be modified based on age and medical condition.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 8 -->
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>What should I do if the AI seems to have missed something?</span>
+                            <i class="fa fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>If you have concerns about your diagnosis, please contact us immediately at <a href="tel:03045450049">0304-5450049</a> or email <a href="mailto:tauqeerqureshi112@gmail.com">tauqeerqureshi112@gmail.com</a>. Your case will be reviewed by senior medical professionals. We can also arrange a consultation with our specialists for second opinion.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 9 -->
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>How do I use the voice chat feature?</span>
+                            <i class="fa fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Our voice-enabled chatbot is available 24/7. Simply click on the chat widget on our website and click the microphone icon to start speaking. You can ask questions about your diagnosis, get exercise guidance, or ask general health questions. The AI will respond to you with voice and text for clarity.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 10 -->
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>What types of fractures can you detect?</span>
+                            <i class="fa fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Our system is specifically trained to detect shoulder fractures, including: Proximal humerus fractures, Clavicle fractures, Scapular fractures, and other shoulder-related bone injuries. We are continuously expanding our detection capabilities to cover additional bone fractures. Contact us to ask about specific types of fractures.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 11 -->
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Can I get a second opinion from a different doctor?</span>
+                            <i class="fa fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes, we encourage getting a second opinion, especially for complex cases. You can submit your case for review by a different specialist from our team. This incurs an additional consultation fee. Please contact us at <a href="tel:03045450049">0304-5450049</a> to arrange this.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 12 -->
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>How do I book a consultation with a doctor?</span>
+                            <i class="fa fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>You can book a consultation through multiple ways: 1) Fill out our contact form on this website, 2) Call us at <a href="tel:03045450049">0304-5450049</a>, 3) Email us at <a href="mailto:tauqeerqureshi112@gmail.com">tauqeerqureshi112@gmail.com</a>, or 4) Use the appointment form on the home page. Our team will get back to you within 30 minutes during business hours.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%); padding: 60px 0; color: white; text-align: center;">
+        <div class="container">
+            <h2 style="font-size: 2.2em; margin-bottom: 20px;">Still have questions?</h2>
+            <p style="font-size: 1.1em; margin-bottom: 30px;">Contact our support team - we're here to help!</p>
+            <a href="{% url 'contact_page' %}" class="btn" style="background: white; color: #667eea; padding: 12px 40px; font-weight: bold; border: none;">Contact Us</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer" class="footer" style="background: #1a1a1a; color: #999; padding: 40px 0 20px;">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="single-footer">
+                            <h2 style="color: white; margin-bottom: 20px;">X-Ai Medical Center</h2>
+                            <p>Revolutionizing healthcare with AI-powered diagnostics.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="single-footer f-link">
+                            <h2 style="color: white; margin-bottom: 20px;">Quick Links</h2>
+                            <ul>
+                                <li><a href="{% url 'MainPage' %}" style="color: #999;"><i class="fa fa-caret-right"></i>Home</a></li>
+                                <li><a href="{% url 'services_page' %}" style="color: #999;"><i class="fa fa-caret-right"></i>Services</a></li>
+                                <li><a href="{% url 'contact_page' %}" style="color: #999;"><i class="fa fa-caret-right"></i>Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright" style="border-top: 1px solid #333; padding-top: 20px;">
+            <div class="container">
+                <p style="text-align: center; margin: 0;">© 2024 X-Ai Medical Center | All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery-migrate-3.0.0.js' %}"></script>
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/easing.js' %}"></script>
+    <script src="{% static 'js/colors.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'js/jquery.nav.js' %}"></script>
+    <script src="{% static 'js/slicknav.min.js' %}"></script>
+    <script src="{% static 'js/jquery.scrollUp.min.js' %}"></script>
+    <script src="{% static 'js/niceselect.js' %}"></script>
+    <script src="{% static 'js/tilt.jquery.min.js' %}"></script>
+    <script src="{% static 'js/owl-carousel.js' %}"></script>
+    <script src="{% static 'js/jquery.counterup.min.js' %}"></script>
+    <script src="{% static 'js/steller.js' %}"></script>
+    <script src="{% static 'js/wow.min.js' %}"></script>
+    <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+    <script>
+        function toggleFaq(element) {
+            const answer = element.nextElementSibling;
+            answer.classList.toggle('show');
+            element.classList.toggle('active');
+        }
+    </script>
+
+</body>
+
+</html>

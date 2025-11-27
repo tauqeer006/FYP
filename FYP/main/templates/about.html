@@ -1,0 +1,285 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="zxx">
+
+<head>
+    <!-- Meta Tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content="AI Medical Center, Fracture Detection, Healthcare">
+    <meta name="description" content="About X-Ai Medical Center - Pakistan's leading AI-powered diagnostic center">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Title -->
+    <title>About Us - X-Ai Medical Center Pakistan</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'img/favicon.png' %}">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icofont.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+</head>
+
+<body>
+
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader-outter"></div>
+            <div class="loader-inner"></div>
+            <div class="indicator">
+                <svg width="16px" height="12px">
+                    <polyline id="back" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
+                    <polyline id="front" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Area -->
+    <header class="header">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-5 col-12">
+                        <ul class="top-link">
+                            <li><a href="{% url 'about_page' %}">About</a></li>
+                            <li><a href="{% url 'doctors_page' %}">Doctors</a></li>
+                            <li><a href="{% url 'contact_page' %}">Contact</a></li>
+                            <li><a href="{% url 'faq_page' %}">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-6 col-md-7 col-12">
+                        <ul class="top-contact">
+                            <li><i class="fa fa-phone"></i><strong>0304-5450049</strong></li>
+                            <li><i class="fa fa-envelope"></i><a href="mailto:tauqeerqureshi112@gmail.com">tauqeerqureshi112@gmail.com</a></li>
+                            <li><i class="fa fa-map-marker"></i><strong>Rawalpindi, Pakistan</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header Inner -->
+        <div class="header-inner">
+            <div class="container">
+                <div class="inner">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-12">
+                            <div class="logo">
+                                <a href="{% url 'MainPage' %}"><img src="{% static 'img/blue.png' %}" alt="X-Ai Medical Center"></a>
+                            </div>
+                            <div class="mobile-nav"></div>
+                        </div>
+                        <div class="col-lg-7 col-md-9 col-12">
+                            <div class="main-menu">
+                                <nav class="navigation">
+                                    <ul class="nav menu">
+                                        <li><a href="{% url 'MainPage' %}">Home</a></li>
+                                        <li class="active"><a href="{% url 'about_page' %}">About</a></li>
+                                        <li><a href="{% url 'services_page' %}">Services</a></li>
+                                        <li><a href="{% url 'doctors_page' %}">Doctors</a></li>
+                                        <li><a href="{% url 'contact_page' %}">Contact Us</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-12">
+                            <div class="get-quote dropdown">
+                                <button class="btn dropdown-toggle" type="button" id="loginDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Login
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="loginDropdown">
+                                    <a class="dropdown-item" href="{% url 'admin_login' %}">Admin</a>
+                                    <a class="dropdown-item" href="{% url 'patient_logins' %}">Patient</a>
+                                    <a class="dropdown-item" href="{% url 'loginSystem' %}">Doctor</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Title -->
+    <div class="page-title" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%), url('{% static 'img/call-bg.png' %}'); background-size: cover; background-position: center; padding: 80px 0; color: white; text-align: center;">
+        <div class="container">
+            <h1 style="font-size: 3em; margin-bottom: 10px;">About X-Ai Medical Center</h1>
+            <p style="font-size: 1.2em;">Your Trusted Partner in AI-Powered Healthcare</p>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <section class="about-section" style="padding: 80px 0; background: white;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-12" style="padding-right: 40px;">
+                    <h2 style="font-size: 2.5em; margin-bottom: 20px; color: #667eea;">Our Mission</h2>
+                    <p style="font-size: 1.1em; line-height: 1.8; color: #666; margin-bottom: 15px;">
+                        X-Ai Medical Center is dedicated to revolutionizing healthcare through artificial intelligence. 
+                        Our mission is to make world-class fracture detection accessible to every person in Pakistan, 
+                        regardless of their location or financial constraints.
+                    </p>
+                    <p style="font-size: 1.1em; line-height: 1.8; color: #666; margin-bottom: 15px;">
+                        We believe that technology should serve humanity. By combining cutting-edge AI algorithms with 
+                        expert medical knowledge, we provide fast, accurate, and affordable diagnostic services.
+                    </p>
+                    <p style="font-size: 1.1em; line-height: 1.8; color: #666;">
+                        Our Final Year Project transforms the way patients receive fracture diagnosis and rehabilitation guidance, 
+                        making life easier and healthcare more efficient for everyone.
+                    </p>
+                </div>
+                <div class="col-lg-6 col-12">
+                    <img src="{% static 'main_page/hospital.jpg' %}" alt="X-Ai Medical Center" style="width: 100%; height: auto; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="why-choose-section" style="padding: 80px 0; background: #f9f9f9;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div style="text-align: center; margin-bottom: 60px;">
+                        <h2 style="font-size: 2.5em; margin-bottom: 15px; color: #333;">Why Choose Us?</h2>
+                        <p style="font-size: 1.1em; color: #666;">Leading innovation in AI-powered medical diagnostics</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-12" style="margin-bottom: 40px;">
+                    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); text-align: center; transition: transform 0.3s ease;">
+                        <i class="icofont icofont-brain" style="font-size: 3em; color: #667eea; margin-bottom: 15px;"></i>
+                        <h3 style="margin-bottom: 10px; color: #333;">AI-Powered Accuracy</h3>
+                        <p style="color: #666;">Advanced machine learning algorithms trained on thousands of X-rays for precise fracture detection.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12" style="margin-bottom: 40px;">
+                    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); text-align: center; transition: transform 0.3s ease;">
+                        <i class="icofont icofont-clock-time" style="font-size: 3em; color: #667eea; margin-bottom: 15px;"></i>
+                        <h3 style="margin-bottom: 10px; color: #333;">Fast Results</h3>
+                        <p style="color: #666;">Get instant diagnosis reports in minutes, not hours or days. Save time and start treatment immediately.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12" style="margin-bottom: 40px;">
+                    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); text-align: center; transition: transform 0.3s ease;">
+                        <i class="icofont icofont-money" style="font-size: 3em; color: #667eea; margin-bottom: 15px;"></i>
+                        <h3 style="margin-bottom: 10px; color: #333;">Affordable</h3>
+                        <p style="color: #666;">Making quality healthcare accessible. Our AI-powered system reduces costs without compromising quality.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12" style="margin-bottom: 40px;">
+                    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); text-align: center; transition: transform 0.3s ease;">
+                        <i class="icofont icofont-doctor-alt" style="font-size: 3em; color: #667eea; margin-bottom: 15px;"></i>
+                        <h3 style="margin-bottom: 10px; color: #333;">Expert Doctors</h3>
+                        <p style="color: #666;">AI findings are verified by experienced orthopedic specialists and radiologists.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12" style="margin-bottom: 40px;">
+                    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); text-align: center; transition: transform 0.3s ease;">
+                        <i class="icofont icofont-chart-bar" style="font-size: 3em; color: #667eea; margin-bottom: 15px;"></i>
+                        <h3 style="margin-bottom: 10px; color: #333;">Detailed Reports</h3>
+                        <p style="color: #666;">Comprehensive medical reports with AI analysis and professional recommendations for treatment.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12" style="margin-bottom: 40px;">
+                    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); text-align: center; transition: transform 0.3s ease;">
+                        <i class="icofont icofont-heart-beat" style="font-size: 3em; color: #667eea; margin-bottom: 15px;"></i>
+                        <h3 style="margin-bottom: 10px; color: #333;">Complete Care</h3>
+                        <p style="color: #666;">From diagnosis to rehabilitation - voice guidance and exercise monitoring included.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section style="padding: 40px 0;">
+        <div class="container-fluid">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3318.9833849364697!2d72.80207!3d33.58097!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38dfc16de5c5b8db%3A0x7c8f8f8f8f8f8f8f!2sRawalpindi%2C%20Punjab%2C%20Pakistan!5e0!3m2!1sen!2s!4v1234567890" width="100%" height="400" style="border: none;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%); padding: 60px 0; color: white; text-align: center;">
+        <div class="container">
+            <h2 style="font-size: 2.2em; margin-bottom: 20px;">Ready to Experience AI-Powered Healthcare?</h2>
+            <p style="font-size: 1.1em; margin-bottom: 30px;">Join thousands of patients who trust X-Ai Medical Center</p>
+            <a href="{% url 'patient_logins' %}" class="btn" style="background: white; color: #667eea; padding: 12px 40px; font-weight: bold; border: none;">Get Started Now</a>
+        </div>
+    </section>
+
+    <!-- Footer Area -->
+    <footer id="footer" class="footer" style="background: #1a1a1a; color: #999; padding: 40px 0 20px;">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="single-footer">
+                            <h2 style="color: white; margin-bottom: 20px;">About Us</h2>
+                            <p>X-Ai Medical Center brings artificial intelligence to healthcare in Pakistan, making fracture detection fast, accurate, and affordable.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="single-footer f-link">
+                            <h2 style="color: white; margin-bottom: 20px;">Quick Links</h2>
+                            <ul>
+                                <li><a href="{% url 'MainPage' %}" style="color: #999;"><i class="fa fa-caret-right"></i>Home</a></li>
+                                <li><a href="{% url 'about_page' %}" style="color: #999;"><i class="fa fa-caret-right"></i>About</a></li>
+                                <li><a href="{% url 'services_page' %}" style="color: #999;"><i class="fa fa-caret-right"></i>Services</a></li>
+                                <li><a href="{% url 'contact_page' %}" style="color: #999;"><i class="fa fa-caret-right"></i>Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="single-footer">
+                            <h2 style="color: white; margin-bottom: 20px;">Opening Hours</h2>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="margin-bottom: 10px;"><strong>Monday - Sunday</strong><br><span style="color: #667eea;">10:00 AM – 10:00 PM</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="single-footer">
+                            <h2 style="color: white; margin-bottom: 20px;">Contact Info</h2>
+                            <p>📞 <strong><a href="tel:03045450049" style="color: #667eea;">0304-5450049</a></strong></p>
+                            <p>📧 <strong><a href="mailto:tauqeerqureshi112@gmail.com" style="color: #667eea;">tauqeerqureshi112@gmail.com</a></strong></p>
+                            <p>📍 Range Road, Rawalpindi, Pakistan</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright" style="border-top: 1px solid #333; padding-top: 20px;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-12">
+                        <div class="copyright-content" style="text-align: center;">
+                            <p style="margin: 0;">© 2024 X-Ai Medical Center | All Rights Reserved | Final Year Project - AI Healthcare Innovation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{% static 'js/jquery.min.js' %}" defer></script>
+    <script src="{% static 'js/bootstrap.min.js' %}" defer></script>
+    <script src="{% static 'js/main.js' %}" defer></script>
+
+</body>
+
+</html>

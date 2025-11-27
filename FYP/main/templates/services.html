@@ -1,0 +1,301 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="zxx">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content="Medical Services, Healthcare, Fracture Detection">
+    <meta name="description" content="Our Comprehensive Healthcare Services - X-Ai Medical Center">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Our Services - X-Ai Medical Center Pakistan</title>
+    <link rel="icon" href="{% static 'img/favicon.png' %}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icofont.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+</head>
+
+<body>
+
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader-outter"></div>
+            <div class="loader-inner"></div>
+        </div>
+    </div>
+
+    <!-- Header Area -->
+    <header class="header">
+        <div class="topbar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-5 col-12">
+                        <ul class="top-link">
+                            <li><a href="{% url 'about_page' %}">About</a></li>
+                            <li><a href="{% url 'doctors_page' %}">Doctors</a></li>
+                            <li><a href="{% url 'contact_page' %}">Contact</a></li>
+                            <li><a href="{% url 'faq_page' %}">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-6 col-md-7 col-12">
+                        <ul class="top-contact">
+                            <li><i class="fa fa-phone"></i><strong>0304-5450049</strong></li>
+                            <li><i class="fa fa-envelope"></i><a href="mailto:tauqeerqureshi112@gmail.com">tauqeerqureshi112@gmail.com</a></li>
+                            <li><i class="fa fa-map-marker"></i><strong>Rawalpindi, Pakistan</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-inner">
+            <div class="container">
+                <div class="inner">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-12">
+                            <div class="logo">
+                                <a href="{% url 'MainPage' %}"><img src="{% static 'img/blue.png' %}" alt="X-Ai"></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-7 col-md-9 col-12">
+                            <div class="main-menu">
+                                <nav class="navigation">
+                                    <ul class="nav menu">
+                                        <li><a href="{% url 'MainPage' %}">Home</a></li>
+                                        <li><a href="{% url 'about_page' %}">About</a></li>
+                                        <li class="active"><a href="{% url 'services_page' %}">Services</a></li>
+                                        <li><a href="{% url 'doctors_page' %}">Doctors</a></li>
+                                        <li><a href="{% url 'contact_page' %}">Contact Us</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-12">
+                            <div class="get-quote dropdown">
+                                <button class="btn dropdown-toggle" type="button" id="loginDropdown" data-toggle="dropdown">
+                                    Login
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="loginDropdown">
+                                    <a class="dropdown-item" href="{% url 'admin_login' %}">Admin</a>
+                                    <a class="dropdown-item" href="{% url 'patient_logins' %}">Patient</a>
+                                    <a class="dropdown-item" href="{% url 'loginSystem' %}">Doctor</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Title -->
+    <div class="page-title" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%); padding: 80px 0; color: white; text-align: center;">
+        <div class="container">
+            <h1 style="font-size: 3em; margin-bottom: 10px;">Our Services</h1>
+            <p style="font-size: 1.2em;">Comprehensive AI-Powered Healthcare Solutions</p>
+        </div>
+    </div>
+
+    <!-- Services Section -->
+    <section class="services-section" style="padding: 80px 0; background: white;">
+        <div class="container">
+            <div class="row">
+                <!-- Service 1 -->
+                <div class="col-lg-4 col-md-6 col-12" style="margin-bottom: 40px;">
+                    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); height: 100%; transition: transform 0.3s ease;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <i class="icofont icofont-prescription" style="font-size: 3.5em; color: #667eea;"></i>
+                        </div>
+                        <h3 style="text-align: center; margin-bottom: 15px; font-size: 1.5em; color: #333;">X-Ray Diagnosis</h3>
+                        <p style="color: #666; text-align: center; line-height: 1.6;">
+                            Upload your X-ray images for instant AI-powered analysis. Our advanced machine learning model detects fractures with high accuracy.
+                        </p>
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                <li style="padding: 8px 0; color: #666;"><i class="fa fa-check" style="color: #667eea; margin-right: 10px;"></i>AI-powered fracture detection</li>
+                                <li style="padding: 8px 0; color: #666;"><i class="fa fa-check" style="color: #667eea; margin-right: 10px;"></i>Fast results in minutes</li>
+                                <li style="padding: 8px 0; color: #666;"><i class="fa fa-check" style="color: #667eea; margin-right: 10px;"></i>Doctor verification included</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="col-lg-4 col-md-6 col-12" style="margin-bottom: 40px;">
+                    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); height: 100%; transition: transform 0.3s ease;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <i class="icofont icofont-stethoscope" style="font-size: 3.5em; color: #667eea;"></i>
+                        </div>
+                        <h3 style="text-align: center; margin-bottom: 15px; font-size: 1.5em; color: #333;">Medical Consultation</h3>
+                        <p style="color: #666; text-align: center; line-height: 1.6;">
+                            Get professional medical advice from our experienced doctors. Personalized treatment recommendations based on your diagnosis.
+                        </p>
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                <li style="padding: 8px 0; color: #666;"><i class="fa fa-check" style="color: #667eea; margin-right: 10px;"></i>Expert doctor consultation</li>
+                                <li style="padding: 8px 0; color: #666;"><i class="fa fa-check" style="color: #667eea; margin-right: 10px;"></i>Personalized treatment plans</li>
+                                <li style="padding: 8px 0; color: #666;"><i class="fa fa-check" style="color: #667eea; margin-right: 10px;"></i>Follow-up support available</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="col-lg-4 col-md-6 col-12" style="margin-bottom: 40px;">
+                    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); height: 100%; transition: transform 0.3s ease;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <i class="icofont icofont-heart-alt" style="font-size: 3.5em; color: #667eea;"></i>
+                        </div>
+                        <h3 style="text-align: center; margin-bottom: 15px; font-size: 1.5em; color: #333;">Orthopedic Care</h3>
+                        <p style="color: #666; text-align: center; line-height: 1.6;">
+                            Specialized treatment for bone and joint conditions. From diagnosis through rehabilitation, complete orthopedic care.
+                        </p>
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                <li style="padding: 8px 0; color: #666;"><i class="fa fa-check" style="color: #667eea; margin-right: 10px;"></i>Fracture treatment plans</li>
+                                <li style="padding: 8px 0; color: #666;"><i class="fa fa-check" style="color: #667eea; margin-right: 10px;"></i>Rehabilitation guidance</li>
+                                <li style="padding: 8px 0; color: #666;"><i class="fa fa-check" style="color: #667eea; margin-right: 10px;"></i>Recovery monitoring</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 4 -->
+                <div class="col-lg-4 col-md-6 col-12" style="margin-bottom: 40px;">
+                    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); height: 100%; transition: transform 0.3s ease;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <i class="icofont icofont-ui-clock" style="font-size: 3.5em; color: #667eea;"></i>
+                        </div>
+                        <h3 style="text-align: center; margin-bottom: 15px; font-size: 1.5em; color: #333;">Exercise Rehabilitation</h3>
+                        <p style="color: #666; text-align: center; line-height: 1.6;">
+                            Guided rehabilitation exercises with real-time posture correction. AI-monitored movement analysis for proper recovery.
+                        </p>
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                <li style="padding: 8px 0; color: #666;"><i class="fa fa-check" style="color: #667eea; margin-right: 10px;"></i>Real-time posture tracking</li>
+                                <li style="padding: 8px 0; color: #666;"><i class="fa fa-check" style="color: #667eea; margin-right: 10px;"></i>AI-powered feedback</li>
+                                <li style="padding: 8px 0; color: #666;"><i class="fa fa-check" style="color: #667eea; margin-right: 10px;"></i>Progress monitoring</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 5 -->
+                <div class="col-lg-4 col-md-6 col-12" style="margin-bottom: 40px;">
+                    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); height: 100%; transition: transform 0.3s ease;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <i class="icofont icofont-heartbeat" style="font-size: 3.5em; color: #667eea;"></i>
+                        </div>
+                        <h3 style="text-align: center; margin-bottom: 15px; font-size: 1.5em; color: #333;">Voice Assistance</h3>
+                        <p style="color: #666; text-align: center; line-height: 1.6;">
+                            AI chatbot for hands-free guidance. Ask questions and get medical information using natural voice commands.
+                        </p>
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                <li style="padding: 8px 0; color: #666;"><i class="fa fa-check" style="color: #667eea; margin-right: 10px;"></i>Voice-enabled chat</li>
+                                <li style="padding: 8px 0; color: #666;"><i class="fa fa-check" style="color: #667eea; margin-right: 10px;"></i>24/7 availability</li>
+                                <li style="padding: 8px 0; color: #666;"><i class="fa fa-check" style="color: #667eea; margin-right: 10px;"></i>Quick responses</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 6 -->
+                <div class="col-lg-4 col-md-6 col-12" style="margin-bottom: 40px;">
+                    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); height: 100%; transition: transform 0.3s ease;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <i class="icofont icofont-doctor-alt" style="font-size: 3.5em; color: #667eea;"></i>
+                        </div>
+                        <h3 style="text-align: center; margin-bottom: 15px; font-size: 1.5em; color: #333;">24/7 Support</h3>
+                        <p style="color: #666; text-align: center; line-height: 1.6;">
+                            Round-the-clock patient support and emergency assistance. Always available when you need professional medical guidance.
+                        </p>
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                <li style="padding: 8px 0; color: #666;"><i class="fa fa-check" style="color: #667eea; margin-right: 10px;"></i>Round-the-clock support</li>
+                                <li style="padding: 8px 0; color: #666;"><i class="fa fa-check" style="color: #667eea; margin-right: 10px;"></i>Emergency assistance</li>
+                                <li style="padding: 8px 0; color: #666;"><i class="fa fa-check" style="color: #667eea; margin-right: 10px;"></i>Expert guidance</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%); padding: 60px 0; color: white; text-align: center;">
+        <div class="container">
+            <h2 style="font-size: 2.2em; margin-bottom: 20px;">Ready for Your Diagnosis?</h2>
+            <p style="font-size: 1.1em; margin-bottom: 30px;">Start your AI-powered diagnosis today</p>
+            <a href="{% url 'diagnosis_page' %}" class="btn" style="background: white; color: #667eea; padding: 12px 40px; font-weight: bold; border: none;">Get Started</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer" class="footer" style="background: #1a1a1a; color: #999; padding: 40px 0 20px;">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="single-footer">
+                            <h2 style="color: white; margin-bottom: 20px;">X-Ai Medical Center</h2>
+                            <p>Providing world-class AI-powered diagnostic services in Pakistan.</p>
+                            <p>📍 Range Road, Rawalpindi, Pakistan<br>
+                               📞 <a href="tel:03045450049" style="color: #667eea;">0304-5450049</a><br>
+                               📧 <a href="mailto:tauqeerqureshi112@gmail.com" style="color: #667eea;">tauqeerqureshi112@gmail.com</a></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="single-footer f-link">
+                            <h2 style="color: white; margin-bottom: 20px;">Quick Links</h2>
+                            <ul>
+                                <li><a href="{% url 'MainPage' %}" style="color: #999;"><i class="fa fa-caret-right"></i>Home</a></li>
+                                <li><a href="{% url 'about_page' %}" style="color: #999;"><i class="fa fa-caret-right"></i>About</a></li>
+                                <li><a href="{% url 'services_page' %}" style="color: #999;"><i class="fa fa-caret-right"></i>Services</a></li>
+                                <li><a href="{% url 'doctors_page' %}" style="color: #999;"><i class="fa fa-caret-right"></i>Doctors</a></li>
+                                <li><a href="{% url 'contact_page' %}" style="color: #999;"><i class="fa fa-caret-right"></i>Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright" style="border-top: 1px solid #333; padding-top: 20px;">
+            <div class="container">
+                <p style="text-align: center; margin: 0;">© 2024 X-Ai Medical Center | All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery-migrate-3.0.0.js' %}"></script>
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/easing.js' %}"></script>
+    <script src="{% static 'js/colors.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'js/jquery.nav.js' %}"></script>
+    <script src="{% static 'js/slicknav.min.js' %}"></script>
+    <script src="{% static 'js/jquery.scrollUp.min.js' %}"></script>
+    <script src="{% static 'js/niceselect.js' %}"></script>
+    <script src="{% static 'js/tilt.jquery.min.js' %}"></script>
+    <script src="{% static 'js/owl-carousel.js' %}"></script>
+    <script src="{% static 'js/jquery.counterup.min.js' %}"></script>
+    <script src="{% static 'js/steller.js' %}"></script>
+    <script src="{% static 'js/wow.min.js' %}"></script>
+    <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+
+</html>

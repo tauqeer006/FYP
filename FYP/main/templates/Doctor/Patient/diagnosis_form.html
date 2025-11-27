@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Diagnosis - Medical System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1e90ff;
+            --dark-blue: #0d47a1;
+            --light-blue: #e3f2fd;
+            --success-green: #4caf50;
+            --warning-orange: #ff9800;
+            --danger-red: #f44336;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e3f2fd 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 30px 0;
+        }
+        
+        .navbar {
+            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .form-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            padding: 40px;
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 35px;
+            border-bottom: 2px solid var(--light-blue);
+            padding-bottom: 20px;
+        }
+        
+        .form-header h1 {
+            color: var(--dark-blue);
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 0;
+        }
+        
+        .form-header p {
+            color: #666;
+            margin-top: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: var(--dark-blue);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
+        }
+        
+        .form-control {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background-color: #f9f9f9;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.1);
+            background-color: white;
+            outline: none;
+        }
+        
+        .form-control:hover {
+            border-color: var(--primary-blue);
+        }
+        
+        .form-text {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .file-upload-area {
+            border: 2px dashed var(--primary-blue);
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            background-color: rgba(30, 144, 255, 0.02);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .file-upload-area:hover {
+            border-color: var(--dark-blue);
+            background-color: rgba(30, 144, 255, 0.05);
+        }
+        
+        .file-upload-area input[type="file"] {
+            display: none;
+        }
+        
+        .file-upload-label {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+        }
+        
+        .file-upload-label i {
+            font-size: 2.5rem;
+            color: var(--primary-blue);
+        }
+        
+        .file-upload-label span {
+            font-weight: 600;
+            color: var(--dark-blue);
+        }
+        
+        .file-upload-area.dragover {
+            border-color: var(--success-green);
+            background-color: rgba(76, 175, 80, 0.05);
+        }
+        
+        .error-message {
+            background-color: #ffebee;
+            color: var(--danger-red);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid var(--danger-red);
+        }
+        
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 144, 255, 0.3);
+        }
+        
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+        
+        .selected-files {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border-radius: 8px;
+            border: 1px solid var(--light-blue);
+            display: none;
+        }
+        
+        .selected-files.show {
+            display: block;
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            color: var(--dark-blue);
+            font-weight: 500;
+        }
+        
+        .file-item i {
+            color: var(--success-green);
+        }
+        
+        .info-box {
+            background-color: #e3f2fd;
+            border-left: 4px solid var(--primary-blue);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            color: var(--dark-blue);
+            font-size: 0.9rem;
+        }
+        
+        .info-box i {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'diagnosis_page' %}">
+                <i class="bi bi-hospital"></i> Medical System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'diagnosis_page' %}">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'get_patient' %}">
+                            <i class="bi bi-people"></i> All Patients
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Form -->
+    <div class="form-container">
+        <div class="form-header">
+            <h1><i class="bi bi-stethoscope"></i> New Diagnosis</h1>
+            <p>Upload X-ray images and perform diagnosis analysis</p>
+        </div>
+
+        {% if error %}
+        <div class="error-message">
+            <i class="bi bi-exclamation-circle"></i>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        <div class="info-box">
+            <i class="bi bi-info-circle"></i>
+            Select a patient and upload X-ray images for diagnosis. Our AI will analyze the images and provide recommendations.
+        </div>
+
+        <form method="POST" action="{% url 'predict_diagnosis' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Patient Selection -->
+            <div class="form-group">
+                <label for="patientSelect">
+                    <i class="bi bi-person-check"></i> Select Patient
+                </label>
+                <select class="form-control" id="patientSelect" name="patient_id" required>
+                    <option value="">-- Choose a Patient --</option>
+                    {% for patient in patients %}
+                    <option value="{{ patient.id }}" 
+                            data-name="{{ patient.fname }} {{ patient.lname }}" 
+                            data-age="{{ patient.age }}">
+                        {{ patient.fname }} {{ patient.lname }} (ID: {{ patient.id }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Patient Details (Auto-filled) -->
+            <div class="form-group">
+                <label for="patientName">
+                    <i class="bi bi-person"></i> Patient Name
+                </label>
+                <input type="text" id="patientName" class="form-control" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="patientAge">
+                    <i class="bi bi-calendar"></i> Age
+                </label>
+                <input type="text" id="patientAge" class="form-control" readonly>
+            </div>
+
+            <!-- File Upload -->
+            <div class="form-group">
+                <label>
+                    <i class="bi bi-image"></i> Upload X-Ray Images
+                </label>
+                <div class="file-upload-area" id="fileUploadArea">
+                    <label class="file-upload-label">
+                        <i class="bi bi-cloud-arrow-up"></i>
+                        <span>Drag and drop or click to upload</span>
+                        <small style="color: #999; font-weight: normal;">JPG, PNG (Max 10MB per file)</small>
+                        <input type="file" id="xrayFiles" name="xray_images" accept="image/*" multiple required>
+                    </label>
+                </div>
+                <div class="selected-files" id="selectedFiles"></div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn-submit">
+                <i class="bi bi-play-circle"></i> Start Analysis
+            </button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Patient selection auto-fill
+        document.getElementById('patientSelect').addEventListener('change', function() {
+            const selected = this.options[this.selectedIndex];
+            const name = selected.getAttribute('data-name');
+            const age = selected.getAttribute('data-age');
+            
+            document.getElementById('patientName').value = name || '';
+            document.getElementById('patientAge').value = age || '';
+        });
+
+        // File upload handling
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const fileInput = document.getElementById('xrayFiles');
+        const selectedFilesDiv = document.getElementById('selectedFiles');
+
+        // Drag and drop
+        fileUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUploadArea.classList.add('dragover');
+        });
+
+        fileUploadArea.addEventListener('dragleave', () => {
+            fileUploadArea.classList.remove('dragover');
+        });
+
+        fileUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+            fileInput.files = e.dataTransfer.files;
+            displaySelectedFiles();
+        });
+
+        fileInput.addEventListener('change', displaySelectedFiles);
+
+        function displaySelectedFiles() {
+            const files = fileInput.files;
+            selectedFilesDiv.innerHTML = '';
+            
+            if (files.length > 0) {
+                selectedFilesDiv.classList.add('show');
+                Array.from(files).forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    fileItem.innerHTML = `
+                        <i class="bi bi-file-earmark-image"></i>
+                        <span>${file.name}</span>
+                        <small style="color: #999; margin-left: auto;">${(file.size / 1024).toFixed(2)} KB</small>
+                    `;
+                    selectedFilesDiv.appendChild(fileItem);
+                });
+            } else {
+                selectedFilesDiv.classList.remove('show');
+            }
+        }
+    </script>
+</body>
+</html>

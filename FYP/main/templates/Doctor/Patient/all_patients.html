@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Patients - Medical System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1e90ff;
+            --dark-blue: #0d47a1;
+            --light-blue: #e3f2fd;
+            --success-green: #4caf50;
+            --warning-orange: #ff9800;
+            --danger-red: #f44336;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e3f2fd 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .container-main {
+            padding: 30px 0;
+            max-width: 1200px;
+        }
+        
+        .page-header {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .page-header h1 {
+            color: var(--dark-blue);
+            margin: 0;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .patients-table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .table {
+            margin: 0;
+        }
+        
+        .table thead {
+            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+            color: white;
+        }
+        
+        .table thead th {
+            border: none;
+            padding: 20px 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .table tbody td {
+            padding: 18px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+        
+        .table tbody tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .patient-id {
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+        
+        .badge-age {
+            background: var(--light-blue);
+            color: var(--dark-blue);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .btn-diagnose {
+            background: var(--success-green);
+            color: white;
+        }
+        
+        .btn-diagnose:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+        
+        .btn-view {
+            background: var(--primary-blue);
+            color: white;
+        }
+        
+        .btn-view:hover {
+            background: #1a7bcc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 144, 255, 0.3);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.95rem;
+            margin-top: 8px;
+        }
+        
+        .search-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .search-box input {
+            border: 2px solid #e0e0e0;
+            padding: 12px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 8px rgba(30, 144, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'diagnosis_page' %}">
+                <i class="bi bi-hospital"></i> Medical System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'diagnosis_page' %}">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'add_patient_record1' %}">
+                            <i class="bi bi-person-plus"></i> Add Patient
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container container-main">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="bi bi-people-fill"></i> All Patients</h1>
+            <p class="text-muted mt-2">View and manage all patient records</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-value">{{ patients|length }}</div>
+                <div class="stat-label">Total Patients</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">0</div>
+                <div class="stat-label">Active Cases</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">0</div>
+                <div class="stat-label">Pending Review</div>
+            </div>
+        </div>
+
+        <!-- Search Box -->
+        <div class="search-box">
+            <div class="input-group">
+                <span class="input-group-text" style="background: white; border: 2px solid #e0e0e0;">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input type="text" class="form-control" id="searchInput" placeholder="Search by name, ID, or email..." 
+                       style="border: 2px solid #e0e0e0;">
+            </div>
+        </div>
+
+        <!-- Patients Table -->
+        <div class="patients-table">
+            {% if patients %}
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><i class="bi bi-person"></i> Patient Name</th>
+                        <th><i class="bi bi-calendar"></i> Age</th>
+                        <th><i class="bi bi-envelope"></i> Email</th>
+                        <th><i class="bi bi-telephone"></i> Contact</th>
+                        <th><i class="bi bi-activity"></i> Status</th>
+                        <th><i class="bi bi-gear"></i> Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="patientTableBody">
+                    {% for patient in patients %}
+                    <tr class="patient-row" data-patient-name="{{ patient.fname|lower }} {{ patient.lname|lower }}">
+                        <td>
+                            <span class="patient-id">{{ patient.fname }} {{ patient.lname }}</span>
+                        </td>
+                        <td>
+                            <span class="badge-age">{{ patient.age }} years</span>
+                        </td>
+                        <td>{{ patient.email|default:"N/A" }}</td>
+                        <td>{{ patient.contact_number|default:"N/A" }}</td>
+                        <td>
+                            {% if patient.show_on_dashboard %}
+                            <span class="badge bg-success"><i class="bi bi-check-circle"></i> Active</span>
+                            {% else %}
+                            <span class="badge bg-warning"><i class="bi bi-exclamation-circle"></i> Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button class="action-btn btn-view" onclick="viewPatient({{ patient.id }})">
+                                <i class="bi bi-eye"></i> View
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-inbox"></i>
+                <h5>No patients found</h5>
+                <p class="text-muted">Start by adding a new patient to see them here</p>
+                <a href="{% url 'add_patient_record1' %}" class="btn btn-primary mt-3">
+                    <i class="bi bi-plus-circle"></i> Add First Patient
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('.patient-row');
+            
+            rows.forEach(row => {
+                const patientName = row.getAttribute('data-patient-name');
+                if (patientName.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+        
+        function viewPatient(patientId) {
+            // Navigate to patient detail page or diagnosis page
+            window.location.href = '/predict/';
+        }
+    </script>
+</body>
+</html>

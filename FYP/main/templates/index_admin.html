@@ -7,38 +7,565 @@
     <link rel="apple-touch-icon" sizes="76x76" href="{% static 'assets/img/apple-icon.png' %}">
     <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.ico' %}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <title>X-AI Pediatic Diagnosis System</title>
+    <title>Admin Dashboard - X-AI Medical System</title>
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
-    <!--     Fonts and icons     -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    
     <!-- CSS Files -->
     <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet" />
     <link href="{% static 'assets/css/light-bootstrap-dashboard.css' %}?v=2.0.0" rel="stylesheet" />
-    <!-- CSS Just for demo purpose, don't include it in your project -->
     <link href="{% static 'assets/css/demo.css' %}" rel="stylesheet" />
+    
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --primary-blue: #1e90ff;
+            --light-blue: #e3f2fd;
+            --dark-blue: #0d47a1;
+            --accent-blue: #64b5f6;
+            --white: #ffffff;
+            --gray-light: #f5f7fa;
+            --gray-dark: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e3f2fd 100%);
+            font-family: 'Montserrat', sans-serif;
+            color: var(--gray-dark);
+        }
+
+        .wrapper {
+            background: transparent;
+            display: flex;
+            position: relative;
+        }
+
+        /* Sidebar Toggle */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1100;
+            background: var(--primary-blue);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .sidebar-toggle:hover {
+            background: var(--dark-blue);
+        }
+
+        /* Sidebar Styling - Collapsible */
+        .sidebar {
+            background: linear-gradient(180deg, var(--dark-blue) 0%, var(--primary-blue) 100%);
+            box-shadow: 2px 0 10px rgba(30, 144, 255, 0.2);
+            width: 260px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease, left 0.3s ease;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-100%);
+            left: -260px;
+        }
+
+        /* Mobile responsive sidebar */
+        @media (max-width: 768px) {
+            .sidebar-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                width: 260px;
+                left: 0;
+                top: 0;
+                z-index: 999;
+            }
+
+            .sidebar.closed {
+                transform: translateX(-260px);
+            }
+
+            .main-panel {
+                margin-left: 0;
+            }
+        }
+
+        /* Desktop sidebar - always visible */
+        @media (min-width: 769px) {
+            .sidebar {
+                width: 260px;
+                position: relative;
+                height: auto;
+                transform: translateX(0);
+                left: auto;
+            }
+
+            .wrapper {
+                flex-direction: row;
+            }
+
+            .main-panel {
+                flex: 1;
+                margin-left: 0;
+            }
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            background: linear-gradient(180deg, var(--dark-blue) 0%, var(--primary-blue) 100%);
+            box-shadow: 2px 0 10px rgba(30, 144, 255, 0.2);
+        }
+
+        .sidebar-wrapper {
+            padding: 20px 10px;
+        }
+
+        .sidebar .logo a {
+            color: var(--white);
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: block;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .logo a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .sidebar .nav li a {
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            margin: 8px 0;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .nav li a:hover,
+        .sidebar .nav li a.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            padding-left: 20px;
+        }
+
+        .sidebar .nav li a i {
+            width: 30px;
+            text-align: center;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .sidebar .nav li a p {
+            margin: 0;
+            font-weight: 500;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background: var(--white);
+            box-shadow: 0 4px 15px rgba(30, 144, 255, 0.1);
+            padding: 15px 30px;
+            border-bottom: 3px solid var(--primary-blue);
+        }
+
+        .navbar-brand {
+            color: var(--primary-blue);
+            font-weight: 700;
+            font-size: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .navbar .nav-link {
+            color: var(--primary-blue);
+            font-weight: 500;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .navbar .nav-link:hover {
+            color: var(--dark-blue);
+        }
+
+        .navbar .nav-link i {
+            font-size: 20px;
+            margin-right: 5px;
+        }
+
+        /* Main Content */
+        .main-panel {
+            background: transparent;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        /* Card Styling */
+        .card {
+            background: var(--white);
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(30, 144, 255, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 35px rgba(30, 144, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            border-radius: 12px 12px 0 0;
+            padding: 25px;
+            color: var(--white);
+            border-bottom: none;
+        }
+
+        .card-header h4 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        /* Stats Cards */
+        .stat-card {
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--white) 100%);
+            border-left: 5px solid var(--primary-blue);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 5px 15px rgba(30, 144, 255, 0.15);
+            transform: translateX(5px);
+        }
+
+        .stat-card h5 {
+            color: var(--primary-blue);
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card h3 {
+            color: var(--dark-blue);
+            font-weight: 700;
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .stat-card p {
+            color: #666;
+            margin: 10px 0 0 0;
+            font-size: 14px;
+        }
+
+        /* Form Styling */
+        .form-group label {
+            color: var(--gray-dark);
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-control {
+            border: 2px solid var(--light-blue);
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.1);
+            background: var(--white);
+            color: var(--gray-dark);
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231e90ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
+            padding-right: 35px;
+        }
+
+        /* Button Styling */
+        .btn {
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 12px 28px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .btn-primary,
+        .btn-fill {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(30, 144, 255, 0.3);
+        }
+
+        .btn-primary:hover,
+        .btn-fill:hover {
+            background: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary-blue) 100%);
+            box-shadow: 0 6px 20px rgba(30, 144, 255, 0.4);
+            transform: translateY(-2px);
+            color: var(--white);
+        }
+
+        .btn-secondary {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background: #ff6b6b;
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background: #ff5252;
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+        }
+
+        /* Dropdown Menu */
+        .dropdown-menu {
+            background: var(--white);
+            border: 1px solid var(--light-blue);
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(30, 144, 255, 0.15);
+            padding: 10px 0;
+        }
+
+        .dropdown-item {
+            color: var(--gray-dark);
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .dropdown-item:hover {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            border-left: 3px solid var(--primary-blue);
+        }
+
+        /* Collapse Menu */
+        .collapse {
+            background: rgba(30, 144, 255, 0.05);
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        .collapse .nav {
+            padding: 10px 0;
+        }
+
+        .collapse .nav-item a {
+            padding-left: 40px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--white);
+            border-top: 2px solid var(--light-blue);
+            padding: 20px;
+            margin-top: 50px;
+        }
+
+        .footer p {
+            color: var(--primary-blue);
+            font-weight: 500;
+            margin: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 250px;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .card-header h4 {
+                font-size: 18px;
+            }
+
+            .stat-card h3 {
+                font-size: 24px;
+            }
+        }
+
+        /* Alert/Notification */
+        .alert {
+            border-radius: 8px;
+            border: none;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .alert-info {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #4caf50;
+        }
+
+        .alert-danger {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        /* Table Styling */
+        .table {
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table thead {
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--accent-blue) 100%);
+        }
+
+        .table thead th {
+            color: var(--dark-blue);
+            font-weight: 700;
+            border: none;
+            padding: 15px;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .table tbody td {
+            padding: 12px 15px;
+            border-color: var(--light-blue);
+            vertical-align: middle;
+        }
+
+        .table tbody tr:hover {
+            background: var(--light-blue);
+        }
+
+        /* Notification Badge */
+        .notification {
+            background: #ff6b6b;
+            color: var(--white);
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-left: 5px;
+        }
+    </style>
 </head>
 
 <body>
+    <!-- Sidebar Toggle Button for Mobile -->
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="bi bi-list"></i>
+    </button>
+
     <div class="wrapper">
-        <div class="sidebar" data-image="{% static 'assets/img/sidebar-5.jpg' %}">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar" data-image="{% static 'assets/img/sidebar-5.jpg' %}">
             <div class="sidebar-wrapper">
                 <div class="logo">
-                    <a href="#" class="simple-text">
-                     X-AI Pediatic Diagnosis 
+                    <a href="{% url 'index_admin' %}">
+                        <i class="bi bi-hospital" style="margin-right: 8px;"></i> X-AI Medical
                     </a>
                 </div>
                 <ul class="nav">
-                    <li>
-                        <a class="nav-link" href="{% url 'index_admin' %}">
-                            <i class="nc-icon nc-chart-pie-35"></i>
+                    <!-- Dashboard -->
+                    <li class="active">
+                        <a class="nav-link active" href="{% url 'index_admin' %}">
+                            <i class="bi bi-speedometer2"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
-                 <li class="nav-item">
-                        <a class="nav-link" data-toggle="collapse" href="#userManagement" role="button"
-                            aria-expanded="false" aria-controls="userManagement">
-                            <i class="nc-icon nc-circle-09"></i>
+
+                    <!-- User Management -->
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#userManagement" role="button" aria-expanded="false">
+                            <i class="bi bi-people"></i>
                             <p>
                                 User Management
                                 <b class="caret"></b>
@@ -48,128 +575,195 @@
                             <ul class="nav">
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'add_user' %}">
-                                        <span class="sidebar-normal">Add Users</span>
+                                        <i class="bi bi-person-plus"></i>
+                                        <span class="sidebar-normal">Add User</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'manageuser' %}">
+                                        <i class="bi bi-person-gear"></i>
                                         <span class="sidebar-normal">Manage Users</span>
                                     </a>
                                 </li>
                             </ul>
                         </div>
                     </li>
-                    <li>
-                        <a class="nav-link" href="./diagnosis.html">
-                            <i class="nc-icon nc-atom"></i>
-                            <p>Diagnosis</p>
-                        </a>
-                    </li> 
-                    <li class="nav-item active active-pro"> 
-                        <a class="nav-link active" href="#">
-                            <i class="nc-icon nc-alien-33"></i>
-                            <p>USER</p>
-                        </a>
-                    </li>
                 </ul>
             </div>
         </div>
+
+        <!-- Main Panel -->
         <div class="main-panel">
             <!-- Navbar -->
-            <nav class="navbar navbar-expand-lg " color-on-scroll="500">
+            <nav class="navbar navbar-expand-lg">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#pablo"> User </a>
-                    <button href="" class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+                    <a class="navbar-brand" href="{% url 'index_admin' %}">
+                        <i class="bi bi-speedometer2"></i> Admin Dashboard
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-bar burger-lines"></span>
                         <span class="navbar-toggler-bar burger-lines"></span>
                         <span class="navbar-toggler-bar burger-lines"></span>
                     </button>
-                    <div class="collapse navbar-collapse justify-content-end" id="navigation">
-                        <ul class="nav navbar-nav mr-auto">
-                            <li class="nav-item">
-                                <a href="{% url 'index_admin' %}" class="nav-link" data-toggle="dropdown">
-                                    <i class="nc-icon nc-palette"></i>
-                                    <span class="d-lg-none">Dashboard</span>
-                                </a>
-                            </li>
-                            <li class="dropdown nav-item">
-                                <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                                    <i class="nc-icon nc-planet"></i>
-                                    <span class="notification">5</span>
-                                    <span class="d-lg-none">Notification</span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <a class="dropdown-item" href="#">Notification 1</a>
-                                    <a class="dropdown-item" href="#">Notification 2</a>
-                                    <a class="dropdown-item" href="#">Notification 3</a>
-                                    <a class="dropdown-item" href="#">Notification 4</a>
-                                    <a class="dropdown-item" href="#">Another notification</a>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="nc-icon nc-zoom-split"></i>
-                                    <span class="d-lg-block">&nbsp;Search</span>
-                                </a>
-                            </li>
-                        </ul>
-                        <ul class="navbar-nav ml-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#pablo">
-                                    <span class="no-icon">Account</span>
-                                </a>
-                            </li>
+                    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <!-- Notifications -->
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="no-icon">Dropdown</span>
+                                <a class="nav-link" href="#" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-bell"></i>
+                                    <span class="notification">{{ recent_activity|length }}</span>
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <a class="dropdown-item" href="#">Something</a>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                    <div class="divider"></div>
-                                    <a class="dropdown-item" href="#">Separated link</a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown" style="width: 350px;">
+                                    <h6 class="dropdown-header" style="padding: 15px; font-weight: 700;">Recent Reports</h6>
+                                    {% if recent_activity %}
+                                        {% for activity in recent_activity %}
+                                        <a class="dropdown-item" href="#">
+                                            <i class="bi bi-file-earmark text-info"></i> 
+                                            Report generated for patient
+                                            <br><small style="color: #999;">{{ activity.created_at|date:"M d, Y H:i" }}</small>
+                                        </a>
+                                        {% endfor %}
+                                    {% else %}
+                                        <a class="dropdown-item" href="#">
+                                            <i class="bi bi-info-circle text-info"></i> No recent reports
+                                        </a>
+                                    {% endif %}
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item text-center" href="#" style="color: var(--primary-blue); font-weight: 600;">View All</a>
                                 </div>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'logout' %}">
-                                    <span class="no-icon">Log out</span>
+
+                            <!-- Messages -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" href="#" id="messageDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-chat-dots"></i>
+                                    <span class="notification">5</span>
                                 </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="messageDropdown" style="width: 350px;">
+                                    <h6 class="dropdown-header" style="padding: 15px; font-weight: 700;">Messages</h6>
+                                    <a class="dropdown-item" href="#">
+                                        <strong>Dr. Ahmed</strong> - Query about patient record
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        <strong>Dr. Sarah</strong> - Feedback on system update
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        <strong>System Admin</strong> - Scheduled maintenance notice
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item text-center" href="#" style="color: var(--primary-blue); font-weight: 600;">View All Messages</a>
+                                </div>
+                            </li>
+
+                            <!-- User Profile -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" href="#" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-person-circle"></i>
+                                    <span class="d-lg-block" style="margin-left: 5px;">{{ user.username }}</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                                    <a class="dropdown-item" href="{% url 'change_admin_password' %}">
+                                        <i class="bi bi-key"></i> Change Password
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{% url 'logout_doctor' %}">
+                                        <i class="bi bi-box-arrow-right"></i> Logout
+                                    </a>
+                                </div>
                             </li>
                         </ul>
                     </div>
                 </div>
             </nav>
-            <!-- End Navbar -->
+
+            <!-- Content -->
             <div class="content">
                 <div class="container-fluid">
-                    <div class="row justify-content-center">
-                        <div class="col-md-8">
+                    <!-- Welcome Section -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="alert alert-info" role="alert">
+                                <strong><i class="bi bi-info-circle"></i> Welcome!</strong> You are logged in as <strong>{{ user.get_full_name|default:user.username }}</strong>. 
+                                {% if last_login %}
+                                    Last login: <strong>{{ last_login|date:"M d, Y H:i" }}</strong>
+                                {% else %}
+                                    Last login: <strong>This is your first login</strong>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Section -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <h5><i class="bi bi-people"></i> Total Users</h5>
+                                <h3>{{ total_users|default:"0" }}</h3>
+                                <p><i class="bi bi-arrow-up"></i> Active users in system</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <h5><i class="bi bi-person-badge"></i> Active Doctors</h5>
+                                <h3>{{ total_doctors|default:"0" }}</h3>
+                                <p>Registered doctors</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <h5><i class="bi bi-heart"></i> Active Patients</h5>
+                                <h3>{{ total_patients|default:"0" }}</h3>
+                                <p>Patient accounts</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <h5><i class="bi bi-file-earmark"></i> Reports Generated</h5>
+                                <h3>{{ total_reports|default:"0" }}</h3>
+                                <p>Total reports</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="row">
+                        <!-- Add New User Card -->
+                        <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4 class="card-title">Add New User</h4>
+                                    <i class="bi bi-person-plus"></i> Add New User
                                 </div>
                                 <div class="card-body">
                                     <form action="{% url 'add_user' %}" method="POST">
                                         {% csrf_token %}
+                                        
+                                        {% if messages %}
+                                            {% for message in messages %}
+                                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                                    {{ message }}
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+
+                                        <div class="form-group">
+                                            <label><i class="bi bi-person"></i> Username</label>
+                                            <input type="text" class="form-control" placeholder="Enter username" name="username" required>
+                                        </div>
+
                                         <div class="row">
-                                            <div class="col-md-6 pr-1">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Username</label>
-                                                    <input type="text" class="form-control" placeholder="Enter full name" name="username">
+                                                    <label><i class="bi bi-calendar"></i> Age</label>
+                                                    <input type="number" class="form-control" placeholder="Enter age" name="ages" min="18" max="100" required>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 px-1">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Age</label>
-                                                    <input type="number" class="form-control" placeholder="Enter age" name="ages">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 pl-1">
-                                                <div class="form-group">
-                                                    <label>Gender</label>
-                                                    <select class="form-control" name="genders">
+                                                    <label><i class="bi bi-person-fill"></i> Gender</label>
+                                                    <select class="form-control" name="genders" required>
                                                         <option value="" disabled selected>Select gender</option>
                                                         <option value="M">Male</option>
                                                         <option value="F">Female</option>
@@ -179,51 +773,117 @@
                                             </div>
                                         </div>
 
+                                        <div class="form-group">
+                                            <label><i class="bi bi-telephone"></i> Mobile Number</label>
+                                            <input type="text" class="form-control" placeholder="Enter mobile number" name="phno" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label><i class="bi bi-envelope"></i> Email Address</label>
+                                            <input type="email" class="form-control" placeholder="Enter email" name="emails" required>
+                                        </div>
+
                                         <div class="row">
-                                            <div class="col-md-6 pr-1">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Mobile No.</label>
-                                                    <input type="text" class="form-control" placeholder="Enter mobile number" name="phno">
+                                                    <label><i class="bi bi-lock"></i> Password</label>
+                                                    <input type="password" class="form-control" placeholder="Enter password" name="password" required>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 pl-1">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Email Address</label>
-                                                    <input type="email" class="form-control" placeholder="Enter email" name = "emails">
+                                                    <label><i class="bi bi-lock-check"></i> Confirm Password</label>
+                                                    <input type="password" class="form-control" placeholder="Confirm password" name="password1" required>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="row">
-                                            <div class="col-md-6 pr-1">
-                                                <div class="form-group">
-                                                    <label>Password</label>
-                                                    <input type="password" class="form-control" placeholder="Enter password" name="password">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 pl-1">
-                                                <div class="form-group">
-                                                    <label>Confirm Password</label>
-                                                    <input type="password" class="form-control" placeholder="Confirm password" name="password1">
-                                                </div>
-                                            </div>
+                                        <div class="form-group">
+                                            <label><i class="bi bi-badge"></i> User Role</label>
+                                            <select class="form-control" name="roles" required>
+                                                <option value="" disabled selected>Select role</option>
+                                                <option value="patient">Patient</option>
+                                                <option value="doctor">Doctor</option>
+                                            </select>
                                         </div>
 
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label>User Role</label>
-                                                    <select class="form-control" name="roles">
-                                                        <option value="" disabled selected>Select role</option>
-                                                        <option value="patient">Patient</option>
-                                                        <option value="doctor">Doctor</option>
-                                                        
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-fill w-100">
+                                            <i class="bi bi-check-circle"></i> Add User
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
 
-                                        <button type="submit" class="btn btn-primary btn-fill">Add User</button>
+                        <!-- Quick Actions & Information -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="bi bi-lightning"></i> Quick Actions
+                                </div>
+                                <div class="card-body">
+                                <div class="btn-group-vertical w-100" role="group">
+                                    <a href="{% url 'manageuser' %}" class="btn btn-primary" style="text-align: left; margin-bottom: 10px;">
+                                        <i class="bi bi-person-gear"></i> Manage Users & View Statistics
+                                    </a>
+                                    <a href="{% url 'add_user' %}" class="btn btn-primary" style="text-align: left; margin-bottom: 10px;">
+                                        <i class="bi bi-person-plus"></i> Add New User
+                                    </a>
+                                    <a href="{% url 'logout' %}" class="btn btn-secondary" style="text-align: left;">
+                                        <i class="bi bi-box-arrow-right"></i> Logout
+                                    </a>
+                                </div>                                    <hr style="margin: 20px 0; border-color: var(--light-blue);">
+
+                                    <h5 style="color: var(--primary-blue); font-weight: 700; margin-bottom: 15px;">
+                                        <i class="bi bi-info-circle"></i> System Status
+                                    </h5>
+                                    <p><strong>Database:</strong> <span class="badge badge-success">Online</span></p>
+                                    <p><strong>Email Service:</strong> <span class="badge badge-success">Active</span></p>
+                                    <p><strong>Backup Status:</strong> <span class="badge badge-success">Last 1 hour ago</span></p>
+                                    <p><strong>System Health:</strong> <span class="badge badge-success">Excellent</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="bi bi-clock-history"></i> Recent Activity
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Timestamp</th>
+                                                <th>User</th>
+                                                <th>Action</th>
+                                                <th>Status</th>
+                                                <th>Details</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% if recent_activity %}
+                                                {% for activity in recent_activity %}
+                                                <tr>
+                                                    <td>{{ activity.created_at|date:"M d, Y H:i" }}</td>
+                                                    <td><strong>System Report</strong></td>
+                                                    <td>Generated Report</td>
+                                                    <td><span class="badge badge-success">Success</span></td>
+                                                    <td>Patient ID: {{ activity.id }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            {% else %}
+                                                <tr>
+                                                    <td colspan="5" class="text-center">
+                                                        <strong>No recent activity</strong>
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -231,44 +891,112 @@
                 </div>
             </div>
 
+            <!-- Footer -->
             <footer class="footer">
                 <div class="container-fluid">
                     <nav>
                         <p class="copyright text-center">
-                            ©
-                            <script>
-                                document.write(new Date().getFullYear())
-                            </script>
-                            <a href="#">X-AI Diagnosis</a>HealthCare Provider
+                            © <script>document.write(new Date().getFullYear())</script>
+                            <strong style="color: var(--primary-blue);">X-AI Medical System</strong> - Professional Healthcare Management Platform
+                            <br>
+                            <small style="color: #999;">Powered by Advanced AI & Medical Technology | All Rights Reserved</small>
                         </p>
                     </nav>
                 </div>
             </footer>
         </div>
     </div>
-<button type="submit" class="btn btn-primary btn-fill">Add User</button>
-</form>
-    <!-- Core JS Files -->
+
+    <!-- Global Voice Recorder -->
+    {% include 'components/global_voice_recorder.html' %}
+
+    <!-- Chatbot Widget -->
+    {% include 'components/chatbot_widget.html' %}
+
+    <!-- Scripts -->
     <script src="{% static 'assets/js/core/jquery.3.2.1.min.js' %}" type="text/javascript"></script>
     <script src="{% static 'assets/js/core/popper.min.js' %}" type="text/javascript"></script>
     <script src="{% static 'assets/js/core/bootstrap.min.js' %}" type="text/javascript"></script>
-    <!-- Plugin for Switches -->
-    <script src="{% static 'assets/js/plugins/bootstrap-switch.js' %}"></script>
-    <!-- Google Maps Plugin -->
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
-    <!-- Chartist Plugin -->
-    <script src="{% static 'assets/js/plugins/chartist.min.js' %}"></script>
-    <!-- Notifications Plugin -->
-    <script src="{% static 'assets/js/plugins/bootstrap-notify.js' %}"></script>
-    <!-- Control Center for Light Bootstrap Dashboard -->
     <script src="{% static 'assets/js/light-bootstrap-dashboard.js' %}?v=2.0.0" type="text/javascript"></script>
-    <!-- Light Bootstrap Dashboard DEMO methods -->
-    <script src="{% static 'assets/js/demo.js' %}"></script>
 
-<!-- Global Voice Recorder - Always Listening -->
-{% include 'components/global_voice_recorder.html' %}
+    <script>
+        // Handle collapse menu items
+        document.querySelectorAll('[data-toggle="collapse"]').forEach(item => {
+            item.addEventListener('click', function() {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.classList.toggle('show');
+                }
+            });
+        });
 
-<!-- Chatbot Widget -->
-{% include 'components/chatbot_widget.html' %}
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const password = document.querySelector('input[name="password"]').value;
+            const confirmPassword = document.querySelector('input[name="password1"]').value;
+
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('Passwords do not match!');
+                return false;
+            }
+
+            if (password.length < 6) {
+                e.preventDefault();
+                alert('Password must be at least 6 characters long!');
+                return false;
+            }
+        });
+
+        // Notification badge animation
+        const badges = document.querySelectorAll('.notification');
+        setInterval(() => {
+            badges.forEach(badge => {
+                badge.style.opacity = badge.style.opacity === '0.5' ? '1' : '0.5';
+            });
+        }, 1000);
+
+        // Sidebar Toggle Functionality
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        if (sidebarToggle && sidebar) {
+            // Toggle sidebar on button click
+            sidebarToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sidebar.classList.toggle('closed');
+            });
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(e) {
+                if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.add('closed');
+                    }
+                }
+            });
+
+            // Close sidebar on nav link click
+            const navLinks = sidebar.querySelectorAll('a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.add('closed');
+                    }
+                });
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    sidebar.classList.remove('closed');
+                }
+            });
+        }
+    </script>
+
+    <!-- Chatbot Widget -->
+    {% include 'components/chatbot_widget.html' %}
 </body>
+
 </html>

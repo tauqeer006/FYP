@@ -23,7 +23,7 @@ class ChatbotService:
         """Initialize the chatbot service with routes data"""
         self.routes_file = Path(__file__).parent.parent / "config" / "routes.yml"
         self.routes_data = None
-        self.gemini_api_key = "AIzaSyDk-aE6_LA-PIbgh0AqwBVypModgSgu7XY"
+        self.gemini_api_key = "AIzaSyB7fwNrYMa4T05ilokA3YQwjasZcwYRG5Y"
         self.gemini_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
         self.load_routes()
     

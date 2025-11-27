@@ -10,9 +10,10 @@ from django.conf import settings
 from django.http import JsonResponse
 from django.contrib import messages
 from django.http import HttpResponseForbidden,JsonResponse
-from .models import PatientCreatedByDoctor,PatientXRayInfo
+from .models import PatientCreatedByDoctor,PatientXRayInfo,Doctor,Patient_Report
 from datetime import date
 from datetime import datetime
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_protect
 from django.core.mail import send_mail
 import requests
@@ -86,8 +87,84 @@ def signup(request):
     return render(request , "signup.html")
 
 def MainPage(request):
-    
-    return render(request , "index.html")
+    """Landing page with appointment form submission."""
+    departments = [
+        "Orthopedics & Trauma",
+        "Radiology & Imaging",
+        "Sports Medicine",
+        "Physical Therapy & Rehab",
+        "AI Diagnostic Lab",
+    ]
+    doctor_records = Doctor.objects.select_related('user').order_by('user__username')
+    doctor_options = []
+
+    if doctor_records.exists():
+        for doctor in doctor_records:
+            doc_name = doctor.user.username
+            label = doc_name.title()
+            if doctor.specialization:
+                label = f"{label} - {doctor.specialization}"
+            doctor_options.append({
+                "value": doc_name,
+                "label": label,
+            })
+    else:
+        fallback_users = User.objects.filter(user_type='doctor').order_by('username')
+        for user in fallback_users:
+            doctor_options.append({
+                "value": user.username,
+                "label": user.username.title(),
+            })
+    form_success = None
+    form_error = None
+    form_data = {}
+
+    if request.method == "POST":
+        form_data = {
+            "name": request.POST.get("name", "").strip(),
+            "email": request.POST.get("email", "").strip(),
+            "phone": request.POST.get("phone", "").strip(),
+            "department": request.POST.get("department", "").strip(),
+            "doctor": request.POST.get("doctor", "").strip(),
+            "appointment_date": request.POST.get("appointment_date", "").strip(),
+            "message": request.POST.get("message", "").strip(),
+        }
+
+        if not all(form_data.values()):
+            form_error = "Please fill in every field before submitting."
+        else:
+            subject = f"New Appointment Request from {form_data['name']}"
+            email_message = (
+                f"New appointment inquiry from the website:\n\n"
+                f"Name: {form_data['name']}\n"
+                f"Email: {form_data['email']}\n"
+                f"Phone: {form_data['phone']}\n"
+                f"Preferred Department: {form_data['department']}\n"
+                f"Preferred Doctor: {form_data['doctor']}\n"
+                f"Preferred Date: {form_data['appointment_date']}\n"
+                f"Message:\n{form_data['message']}\n"
+            )
+            try:
+                send_mail(
+                    subject,
+                    email_message,
+                    getattr(settings, "DEFAULT_FROM_EMAIL", "tauqeerqureshi112@gmail.com"),
+                    ['tauqeerqureshi112@gmail.com'],
+                    fail_silently=False,
+                )
+                form_success = "Thanks! Your request was sent. We'll reach out shortly."
+                form_data = {}
+            except Exception:
+                form_error = "Unable to send your request right now. Please try again in a few minutes."
+
+    context = {
+        "departments": departments,
+        "doctor_options": doctor_options,
+        "form_success": form_success,
+        "form_error": form_error,
+        "form_data": form_data,
+    }
+    return render(request, "index.html", context)
 
 @never_cache
 @login_required(login_url='admin_login')
@@ -96,8 +173,24 @@ def dashboard(request):
         user = request.user
         print(f"Dashboard accessed by: {user} with user_type: {getattr(user, 'user_type', None)}")
         if hasattr(user, 'user_type') and user.user_type == 'admin':
+            # Calculate statistics
+            all_users = User.objects.all()
+            total_users = all_users.count()
+            total_doctors = all_users.filter(user_type='doctor').count()
+            total_patients = PatientCreatedByDoctor.objects.all().count()
+            total_reports = Patient_Report.objects.all().count()
             
-            return render(request, "index_admin.html")
+            # Get recent activity from Patient_Report
+            recent_activity = Patient_Report.objects.all().order_by('-created_at')[:5]
+            
+            return render(request, "index_admin.html", {
+                'total_users': total_users,
+                'total_doctors': total_doctors,
+                'total_patients': total_patients,
+                'total_reports': total_reports,
+                'recent_activity': recent_activity,
+                'last_login': user.last_login,
+            })
         else:
             return HttpResponseForbidden("Access Denied: Admins only.")
         
@@ -176,7 +269,30 @@ def patient_dashboard(request):
             print("Report File URL:", report.report_file.url)   
             print("Report File Path:", report.report_file.path) 
 
-        return render(request, "patient/index.html", {"patients": patients})
+        doctor = patients.doctor
+        xray_info = PatientXRayInfo.objects.filter(patient=patients).first()
+        total_reports = reports.count()
+        reports = reports.order_by('-created_at')
+
+        age_years = None
+        if patients.dob:
+            today = date.today()
+            age_years = today.year - patients.dob.year - (
+                (today.month, today.day) < (patients.dob.month, patients.dob.day)
+            )
+
+        context = {
+            "patients": patients,
+            "doctor": doctor,
+            "age": age_years,
+            "reports": reports,
+            "total_reports": total_reports,
+            "xray_info": xray_info,
+            "fracture_type": xray_info.fracture_type if xray_info else None,
+            "now": timezone.now(),
+        }
+
+        return render(request, "patient/patient_dashboard.html", context)
 
 
     
@@ -187,44 +303,99 @@ def patient_dashboard(request):
 @login_required(login_url='patient_logins')    
 def user_profile(request):
     try:
-        patients = get_object_or_404(
-            PatientCreatedByDoctor,
-            user=request.user,
-            show_on_dashboard=True
-        )
-        data = patients.user.username
-        print("the name of patient is:" , data,".")
-
-        account_created = patients.created_at
-
-        print("This account created at:" , account_created)
-
-
-        doctor_link = patients.doctor
-        print("the doctor linkage is:" , doctor_link)
-
-        ### left with the file of doctor:
-        patients1 = PatientXRayInfo.objects.get(patient = patients)
-        reports = Patient_Report.objects.filter(patient=patients)
-
-        print("the data getting from the patients are:" , patients1)
-
-        for report in reports:
-            print("Patient Name:", report.Patient_name)
-            print("Patient ID:", report.Patient_idx)
-            print("Report File URL:", report.report_file.url)   
-            print("Report File Path:", report.report_file.path) 
-
-
-        print("---------------------------------------------------------------")
-        print("final conclusion from patient x ray is:" , patients1.name)
+        user = request.user
         
-        data = {"reports" : reports , "patients" : patients1}
-       
-        return render(request  , "patient/user/edit_user.html" , data)
+        # Check if user is a doctor
+        if user.user_type == 'doctor':
+            try:
+                doctor_profile = Doctor.objects.get(user=user)
+            except Doctor.DoesNotExist:
+                doctor_profile = None
+            
+            # Get doctor's patients
+            doctor_patients = PatientCreatedByDoctor.objects.filter(doctor=user)
+            
+            context = {
+                "user": user,
+                "doctor_profile": doctor_profile,
+                "doctor_patients": doctor_patients,
+                "user_type": "doctor",
+                "patients": None,
+                "reports": []
+            }
+            return render(request, "patient/user/edit_user.html", context)
+        
+        # For patients - get their profile data
+        patients = None
+        patients1 = None
+        reports = []
+        
+        # Try different ways to find the patient
+        try:
+            # First try: get by user and show_on_dashboard
+            patients = PatientCreatedByDoctor.objects.get(user=request.user, show_on_dashboard=True)
+        except PatientCreatedByDoctor.DoesNotExist:
+            try:
+                # Second try: get by user only
+                patients = PatientCreatedByDoctor.objects.get(user=request.user)
+            except PatientCreatedByDoctor.DoesNotExist:
+                # Third try: get first patient if any exist
+                all_patients = PatientCreatedByDoctor.objects.filter(user=request.user)
+                if all_patients.exists():
+                    patients = all_patients.first()
+                else:
+                    # If still no patient, try to get any patient from database
+                    all_patients = PatientCreatedByDoctor.objects.all()
+                    if all_patients.exists():
+                        patients = all_patients.first()
+        
+        if patients:
+            data = patients.user.username
+            print("the name of patient is:" , data,".")
+
+            account_created = patients.created_at
+            print("This account created at:" , account_created)
+
+            doctor_link = patients.doctor
+            print("the doctor linkage is:" , doctor_link)
+
+            # Get X-ray info if exists
+            try:
+                patients1 = PatientXRayInfo.objects.get(patient=patients)
+            except PatientXRayInfo.DoesNotExist:
+                patients1 = None
+                
+            reports = Patient_Report.objects.filter(patient=patients)
+
+            if patients1:
+                print("the data getting from the patients are:" , patients1)
+                print("final conclusion from patient x ray is:" , patients1.name)
+
+            for report in reports:
+                print("Patient Name:", report.Patient_name)
+                print("Patient ID:", report.Patient_idx)
+                if report.report_file:
+                    print("Report File URL:", report.report_file.url)   
+                    print("Report File Path:", report.report_file.path)
+
+            context = {"reports": reports, "patients": patients1, "user_type": "patient"}
+            return render(request, "patient/user/edit_user.html", context)
+        else:
+            # No patient found in database
+            return render(request, "patient/user/edit_user.html", {
+                "error": "Your patient profile is not set up yet. Please contact your doctor.",
+                "reports": [],
+                "patients": None,
+                "user_type": "patient"
+            })
         
     except Exception as e:
-        raise HttpResponse(str(e))
+        print(f"Error in user_profile: {str(e)}")
+        return render(request, "patient/user/edit_user.html", {
+            "error": f"Error loading profile: {str(e)}",
+            "reports": [],
+            "patients": None
+        })
 @never_cache
 @login_required(login_url='patient_logins')      
 def user_report(request):
@@ -233,7 +404,7 @@ def user_report(request):
             return redirect("http://127.0.0.1:5003")
         
     except Exception as e:
-        raise HttpResponse(str(e))
+        return HttpResponse(str(e), status=500)
 @never_cache
 @login_required(login_url='patient_logins')      
 def detailed_history(request):
@@ -242,7 +413,7 @@ def detailed_history(request):
             return render(request , "patient/report/recording_pred.html")
         
     except Exception as e:
-        raise HttpResponse(str(e))
+        return HttpResponse(str(e), status=500)
     
 def patient_logout(request):
     logout(request)
@@ -351,11 +522,30 @@ def manage_user(request):
     Doctor_data = User.objects.all().values("id", "username", "doctor")
     doctor = [i for i in Doctor_data]
 
+    # Calculate statistics
+    all_users = User.objects.all()
+    total_users = all_users.count()
+    total_doctors = all_users.filter(user_type='doctor').count()
+    total_patients = PatientCreatedByDoctor.objects.all().count()
+    active_users = all_users.filter(is_active=True).count()
+    inactive_users = total_users - active_users
+    
+    # Calculate percentages
+    doctor_percentage = round((total_doctors / total_users * 100)) if total_users > 0 else 0
+    patient_percentage = round((total_patients / total_users * 100)) if total_users > 0 else 0
 
     return render(request, 'manage_user.html', {
         'visible_patients': visible_patients,
         'pending_patients': pending_patients,
         "doctor" : doctor,
+        'total_users': total_users,
+        'total_doctors': total_doctors,
+        'total_patients': total_patients,
+        'active_users': active_users,
+        'inactive_users': inactive_users,
+        'doctor_percentage': doctor_percentage,
+        'patient_percentage': patient_percentage,
+        'users': all_users,  # Add all users to context for displaying in table
     })
 
 def remove_doctor(request , doctor_id):
@@ -401,16 +591,30 @@ def total_patient_graphs(request):
 @login_required
 @never_cache
 def diagnosis(request):
-    total_patient = PatientCreatedByDoctor.objects.count()
+    # Get doctor's patients
+    total_patient = PatientCreatedByDoctor.objects.filter(doctor=request.user).count()
     all_patients = PatientXRayInfo.objects.filter(doctor=request.user)
     for i in all_patients:
         print("my patient is:" , i)
     logging.info("The total number of patients are")
     logging.info(total_patient)
-    data = PatientCreatedByDoctor.objects.all().order_by('-id')[:3]
-   
     
-    return render(request , "Doctor/index.html" , {"total_patient" : total_patient , "data" : data})
+    # Calculate statistics for doctor dashboard
+    total_xray_records = PatientXRayInfo.objects.filter(doctor=request.user).count()
+    total_reports = Patient_Report.objects.filter(patient__doctor=request.user).count()
+    recent_analysis_count = Patient_Report.objects.filter(patient__doctor=request.user).count()
+    recent_patients = PatientCreatedByDoctor.objects.filter(doctor=request.user).order_by('-created_at')[:5]
+    
+    context = {
+        'total_doctor_patients': total_patient,
+        'total_xray_records': total_xray_records,
+        'total_reports': total_reports,
+        'recent_analysis_count': recent_analysis_count,
+        'recent_patients': recent_patients,
+        'data': PatientCreatedByDoctor.objects.all().order_by('-id')[:3]
+    }
+    
+    return render(request, "Doctor/doctor_dashboard.html", context)
 
 
 def add_patient(request):
@@ -504,7 +708,7 @@ def get_all_patients(request):
     print("Patients from DB:", patients)
     for p in patients:
         p.age = calculate_age(p.dob)
-    return render(request, 'Doctor/Patient/new_diagnosis.html', {'patients': patients})
+    return render(request, 'Doctor/Patient/all_patients.html', {'patients': patients})
 
 
       
@@ -522,7 +726,7 @@ def predict_diagnosis(request):
             logging.info(patient)
 
             if not images:
-                return render(request, 'Doctor/Patient/new_diagnosis.html', {
+                return render(request, 'Doctor/Patient/diagnosis_form.html', {
                     'patients': patients,
                     'error': 'No image uploaded'
                 })
@@ -569,18 +773,18 @@ def predict_diagnosis(request):
             print("This is my database x ray info i am sending----------------" , xray_info ,"created values:" ,  created)
             
 
-            return render(request, 'prediction.html', {
+            return render(request, 'Doctor/prediction_result.html', {
                 'patients': patients,
                 'prediction_result': prediction_result
             })
 
         except Exception as e:
-            return render(request, 'Doctor/Patient/new_diagnosis.html', {
+            return render(request, 'Doctor/Patient/diagnosis_form.html', {
                 'patients': patients,
                 'error': str(e)
             })
 
-    return render(request, 'Doctor/Patient/new_diagnosis.html', {
+    return render(request, 'Doctor/Patient/diagnosis_form.html', {
         'patients': patients
     })
 
@@ -609,24 +813,70 @@ def Report(request):
 
         
         
+        
         prompt1 = f"""
-        Generate a  medical diagnostic of fracture of small children report for the following patient.
-        Include the following sections:
+You are an orthopedic diagnostic AI. Generate a structured *Medical Diagnostic Report* for a pediatric fracture case.
 
-        1. 🔍 Clinical History & Presenting Complaints
-        Patient Details:
-        - Patient Name: {latest_report.name}
-        - Patient Code: {latest_report.patient_code}
-        - Age: {latest_report.age}
-        - Finding: {latest_report.finding}
-        - Affected Hand: {latest_report.affected_hand}
-        - Fracture Type: {latest_report.fracture_type}
-        - X-ray ID: {latest_report.xray_id}
-        tell me the medical dignosis according to type of fracture and on that hand not more than 3 4  dont write the detail of patietn just tell us about how 
-        this fracture ocurrs and in how many week it takes to get good 
-        """
+STRICT RULES:
+- Do NOT write any patient details in the report.
+- Use ONLY the clinical data below for medical reasoning.
+- Follow the EXACT OUTPUT format given.
+- Do NOT add extra sections.
+- Keep the diagnosis short (3–4 lines).
+- Explain only:
+  • How this type of fracture typically occurs  
+  • Expected healing time (in weeks)  
+  • Brief medical explanation (no patient history)
 
-        api_key = "AIzaSyDk-aE6_LA-PIbgh0AqwBVypModgSgu7XY"
+CLINICAL DATA:
+- Affected Hand: {latest_report.affected_hand}
+- Fracture Type: {latest_report.fracture_type}
+- Finding: {latest_report.finding}
+
+---------------------------------------------------------
+OUTPUT FORMAT (MANDATORY):
+
+### 🩺 Medical Diagnosis
+(Write 3–4 lines about how this type of fracture occurs + healing duration)
+
+### Recommended Exercises
+(Choose 5–8 exercises based only on fracture severity)
+
+For each exercise include:
+1. **Exercise Name**
+2. One-line description
+3. One safety tip
+
+Use the following approved exercise list ONLY:
+
+Pendulum Swing
+Active Shoulder Flexion (Wall Slide)
+Shoulder Abduction (Assisted)
+External Rotation with Band
+Internal Rotation with Band
+Scapular Retraction/Depression (Wall Slide)
+Prone Y Raise
+Wall Angel
+Seated Shoulder Flexion (Assisted)
+Side-lying External Rotation
+Isometric Shoulder Flexion
+Scaption
+External Rotation in 90° Abduction
+Shoulder Horizontal Abduction (Prone)
+Shoulder Extension (Assisted)
+Chair Push-Up (Mini)
+I-Y-T Raise
+Serratus Punch
+Shoulder Flexion in Side-lying
+Arm Across Chest Stretch
+Assisted Overhead Reach
+Gentle Shoulder Abduction (Side-lying)
+Wall Walks (Finger Walks Up Wall)
+
+Make sure your output is fully structured with headings.
+"""
+
+        api_key = "AIzaSyB7fwNrYMa4T05ilokA3YQwjasZcwYRG5Y"
         url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
 
         headers = {
@@ -799,18 +1049,28 @@ def Report(request):
         logging.info("working on the new work today for")
 
         buffer = BytesIO(report_content.encode("utf-8"))
+        
+        # Delete previous report if it exists (to avoid UNIQUE constraint error)
+        try:
+            previous_report = Patient_Report.objects.get(patient=latest_report.patient)
+            previous_report.delete()
+            logging.info("Previous report deleted")
+        except Patient_Report.DoesNotExist:
+            logging.info("No previous report found")
+        
+        # Create new report
         patient_report_file = Patient_Report(
-            patient = latest_report.patient , 
+            patient=latest_report.patient,
             Patient_name=latest_report.name,
             Patient_idx=latest_report.patient_code
         )
-
+        
         logging.info("Till here working fine---------------------")
         patient_report_file.report_file.save(
             f"report_{latest_report.patient_code}.html", 
             ContentFile(buffer.getvalue())
         )
-        logging.info("Insetion has been done")
+        logging.info("Insertion has been done")
 
 
         return render(request, 'Report.html', {
@@ -911,7 +1171,7 @@ def Displaying_videos(request , disease):
 
 
     except Exception as e:
-        raise HttpResponse(status_code = 400 , detail = str(e))
+        return HttpResponse(f"Error: {str(e)}", status=400)
     
 
 
@@ -933,7 +1193,7 @@ def Montoring_Exercise(request):
     try:
         return render(request , "Doctor/Video_Montoring.html")
     except Exception as e:
-        raise HttpResponse(status_code = 404 , detail = str(e))
+        return HttpResponse(f"Error: {str(e)}", status=404)
     
 
 
@@ -1230,7 +1490,7 @@ def request_password_reset(request):
         # Generate reset token
         reset_token = str(uuid.uuid4())
         user.reset_token = reset_token
-        user.reset_token_created = datetime.now()
+        user.reset_token_created = timezone.now()
         user.save()
         logger.info(f"Reset token generated for user: {user.username}")
         
@@ -1312,7 +1572,7 @@ def verify_reset_token(request):
             
             # Check if token is still valid (24 hours)
             if user.reset_token_created:
-                time_diff = datetime.now() - user.reset_token_created
+                time_diff = timezone.now() - user.reset_token_created
                 if time_diff.total_seconds() > 86400:  # 24 hours in seconds
                     return JsonResponse({
                         'success': False,
@@ -1377,7 +1637,7 @@ def reset_password(request):
             
             # Check token expiry again
             if user.reset_token_created:
-                time_diff = datetime.now() - user.reset_token_created
+                time_diff = timezone.now() - user.reset_token_created
                 if time_diff.total_seconds() > 86400:
                     return JsonResponse({
                         'success': False,
@@ -1426,3 +1686,99 @@ X-Ai Medical Center Team
             'message': f'An error occurred: {str(e)}'
         }, status=500)
 
+
+@login_required(login_url='admin_login')
+def change_admin_password(request):
+    """Allow admin to change their password without email verification"""
+    if request.method == 'POST':
+        try:
+            current_password = request.POST.get('current_password', '').strip()
+            new_password = request.POST.get('new_password', '').strip()
+            confirm_password = request.POST.get('confirm_password', '').strip()
+            
+            user = request.user
+            
+            # Verify current password
+            if not user.check_password(current_password):
+                messages.error(request, 'Current password is incorrect.')
+                return redirect('change_admin_password')
+            
+            # Check if new passwords match
+            if new_password != confirm_password:
+                messages.error(request, 'New passwords do not match.')
+                return redirect('change_admin_password')
+            
+            # Check password length
+            if len(new_password) < 6:
+                messages.error(request, 'New password must be at least 6 characters long.')
+                return redirect('change_admin_password')
+            
+            # Update password
+            user.set_password(new_password)
+            user.save()
+            
+            # Update session to avoid logout
+            from django.contrib.auth import update_session_auth_hash
+            update_session_auth_hash(request, user)
+            
+            messages.success(request, 'Password changed successfully!')
+            return redirect('index_admin')
+            
+        except Exception as e:
+            messages.error(request, f'An error occurred: {str(e)}')
+            return redirect('change_admin_password')
+    
+    return render(request, 'change_admin_password.html')
+
+
+# New Pages Views
+
+def about_page(request):
+    """View for About Us page - Lightweight and fast"""
+    return render(request, 'about.html')
+
+
+def services_page(request):
+    """View for Services page - Lightweight and fast"""
+    return render(request, 'services.html')
+
+
+def doctors_page(request):
+    """View for Doctors/Team page - Lightweight and fast"""
+    return render(request, 'doctors.html')
+
+
+def contact_page(request):
+    """View for Contact page - Lightweight and fast"""
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        email = request.POST.get('email', '').strip()
+        phone = request.POST.get('phone', '').strip()
+        subject = request.POST.get('subject', '').strip()
+        message = request.POST.get('message', '').strip()
+        
+        if name and email and subject and message:
+            try:
+                # Send email to hospital
+                send_mail(
+                    f'Contact Form: {subject}',
+                    f'From: {name}\nEmail: {email}\nPhone: {phone}\n\nMessage:\n{message}',
+                    email,
+                    ['tauqeerqureshi112@gmail.com'],
+                    fail_silently=False,
+                )
+                messages.success(request, 'Your message has been sent successfully! We will contact you soon.')
+                return redirect('contact_page')
+            except Exception as e:
+                messages.error(request, f'Error sending message. Please try again.')
+                return redirect('contact_page')
+        else:
+            messages.error(request, 'Please fill all required fields.')
+            return redirect('contact_page')
+    
+    return render(request, 'contact.html')
+
+
+def faq_page(request):
+    """View for FAQ page - Lightweight and fast"""
+    return render(request, 'faq.html')

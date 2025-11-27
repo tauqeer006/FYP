@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Diagnosis Result - X-AI Medical System</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    
+    <style>
+        :root {
+            --primary-blue: #1e90ff;
+            --light-blue: #e3f2fd;
+            --dark-blue: #0d47a1;
+            --accent-blue: #64b5f6;
+            --white: #ffffff;
+            --gray-light: #f5f7fa;
+            --gray-dark: #333333;
+            --success-green: #4caf50;
+            --warning-orange: #ff9800;
+            --danger-red: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e3f2fd 100%);
+            font-family: 'Montserrat', sans-serif;
+            color: var(--gray-dark);
+            min-height: 100vh;
+        }
+
+        .container-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        /* Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--success-green), #81c784);
+            color: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.15);
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .page-header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        /* Section */
+        .card-section {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark-blue);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-blue);
+        }
+
+        .section-title i {
+            font-size: 22px;
+            color: var(--primary-blue);
+        }
+
+        /* Two Column Layout */
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Info Box */
+        .info-box {
+            background: var(--light-blue);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-blue);
+            margin-bottom: 20px;
+        }
+
+        .info-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .info-item {
+            padding: 15px;
+            background: var(--white);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark-blue);
+        }
+
+        /* Analysis Results */
+        .analysis-result {
+            background: var(--light-blue);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--warning-orange);
+        }
+
+        .result-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark-blue);
+            margin-bottom: 5px;
+        }
+
+        .result-detail {
+            font-size: 13px;
+            color: #666;
+            margin: 5px 0;
+        }
+
+        /* Confidence Badge */
+        .confidence-badge {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .confidence-high {
+            background: rgba(76, 175, 80, 0.15);
+            color: var(--success-green);
+        }
+
+        .confidence-medium {
+            background: rgba(255, 152, 0, 0.15);
+            color: var(--warning-orange);
+        }
+
+        .confidence-low {
+            background: rgba(244, 67, 54, 0.15);
+            color: var(--danger-red);
+        }
+
+        /* Finding Box */
+        .finding-box {
+            background: rgba(244, 67, 54, 0.05);
+            border: 2px solid var(--danger-red);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .finding-title {
+            color: var(--danger-red);
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .finding-content {
+            color: var(--gray-dark);
+            line-height: 1.6;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .btn-large {
+            padding: 12px 30px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            min-width: 160px;
+            justify-content: center;
+        }
+
+        .btn-primary-large {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+            color: var(--white);
+        }
+
+        .btn-primary-large:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(30, 144, 255, 0.3);
+            text-decoration: none;
+            color: var(--white);
+        }
+
+        .btn-secondary-large {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-secondary-large:hover {
+            background: var(--accent-blue);
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .btn-success-large {
+            background: linear-gradient(135deg, var(--success-green), #81c784);
+            color: var(--white);
+        }
+
+        .btn-success-large:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.3);
+            text-decoration: none;
+            color: var(--white);
+        }
+
+        /* Status Message */
+        .status-message {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid var(--success-green);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-message i {
+            font-size: 24px;
+            color: var(--success-green);
+        }
+
+        .status-text {
+            color: var(--dark-blue);
+        }
+
+        .status-text strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .status-text p {
+            margin: 0;
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Table */
+        .table {
+            margin: 0;
+        }
+
+        .table thead {
+            background: var(--light-blue);
+        }
+
+        .table thead th {
+            color: var(--primary-blue);
+            font-weight: 700;
+            border: none;
+            padding: 15px;
+        }
+
+        .table tbody td {
+            padding: 15px;
+            border-color: #eee;
+            vertical-align: middle;
+        }
+
+        .table tbody tr:hover {
+            background: var(--light-blue);
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .button-group {
+                display: none;
+            }
+
+            .card-section {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-main">
+        <!-- Success Header -->
+        <div class="page-header">
+            <h1>
+                <i class="bi bi-check-circle-fill"></i>
+                Analysis Complete
+            </h1>
+            <p>X-ray has been successfully analyzed by AI models</p>
+        </div>
+
+        <!-- Status Message -->
+        <div class="status-message">
+            <i class="bi bi-info-circle"></i>
+            <div class="status-text">
+                <strong>Patient Record Updated</strong>
+                <p>The X-ray analysis has been saved to {{ patient.fname }} {{ patient.lname }}'s medical record</p>
+            </div>
+        </div>
+
+        <div class="result-grid">
+            <!-- Left Column: Patient Information -->
+            <div class="card-section">
+                <div class="section-title">
+                    <i class="bi bi-person"></i>
+                    Patient Information
+                </div>
+
+                <div class="info-box">
+                    <div class="info-row">
+                        <div class="info-item">
+                            <div class="info-label">Patient Name</div>
+                            <div class="info-value">{{ prediction_result.patient_name }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Age</div>
+                            <div class="info-value">{{ prediction_result.patient_age }} yrs</div>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-item">
+                            <div class="info-label">Date of Birth</div>
+                            <div class="info-value">{{ prediction_result.patient_dob|date:"M d, Y" }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Gender</div>
+                            <div class="info-value">
+                                {% if prediction_result.patient_gender == 'M' %}Male{% elif prediction_result.patient_gender == 'F' %}Female{% else %}Other{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-item">
+                            <div class="info-label">Contact</div>
+                            <div class="info-value">{{ prediction_result.patient_contact }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">{{ prediction_result.patient_email }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis Metadata -->
+                <div class="info-box" style="margin-top: 20px;">
+                    <div class="info-row">
+                        <div class="info-item">
+                            <div class="info-label">X-ray ID</div>
+                            <div class="info-value">{{ prediction_result.xray_id }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Analysis Date</div>
+                            <div class="info-value">{{ prediction_result.analysis_date }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Analysis Results -->
+            <div class="card-section">
+                <div class="section-title">
+                    <i class="bi bi-activity"></i>
+                    Analysis Results
+                </div>
+
+                <!-- Fracture Type -->
+                <div class="analysis-result">
+                    <div class="result-label">Detected Fracture Type</div>
+                    <div class="result-value">
+                        {% if prediction_result.fracture_types.0 %}
+                            {{ prediction_result.fracture_types.0|title }}
+                        {% else %}
+                            No Fracture Detected
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Affected Hand/Side -->
+                <div class="analysis-result">
+                    <div class="result-label">Affected Hand/Side</div>
+                    <div class="result-value">{{ prediction_result.left_right|title }}</div>
+                </div>
+
+                <!-- Confidence -->
+                <div class="analysis-result">
+                    <div class="result-label">Analysis Confidence</div>
+                    <div class="result-value">{{ prediction_result.confidence|floatformat:2 }}%</div>
+                    {% if prediction_result.confidence >= 0.85 %}
+                        <span class="confidence-badge confidence-high">
+                            <i class="bi bi-check-circle"></i> High Confidence
+                        </span>
+                    {% elif prediction_result.confidence >= 0.70 %}
+                        <span class="confidence-badge confidence-medium">
+                            <i class="bi bi-exclamation-circle"></i> Medium Confidence
+                        </span>
+                    {% else %}
+                        <span class="confidence-badge confidence-low">
+                            <i class="bi bi-x-circle"></i> Low Confidence
+                        </span>
+                    {% endif %}
+                </div>
+
+                <!-- Findings -->
+                <div class="finding-box">
+                    <div class="finding-title">
+                        <i class="bi bi-clipboard-check"></i>
+                        Clinical Findings
+                    </div>
+                    <div class="finding-content">
+                        {{ prediction_result.findings }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Notes -->
+        {% if prediction_result.notes %}
+        <div class="card-section">
+            <div class="section-title">
+                <i class="bi bi-file-text"></i>
+                Doctor's Notes
+            </div>
+            <p style="color: #666; line-height: 1.6; margin: 0;">{{ prediction_result.notes }}</p>
+        </div>
+        {% endif %}
+
+        <!-- Next Steps -->
+        <div class="card-section">
+            <div class="section-title">
+                <i class="bi bi-arrow-right-circle"></i>
+                Next Steps
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div style="background: var(--light-blue); padding: 20px; border-radius: 8px; border-left: 4px solid var(--primary-blue);">
+                    <div style="font-weight: 700; color: var(--dark-blue); margin-bottom: 8px;">
+                        <i class="bi bi-file-text"></i> Generate Medical Report
+                    </div>
+                    <p style="font-size: 13px; color: #666; margin: 0;">Create a detailed medical report based on this analysis with AI-generated recommendations</p>
+                </div>
+                <div style="background: var(--light-blue); padding: 20px; border-radius: 8px; border-left: 4px solid var(--success-green);">
+                    <div style="font-weight: 700; color: var(--dark-blue); margin-bottom: 8px;">
+                        <i class="bi bi-check-circle"></i> Review & Approve
+                    </div>
+                    <p style="font-size: 13px; color: #666; margin: 0;">Review the AI analysis and add your clinical assessment before finalizing</p>
+                </div>
+                <div style="background: var(--light-blue); padding: 20px; border-radius: 8px; border-left: 4px solid var(--warning-orange);">
+                    <div style="font-weight: 700; color: var(--dark-blue); margin-bottom: 8px;">
+                        <i class="bi bi-clipboard"></i> Treatment Plan
+                    </div>
+                    <p style="font-size: 13px; color: #666; margin: 0;">Create treatment and exercise recommendations for the patient's recovery</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="button-group">
+            <a href="{% url 'Report_generation' %}" class="btn btn-large btn-success-large">
+                <i class="bi bi-file-text"></i>
+                Generate Full Report
+            </a>
+            <a href="javascript:window.print()" class="btn btn-large btn-secondary-large">
+                <i class="bi bi-printer"></i>
+                Print Results
+            </a>
+            <a href="{% url 'predict_diagnosis' %}" class="btn btn-large btn-secondary-large">
+                <i class="bi bi-plus-circle"></i>
+                Analyze Another
+            </a>
+            <a href="{% url 'diagnosis_page' %}" class="btn btn-large btn-secondary-large">
+                <i class="bi bi-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Chatbot Widget -->
+    {% include 'components/chatbot_widget.html' %}
+
+    <!-- Global Voice Recorder -->
+    {% include 'components/global_voice_recorder.html' %}
+</body>
+
+</html>

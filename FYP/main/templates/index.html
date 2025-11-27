@@ -61,10 +61,10 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-5 col-12">
                         <ul class="top-link">
-                            <li><a href="#">About</a></li>
-                            <li><a href="#">Doctors</a></li>
-                            <li><a href="#">Contact</a></li>
-                            <li><a href="#">FAQ</a></li>
+                            <li><a href="{% url 'about_page' %}">About</a></li>
+                            <li><a href="{% url 'doctors_page' %}">Doctors</a></li>
+                            <li><a href="{% url 'contact_page' %}">Contact</a></li>
+                            <li><a href="{% url 'faq_page' %}">FAQ</a></li>
                         </ul>
                     </div>
                     <div class="col-lg-6 col-md-7 col-12">
@@ -93,23 +93,11 @@
                             <div class="main-menu">
                                 <nav class="navigation">
                                     <ul class="nav menu">
-                                        <li class="active"><a href="#">Home <i class="icofont-rounded-down"></i></a>
-                                            <ul class="dropdown">
-                                                <li><a href="#">Home Page 1</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="#">Doctors</a></li>
-                                        <li><a href="#">Services</a></li>
-                                        <li><a href="#">Pages <i class="icofont-rounded-down"></i></a>
-                                            <ul class="dropdown">
-                                            </ul>
-                                        </li>
-                                        <li><a href="#">Blogs <i class="icofont-rounded-down"></i></a>
-                                            <ul class="dropdown">
-                                                <li><a href="#">Blog Details</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="#">Contact Us</a></li>
+                                        <li class="active"><a href="{% url 'MainPage' %}">Home</a></li>
+                                        <li><a href="{% url 'about_page' %}">About</a></li>
+                                        <li><a href="{% url 'services_page' %}">Services</a></li>
+                                        <li><a href="{% url 'doctors_page' %}">Doctors</a></li>
+                                        <li><a href="{% url 'contact_page' %}">Contact Us</a></li>
                                     </ul>
                                 </nav>
                             </div>
@@ -242,7 +230,7 @@
 									<h4>🧠 AI Voice Chat Bot</h4>
 									<p>An intelligent voice-enabled chatbot that allows users to interact hands-free, ask medical questions, get form-filling assistance, 
 										and navigate the system using natural spoken commands.</p>
-									<a href="#">LEARN MORE<i class="fa fa-long-arrow-right"></i></a>
+									<a href="{% url 'services_page' %}">LEARN MORE<i class="fa fa-long-arrow-right"></i></a>
 								</div>
 							</div>
 						</div>
@@ -259,7 +247,7 @@
 									<h4>X-ray Diagnosis & Recommendations</h4>
 									<p>Upload  X-rays for instant analysis.The system detects 
 										abnormalities and provides tailored medical suggestions..</p>
-									<a href="#">LEARN MORE<i class="fa fa-long-arrow-right"></i></a>
+									<a href="{% url 'services_page' %}">LEARN MORE<i class="fa fa-long-arrow-right"></i></a>
 								</div>
 							</div>
 						</div>
@@ -276,7 +264,7 @@
 									<h4>Exercise Analysis via Webcam</h4>
 									<p>A webcam-based posture and motion analysis module that tracks physical exercise in 
 										real-time  and corrective recommendations..</p>
-									<a href="#">LEARN MORE<i class="fa fa-long-arrow-right"></i></a>
+									<a href="{% url 'services_page' %}">LEARN MORE<i class="fa fa-long-arrow-right"></i></a>
 								</div>
 							</div>
 						</div>
@@ -489,35 +477,35 @@
 						<div class="single-pf">
                         <img src="{% static 'main_page/hospital.jpg' %}" alt="Hospital Building" style="width: 100%; height: auto; border-radius: 8px;">
 
-							<a href="portfolio-details.html" class="btn">View Details</a>
+							<a href="{% url 'about_page' %}" class="btn">View Details</a>
 						</div>
 						<div class="single-pf">
                         <img src="{% static 'main_page/ai based tech.jpg' %}" alt="AI Technology" style="width: 100%; height: auto; border-radius: 8px;">
-							<a href="portfolio-details.html" class="btn">View Details</a>
+							<a href="{% url 'services_page' %}" class="btn">View Details</a>
 						</div>
 						<div class="single-pf">
                         <img src="{% static 'main_page/ai based system.jpg' %}" alt="AI System" style="width: 100%; height: auto; border-radius: 8px;">
-							<a href="portfolio-details.html" class="btn">View Details</a>
+							<a href="{% url 'services_page' %}" class="btn">View Details</a>
 						</div>
 						<div class="single-pf">
                         <img src="{% static 'main_page/fracture detections.jpg' %}" alt="Fracture Detection" style="width: 100%; height: auto; border-radius: 8px;">
-							<a href="portfolio-details.html" class="btn">View Details</a>
+							<a href="{% url 'diagnosis_page' %}" class="btn">View Details</a>
 						</div>
 						<div class="single-pf">
                         <img src="{% static 'main_page/fracture operation threader.jpg' %}" alt="Orthopedic Surgery" style="width: 100%; height: auto; border-radius: 8px;">
-							<a href="portfolio-details.html" class="btn">View Details</a>
+							<a href="{% url 'doctors_page' %}" class="btn">View Details</a>
 						</div>
 						<div class="single-pf">
                         <img src="{% static 'main_page/hospital.jpg' %}" alt="Hospital Building" style="width: 100%; height: auto; border-radius: 8px;">
-							<a href="portfolio-details.html" class="btn">View Details</a>
+							<a href="{% url 'about_page' %}" class="btn">View Details</a>
 						</div>
 						<div class="single-pf">
                         <img src="{% static 'main_page/ai based tech.jpg' %}" alt="AI Technology" style="width: 100%; height: auto; border-radius: 8px;">
-							<a href="portfolio-details.html" class="btn">View Details</a>
+							<a href="{% url 'services_page' %}" class="btn">View Details</a>
 						</div>
 						<div class="single-pf">
                         <img src="{% static 'main_page/fracture detections.jpg' %}" alt="Fracture Detection" style="width: 100%; height: auto; border-radius: 8px;">
-							<a href="portfolio-details.html" class="btn">View Details</a>
+							<a href="{% url 'diagnosis_page' %}" class="btn">View Details</a>
 						</div>
 					</div>
 				</div>
@@ -544,7 +532,7 @@
 					<!-- Start Single Service -->
 					<div class="single-service">
 						<i class="icofont icofont-prescription"></i>
-						<h4><a href="service-details.html">X-Ray Diagnosis</a></h4>
+						<h4><a href="{% url 'services_page' %}">X-Ray Diagnosis</a></h4>
 						<p>Advanced AI-powered X-ray analysis for accurate fracture detection and bone abnormality diagnosis. Fast results with professional interpretation.</p>
 					</div>
 					<!-- End Single Service -->
@@ -553,7 +541,7 @@
 					<!-- Start Single Service -->
 					<div class="single-service">
 						<i class="icofont icofont-stethoscope"></i>
-						<h4><a href="service-details.html">Medical Consultation</a></h4>
+						<h4><a href="{% url 'services_page' %}">Medical Consultation</a></h4>
 						<p>Expert consultation with our experienced doctors. Personalized medical advice, second opinions, and comprehensive treatment planning.</p>
 					</div>
 					<!-- End Single Service -->
@@ -562,7 +550,7 @@
 					<!-- Start Single Service -->
 					<div class="single-service">
 						<i class="icofont icofont-heart-alt"></i>
-						<h4><a href="service-details.html">Orthopedic Care</a></h4>
+						<h4><a href="{% url 'services_page' %}">Orthopedic Care</a></h4>
 						<p>Specialized treatment for bone and joint conditions. From diagnosis through rehabilitation, comprehensive orthopedic care for all ages.</p>
 					</div>
 					<!-- End Single Service -->
@@ -571,7 +559,7 @@
 					<!-- Start Single Service -->
 					<div class="single-service">
 						<i class="icofont icofont-ui-clock"></i>
-						<h4><a href="service-details.html">Exercise Rehabilitation</a></h4>
+						<h4><a href="{% url 'services_page' %}">Exercise Rehabilitation</a></h4>
 						<p>Guided rehabilitation exercises with real-time posture correction. AI-monitored movement analysis to ensure proper recovery technique.</p>
 					</div>
 					<!-- End Single Service -->
@@ -580,7 +568,7 @@
 					<!-- Start Single Service -->
 					<div class="single-service">
 						<i class="icofont icofont-heartbeat"></i>
-						<h4><a href="service-details.html">Voice-Enabled Assistance</a></h4>
+						<h4><a href="{% url 'services_page' %}">Voice-Enabled Assistance</a></h4>
 						<p>AI chatbot for hands-free guidance. Ask questions, get medical information, and navigate services using natural voice commands.</p>
 					</div>
 					<!-- End Single Service -->
@@ -589,7 +577,7 @@
 					<!-- Start Single Service -->
 					<div class="single-service">
 						<i class="icofont icofont-doctor-alt"></i>
-						<h4><a href="service-details.html">24/7 Support</a></h4>
+						<h4><a href="{% url 'services_page' %}">24/7 Support</a></h4>
 						<p>Round-the-clock patient support and emergency assistance. Always available when you need professional medical guidance and care.</p>
 					</div>
 					<!-- End Single Service -->
@@ -839,58 +827,65 @@
 			</div>
 			<div class="row">
 				<div class="col-lg-6 col-md-12 col-12">
-					<form class="form" action="#">
+					<form class="form" action="{% url 'MainPage' %}" method="post">
+						{% csrf_token %}
+						{% if form_success %}
+						<div class="alert alert-success" role="alert">
+							{{ form_success }}
+						</div>
+						{% elif form_error %}
+						<div class="alert alert-danger" role="alert">
+							{{ form_error }}
+						</div>
+						{% endif %}
 						<div class="row">
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
-									<input name="name" type="text" placeholder="Name">
+									<input name="name" type="text" placeholder="Name" value="{{ form_data.name|default:'' }}" required>
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
-									<input name="email" type="email" placeholder="Email">
+									<input name="email" type="email" placeholder="Email" value="{{ form_data.email|default:'' }}" required>
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
-									<input name="phone" type="text" placeholder="Phone">
+									<input name="phone" type="text" placeholder="Phone" value="{{ form_data.phone|default:'' }}" required>
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
-									<div class="nice-select form-control wide" tabindex="0"><span
-											class="current">Department</span>
-										<ul class="list">
-											<li data-value="1" class="option selected ">Department</li>
-											<li data-value="2" class="option">Cardiac Clinic</li>
-											<li data-value="3" class="option">Neurology</li>
-											<li data-value="4" class="option">Dentistry</li>
-											<li data-value="5" class="option">Gastroenterology</li>
-										</ul>
-									</div>
+									<select name="department" class="form-control wide" required>
+										<option value="">Select Department</option>
+										{% for dept in departments %}
+										<option value="{{ dept }}" {% if form_data.department == dept %}selected{% endif %}>{{ dept }}</option>
+										{% endfor %}
+									</select>
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
-									<div class="nice-select form-control wide" tabindex="0"><span
-											class="current">Doctor</span>
-										<ul class="list">
-											<li data-value="1" class="option selected ">Doctor</li>
-											<li data-value="2" class="option">Dr. Akther Hossain</li>
-											<li data-value="3" class="option">Dr. Dery Alex</li>
-											<li data-value="4" class="option">Dr. Jovis Karon</li>
-										</ul>
-									</div>
+									<select name="doctor" class="form-control wide" required>
+										<option value="">Select Doctor</option>
+										{% for doctor in doctor_options %}
+											<option value="{{ doctor.value }}" {% if form_data.doctor == doctor.value %}selected{% endif %}>
+												{{ doctor.label }}
+											</option>
+										{% empty %}
+											<option value="">No doctors available</option>
+										{% endfor %}
+									</select>
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
-									<input type="text" placeholder="Date" id="datepicker">
+									<input name="appointment_date" type="text" placeholder="Date" id="datepicker" value="{{ form_data.appointment_date|default:'' }}" required>
 								</div>
 							</div>
 							<div class="col-lg-12 col-md-12 col-12">
 								<div class="form-group">
-									<textarea name="message" placeholder="Write Your Message Here....."></textarea>
+									<textarea name="message" placeholder="Write Your Message Here....." required>{{ form_data.message|default:'' }}</textarea>
 								</div>
 							</div>
 						</div>
@@ -956,15 +951,13 @@
 					<div class="col-lg-3 col-md-6 col-12">
 						<div class="single-footer">
 							<h2>About Us</h2>
-							<p>Lorem ipsum dolor sit am consectetur adipisicing elit do eiusmod tempor incididunt ut
-								labore dolore magna.</p>
+							<p>X-Ai Medical Center is revolutionizing healthcare through artificial intelligence, making fracture detection fast, accurate, and affordable for everyone in Pakistan.</p>
 							<!-- Social -->
 							<ul class="social">
-								<li><a href="#"><i class="icofont-facebook"></i></a></li>
-								<li><a href="#"><i class="icofont-google-plus"></i></a></li>
-								<li><a href="#"><i class="icofont-twitter"></i></a></li>
-								<li><a href="#"><i class="icofont-vimeo"></i></a></li>
-								<li><a href="#"><i class="icofont-pinterest"></i></a></li>
+								<li><a href="https://facebook.com" target="_blank"><i class="icofont-facebook"></i></a></li>
+								<li><a href="https://twitter.com" target="_blank"><i class="icofont-twitter"></i></a></li>
+								<li><a href="mailto:tauqeerqureshi112@gmail.com"><i class="icofont-email"></i></a></li>
+								<li><a href="tel:03045450049"><i class="icofont-phone"></i></a></li>
 							</ul>
 							<!-- End Social -->
 						</div>
@@ -975,29 +968,26 @@
 							<div class="row">
 								<div class="col-lg-6 col-md-6 col-12">
 									<ul>
-										<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Home</a>
+										<li><a href="{% url 'MainPage' %}"><i class="fa fa-caret-right" aria-hidden="true"></i>Home</a>
 										</li>
-										<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>About Us</a>
+										<li><a href="{% url 'about_page' %}"><i class="fa fa-caret-right" aria-hidden="true"></i>About Us</a>
 										</li>
-										<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Services</a>
+										<li><a href="{% url 'services_page' %}"><i class="fa fa-caret-right" aria-hidden="true"></i>Services</a>
 										</li>
-										<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Our
-												Cases</a></li>
-										<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Other
-												Links</a></li>
+										<li><a href="{% url 'doctors_page' %}"><i class="fa fa-caret-right" aria-hidden="true"></i>Doctors</a></li>
+										<li><a href="{% url 'faq_page' %}"><i class="fa fa-caret-right" aria-hidden="true"></i>FAQ</a></li>
 									</ul>
 								</div>
 								<div class="col-lg-6 col-md-6 col-12">
 									<ul>
-										<li><a href="#"><i class="fa fa-caret-right"
-													aria-hidden="true"></i>Consuling</a></li>
-										<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Finance</a>
+										<li><a href="{% url 'contact_page' %}"><i class="fa fa-caret-right"
+													aria-hidden="true"></i>Contact</a></li>
+										<li><a href="{% url 'diagnosis_page' %}"><i class="fa fa-caret-right" aria-hidden="true"></i>Diagnosis</a>
 										</li>
-										<li><a href="#"><i class="fa fa-caret-right"
-													aria-hidden="true"></i>Testimonials</a></li>
-										<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>FAQ</a></li>
-										<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Contact
-												Us</a></li>
+										<li><a href="{% url 'patient_logins' %}"><i class="fa fa-caret-right"
+													aria-hidden="true"></i>Patient Login</a></li>
+										<li><a href="{% url 'loginSystem' %}"><i class="fa fa-caret-right" aria-hidden="true"></i>Doctor Login</a></li>
+										<li><a href="{% url 'admin_login' %}"><i class="fa fa-caret-right" aria-hidden="true"></i>Admin</a></li>
 									</ul>
 								</div>
 							</div>

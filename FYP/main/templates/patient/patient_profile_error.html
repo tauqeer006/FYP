@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Profile Error - X-AI Medical System</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    
+    <style>
+        :root {
+            --primary-blue: #1e90ff;
+            --light-blue: #e3f2fd;
+            --dark-blue: #0d47a1;
+            --danger-red: #e74c3c;
+            --white: #ffffff;
+            --gray-light: #f5f7fa;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e3f2fd 100%);
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .error-container {
+            background: var(--white);
+            padding: 50px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+        }
+
+        @keyframes pulse-error {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+            }
+        }
+
+        .error-icon {
+            font-size: 72px;
+            color: var(--danger-red);
+            margin-bottom: 25px;
+            animation: pulse-error 2s ease-in-out infinite;
+        }
+
+        .error-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark-blue);
+            margin-bottom: 15px;
+        }
+
+        .error-subtitle {
+            font-size: 16px;
+            color: var(--danger-red);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .error-message {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .info-box {
+            background: var(--light-blue);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-blue);
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .info-box h4 {
+            color: var(--dark-blue);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            margin: 8px 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .info-box ul {
+            margin: 10px 0 0 0;
+            padding-left: 20px;
+        }
+
+        .info-box li {
+            font-size: 14px;
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .troubleshoot-box {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .troubleshoot-box h4 {
+            color: #856404;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .troubleshoot-box p {
+            margin: 8px 0;
+            font-size: 14px;
+            color: #856404;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 12px 30px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue), #64b5f6);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(30, 144, 255, 0.3);
+            text-decoration: none;
+            color: var(--white);
+        }
+
+        .btn-secondary {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-blue);
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: var(--danger-red);
+            color: var(--white);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .error-code {
+            background: var(--gray-light);
+            padding: 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 12px;
+            color: var(--danger-red);
+            margin: 15px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="error-container">
+        <div class="status-badge">
+            <i class="bi bi-x-circle"></i> Profile Error
+        </div>
+
+        <i class="bi bi-exclamation-circle error-icon"></i>
+        
+        <h1 class="error-title">Cannot Load Your Profile</h1>
+        <h3 class="error-subtitle">{{ error_message }}</h3>
+        
+        <p class="error-message">
+            We encountered an issue while trying to access your patient profile. 
+            This typically happens when your account hasn't been properly set up in the system yet.
+        </p>
+
+        <div class="info-box">
+            <h4>
+                <i class="bi bi-info-circle"></i> Possible Reasons
+            </h4>
+            <ul>
+                <li>Your profile hasn't been created yet by your doctor</li>
+                <li>Your account is still pending doctor approval</li>
+                <li>Your profile information needs to be updated</li>
+                <li>There's a temporary connection issue</li>
+            </ul>
+        </div>
+
+        <div class="troubleshoot-box">
+            <h4>
+                <i class="bi bi-wrench"></i> Troubleshooting Steps
+            </h4>
+            <p><strong>Step 1:</strong> Try refreshing this page</p>
+            <p><strong>Step 2:</strong> Log out and log back in</p>
+            <p><strong>Step 3:</strong> Contact your doctor to ensure you're registered</p>
+            <p><strong>Step 4:</strong> If the issue persists, contact system support</p>
+        </div>
+
+        {% if error_details %}
+        <div class="error-code">
+            Error ID: {{ error_details }}
+        </div>
+        {% endif %}
+
+        <div class="button-group">
+            <a href="javascript:location.reload()" class="btn-action btn-primary">
+                <i class="bi bi-arrow-clockwise"></i>
+                Refresh Page
+            </a>
+            <a href="{% url 'patient_logins' %}" class="btn-action btn-secondary">
+                <i class="bi bi-box-arrow-right"></i>
+                Log Out
+            </a>
+        </div>
+    </div>
+
+    <!-- Chatbot Widget -->
+    {% include 'components/chatbot_widget.html' %}
+
+    <!-- Global Voice Recorder -->
+    {% include 'components/global_voice_recorder.html' %}
+</body>
+
+</html>

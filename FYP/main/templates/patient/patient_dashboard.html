@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="apple-touch-icon" sizes="76x76" href="{% static 'assets/img/apple-icon.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.ico' %}">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Patient Dashboard - X-AI Medical System</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/css/light-bootstrap-dashboard.css' %}?v=2.0.0" rel="stylesheet" />
+    
+    <style>
+        :root {
+            --primary-blue: #1e90ff;
+            --light-blue: #e3f2fd;
+            --dark-blue: #0d47a1;
+            --accent-blue: #64b5f6;
+            --white: #ffffff;
+            --gray-light: #f5f7fa;
+            --gray-dark: #333333;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e3f2fd 100%);
+            font-family: 'Montserrat', sans-serif;
+            color: var(--gray-dark);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+            box-shadow: 0 4px 15px rgba(30, 144, 255, 0.2);
+            padding: 15px 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-brand {
+            color: var(--white) !important;
+            font-weight: 700;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .nav-link:hover {
+            color: var(--white) !important;
+        }
+
+        .navbar-nav .dropdown-menu {
+            background: var(--white);
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-item {
+            color: var(--gray-dark);
+            font-weight: 500;
+            border-bottom: 1px solid var(--light-blue);
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+        }
+
+        .container-main {
+            padding: 30px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--dark-blue);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 30px;
+        }
+
+        /* Welcome Card */
+        .welcome-card {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            color: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(30, 144, 255, 0.2);
+            border: none;
+        }
+
+        .welcome-card h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .welcome-card p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .patient-info-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .info-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .info-label {
+            font-size: 12px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(30, 144, 255, 0.1);
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 10px 35px rgba(30, 144, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+        }
+
+        .stat-icon.reports {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+        }
+
+        .stat-icon.fracture {
+            background: linear-gradient(135deg, var(--warning), #ffb74d);
+        }
+
+        .stat-icon.exercise {
+            background: linear-gradient(135deg, var(--success), #81c784);
+        }
+
+        .stat-title {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark-blue);
+        }
+
+        /* Medical Info Section */
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark-blue);
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card {
+            background: var(--white);
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(30, 144, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            border-radius: 12px 12px 0 0;
+            padding: 20px;
+            color: var(--white);
+            border: none;
+        }
+
+        .card-header h5 {
+            margin: 0;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .info-table {
+            width: 100%;
+        }
+
+        .info-table tr {
+            border-bottom: 1px solid var(--light-blue);
+        }
+
+        .info-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .info-table td {
+            padding: 15px 0;
+        }
+
+        .info-table .label {
+            font-weight: 600;
+            color: var(--primary-blue);
+            width: 30%;
+        }
+
+        .info-table .value {
+            color: var(--gray-dark);
+            font-weight: 500;
+        }
+
+        /* Reports Section */
+        .reports-list {
+            list-style: none;
+        }
+
+        .report-item {
+            background: var(--light-blue);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            border-left: 5px solid var(--primary-blue);
+        }
+
+        .report-item:hover {
+            background: rgba(30, 144, 255, 0.15);
+            box-shadow: 0 5px 15px rgba(30, 144, 255, 0.1);
+        }
+
+        .report-info {
+            flex: 1;
+        }
+
+        .report-name {
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .report-date {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 12px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(30, 144, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary-blue) 100%);
+            box-shadow: 0 6px 20px rgba(30, 144, 255, 0.4);
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 11px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: var(--light-blue);
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            margin: 10px 0;
+        }
+
+        /* Exercise Tips Section */
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .tip-card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--success);
+        }
+
+        .tip-card h6 {
+            color: var(--primary-blue);
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tip-card p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Action Buttons Section */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            background: var(--white);
+            border: 2px solid var(--primary-blue);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--primary-blue);
+        }
+
+        .action-btn:hover {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .action-btn i {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .action-btn span {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container-main {
+                padding: 15px 10px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .welcome-card {
+                padding: 20px;
+            }
+
+            .patient-info-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'patient_dashboard' %}">
+                <i class="bi bi-heart-pulse"></i> X-AI Medical System
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'patient_dashboard' %}">
+                            <i class="bi bi-house"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'Video-Recommendations' %}">
+                            <i class="bi bi-activity"></i> Exercise
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> {{ user.username }}
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{% url 'user_profile' %}">
+                                <i class="bi bi-person"></i> My Profile
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <i class="bi bi-gear"></i> Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'patient_logout' %}">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-main">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="bi bi-speedometer2"></i> Patient Dashboard
+            </h1>
+            <p class="page-subtitle">Welcome back, {{ patients.fname }}! Here's your medical overview.</p>
+        </div>
+
+        <!-- Welcome Card -->
+        <div class="welcome-card">
+            <h2>Welcome, {{ patients.fname }} {{ patients.lname }}!</h2>
+            <p>Your health journey at a glance. Stay on track with your rehabilitation and follow your doctor's guidance.</p>
+            
+            <div class="patient-info-row">
+                <div class="info-item">
+                    <div class="info-label">Doctor</div>
+                    <div class="info-value">{% if doctor %}{{ doctor.get_full_name|default:doctor.username }}{% else %}Not assigned{% endif %}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Age</div>
+                    <div class="info-value">
+                        {% if age %}
+                            {{ age }} years
+                        {% else %}
+                            Not available
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Gender</div>
+                    <div class="info-value">
+                        {% if patients.gender == 'M' %}Male{% elif patients.gender == 'F' %}Female{% else %}Other{% endif %}
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Member Since</div>
+                    <div class="info-value">{{ patients.created_at|date:"M d, Y" }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <h3 class="section-title">
+            <i class="bi bi-graph-up"></i> Your Health Statistics
+        </h3>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon reports">
+                    <i class="bi bi-file-earmark-medical"></i>
+                </div>
+                <div class="stat-title">Medical Reports</div>
+                <div class="stat-number">{{ total_reports }}</div>
+                <p style="color: #999; margin-top: 10px; font-size: 12px;">Reports generated by your doctor</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon fracture">
+                    <i class="bi bi-exclamation-circle"></i>
+                </div>
+                <div class="stat-title">Fracture Type</div>
+                <div class="stat-number" style="font-size: 18px;">
+                    {% if fracture_type %}
+                        {{ fracture_type }}
+                    {% else %}
+                        <span style="font-size: 14px;">Not assessed</span>
+                    {% endif %}
+                </div>
+                <p style="color: #999; margin-top: 10px; font-size: 12px;">Your injury classification</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon exercise">
+                    <i class="bi bi-heart-pulse"></i>
+                </div>
+                <div class="stat-title">Status</div>
+                <div class="stat-number" style="font-size: 18px; color: var(--success);">
+                    {% if patients.is_active %}Active{% else %}Inactive{% endif %}
+                </div>
+                <p style="color: #999; margin-top: 10px; font-size: 12px;">Account status</p>
+            </div>
+        </div>
+
+        <!-- Medical Information Section -->
+        <h3 class="section-title">
+            <i class="bi bi-clipboard2-check"></i> Medical Information
+        </h3>
+
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-person-vcard"></i> Personal Details</h5>
+            </div>
+            <div class="card-body">
+                <table class="info-table">
+                    <tr>
+                        <td class="label">Full Name</td>
+                        <td class="value">{{ patients.fname }} {{ patients.lname }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Date of Birth</td>
+                        <td class="value">{{ patients.dob|date:"M d, Y"|default:"Not provided" }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Contact Number</td>
+                        <td class="value">{{ patients.contact_number }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Email</td>
+                        <td class="value">{{ patients.email }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Address</td>
+                        <td class="value">{{ patients.address }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Medical History</td>
+                        <td class="value">{{ patients.medical_history|default:"No medical history provided" }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- X-Ray Information -->
+        {% if xray_info %}
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-x-circle"></i> X-Ray Assessment</h5>
+            </div>
+            <div class="card-body">
+                <table class="info-table">
+                    <tr>
+                        <td class="label">X-Ray ID</td>
+                        <td class="value">{{ xray_info.xray_id }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Fracture Type</td>
+                        <td class="value">
+                            <span style="background: linear-gradient(135deg, var(--warning), #ffb74d); color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+                                {{ xray_info.fracture_type }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">Affected Hand</td>
+                        <td class="value">{{ xray_info.affected_hand|title }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Clinical Findings</td>
+                        <td class="value">{{ xray_info.finding }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Last Updated</td>
+                        <td class="value">{{ xray_info.updated_at|date:"M d, Y H:i" }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Reports Section -->
+        <h3 class="section-title">
+            <i class="bi bi-file-earmark-pdf"></i> Your Medical Reports
+        </h3>
+
+        <div class="card">
+            <div class="card-body">
+                {% if reports %}
+                    <ul class="reports-list">
+                        {% for report in reports %}
+                        <li class="report-item">
+                            <div class="report-info">
+                                <div class="report-name">
+                                    <i class="bi bi-file-earmark-pdf"></i> {{ report.Patient_name }}
+                                </div>
+                                <div class="report-date">
+                                    <i class="bi bi-calendar"></i> Generated on {{ report.created_at|date:"M d, Y H:i" }}
+                                </div>
+                            </div>
+                            <a href="{{ report.report_file.url }}" class="btn btn-primary btn-sm" target="_blank">
+                                <i class="bi bi-download"></i> Download
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="bi bi-file-earmark-pdf"></i>
+                        <p>No reports generated yet</p>
+                        <p style="font-size: 12px;">Your doctor will generate reports after assessment</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Exercise Recommendations -->
+        <h3 class="section-title">
+            <i class="bi bi-activity"></i> Exercise Recommendations
+        </h3>
+
+        <div class="tips-grid">
+            <div class="tip-card">
+                <h6><i class="bi bi-lightbulb"></i> Warm Up First</h6>
+                <p>Always start your exercises with a 5-10 minute gentle warm-up session. This helps increase blood flow and reduces injury risk.</p>
+            </div>
+
+            <div class="tip-card">
+                <h6><i class="bi bi-stopwatch"></i> Follow Your Schedule</h6>
+                <p>Consistency is key to recovery. Perform exercises as recommended by your doctor, typically 3-5 times per week.</p>
+            </div>
+
+            <div class="tip-card">
+                <h6><i class="bi bi-heart"></i> Listen to Your Body</h6>
+                <p>If you experience pain beyond mild discomfort, stop immediately and contact your doctor. Recovery should feel progressive, not painful.</p>
+            </div>
+
+            <div class="tip-card">
+                <h6><i class="bi bi-camera-video"></i> Use Proper Form</h6>
+                <p>Our pose detection system helps ensure you're performing exercises correctly. Always focus on proper technique over speed.</p>
+            </div>
+
+            <div class="tip-card">
+                <h6><i class="bi bi-graph-up"></i> Track Progress</h6>
+                <p>Keep track of your improvements. Progress may be slow, but consistency leads to results. Celebrate small victories!</p>
+            </div>
+
+            <div class="tip-card">
+                <h6><i class="bi bi-chat-dots"></i> Stay Connected</h6>
+                <p>Maintain regular contact with your doctor. Report any concerns and ask questions about your rehabilitation plan.</p>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <h3 class="section-title">
+            <i class="bi bi-lightning-fill"></i> Quick Actions
+        </h3>
+
+        <div class="action-buttons">
+            <a href="{% url 'Video-Recommendations' %}" class="action-btn">
+                <i class="bi bi-play-circle"></i>
+                <span>Start Exercise</span>
+            </a>
+            <a href="{% url 'user_profile' %}" class="action-btn">
+                <i class="bi bi-person"></i>
+                <span>View Profile</span>
+            </a>
+            <a href="{% url 'patient_logout' %}" class="action-btn">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid var(--light-blue); text-align: center; color: #999;">
+            <p style="font-size: 12px;">
+                <i class="bi bi-shield-check"></i> Your health data is secure and private. 
+                Last updated: {{ now|date:"M d, Y H:i" }}
+            </p>
+            <p style="font-size: 12px; margin-top: 10px;">
+                © 2024 X-AI Medical System. All rights reserved.
+            </p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{% static 'assets/js/core/jquery.3.2.1.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+
+    <script>
+        // Add animation to stat cards on scroll
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'slideUp 0.6s ease forwards';
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+
+        document.querySelectorAll('.stat-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+
+    <!-- Chatbot Widget -->
+    {% include 'components/chatbot_widget.html' %}
+
+    <!-- Global Voice Recorder -->
+    {% include 'components/global_voice_recorder.html' %}
+</body>
+
+</html>

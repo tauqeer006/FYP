@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-1ngo+oo&!ib*f4f&xlw5_+^%jl6u3^u2roce6nucs-k#15_5tz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']  # Allow all hosts for development
 
 
 # Application definition
@@ -68,7 +68,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": ["templates"],
-        "APP_DIRS": True,
+        "APP_DIRS": False,  # must stay False when custom loaders are configured below
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.request",
@@ -145,3 +145,23 @@ LOGOUT_REDIRECT_URL = '/login/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Caching configuration for better performance
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+# Session configuration
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_CACHE_ALIAS = 'default'
+
+# Template caching
+TEMPLATES[0]['OPTIONS']['loaders'] = [
+    ('django.template.loaders.cached.Loader', [
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+    ]),
+]
