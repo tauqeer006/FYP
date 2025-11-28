@@ -96,7 +96,7 @@
     </header>
 
     <!-- Page Title -->
-    <div class="page-title" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%); padding: 80px 0; color: white; text-align: center;">
+    <div class="page-title" style="background: linear-gradient(135deg, #344dbd 0%, #344dbd 100%); padding: 80px 0; color: white; text-align: center;">
         <div class="container">
             <h1 style="font-size: 3em; margin-bottom: 10px;">Contact Us</h1>
             <p style="font-size: 1.2em;">We're here to help - Reach out to us anytime</p>
@@ -111,7 +111,7 @@
                 <div class="col-lg-4 col-md-6 col-12" style="margin-bottom: 40px;">
                     <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); margin-bottom: 20px;">
                         <div style="text-align: center; margin-bottom: 20px;">
-                            <i class="icofont icofont-location-pin" style="font-size: 2.5em; color: #667eea;"></i>
+                            <i class="icofont icofont-location-pin" style="font-size: 2.5em; color: #344dbd;"></i>
                         </div>
                         <h3 style="text-align: center; margin-bottom: 10px;">📍 Location</h3>
                         <p style="text-align: center; color: #666; margin: 0;">Range Road, Rawalpindi, Pakistan</p>
@@ -119,23 +119,23 @@
 
                     <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); margin-bottom: 20px;">
                         <div style="text-align: center; margin-bottom: 20px;">
-                            <i class="icofont icofont-phone" style="font-size: 2.5em; color: #667eea;"></i>
+                            <i class="icofont icofont-phone" style="font-size: 2.5em; color: #344dbd;"></i>
                         </div>
                         <h3 style="text-align: center; margin-bottom: 10px;">📞 Phone</h3>
-                        <p style="text-align: center; color: #666; margin: 0;"><a href="tel:03045450049" style="color: #667eea; text-decoration: none;">0304-5450049</a></p>
+                        <p style="text-align: center; color: #666; margin: 0;"><a href="tel:03045450049" style="color: #344dbd; text-decoration: none;">0304-5450049</a></p>
                     </div>
 
                     <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); margin-bottom: 20px;">
                         <div style="text-align: center; margin-bottom: 20px;">
-                            <i class="icofont icofont-email" style="font-size: 2.5em; color: #667eea;"></i>
+                            <i class="icofont icofont-email" style="font-size: 2.5em; color: #344dbd;"></i>
                         </div>
                         <h3 style="text-align: center; margin-bottom: 10px;">📧 Email</h3>
-                        <p style="text-align: center; color: #666; margin: 0;"><a href="mailto:tauqeerqureshi112@gmail.com" style="color: #667eea; text-decoration: none;">tauqeerqureshi112@gmail.com</a></p>
+                        <p style="text-align: center; color: #666; margin: 0;"><a href="mailto:tauqeerqureshi112@gmail.com" style="color: #344dbd; text-decoration: none;">tauqeerqureshi112@gmail.com</a></p>
                     </div>
 
                     <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08);">
                         <div style="text-align: center; margin-bottom: 20px;">
-                            <i class="icofont icofont-clock-time" style="font-size: 2.5em; color: #667eea;"></i>
+                            <i class="icofont icofont-clock-time" style="font-size: 2.5em; color: #344dbd;"></i>
                         </div>
                         <h3 style="text-align: center; margin-bottom: 10px;">⏰ Hours</h3>
                         <p style="text-align: center; color: #666; margin: 0;">10:00 AM – 10:00 PM<br><small>Daily</small></p>
@@ -183,7 +183,7 @@
                                 <textarea name="message" class="form-control" rows="5" placeholder="Your Message" required style="border: 1px solid #ddd; padding: 10px; border-radius: 5px; font-family: Poppins;"></textarea>
                             </div>
 
-                            <button type="submit" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 40px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Send Message</button>
+                            <button type="submit" class="btn" style="background: linear-gradient(135deg, #344dbd 0%, #344dbd 100%); color: white; padding: 12px 40px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Send Message</button>
                         </form>
                     </div>
                 </div>
@@ -249,6 +249,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
+
+    <!-- Chatbot Widget -->
+    {% include 'components/chatbot_widget_unified.html' %}
 
 </body>
 

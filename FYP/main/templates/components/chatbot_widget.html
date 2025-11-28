@@ -13,7 +13,7 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #344dbd 0%, #764ba2 100%);
     border: none;
     color: white;
     font-size: 24px;
@@ -55,7 +55,7 @@
   }
 
   .chatbot-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #344dbd 0%, #764ba2 100%);
     color: white;
     padding: 20px;
     display: flex;
@@ -107,7 +107,7 @@
   }
 
   .chatbot-messages::-webkit-scrollbar-thumb {
-    background: #667eea;
+    background: #344dbd;
     border-radius: 3px;
   }
 
@@ -131,7 +131,7 @@
   }
 
   .message.bot {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #344dbd 0%, #764ba2 100%);
     color: white;
     align-self: flex-start;
     word-wrap: break-word;
@@ -158,7 +158,7 @@
     height: 40px;
     min-width: 40px;
     border-radius: 50%;
-    background: #667eea;
+    background: #344dbd;
     border: none;
     color: white;
     cursor: pointer;
@@ -177,6 +177,93 @@
   .voice-button.recording {
     background: #f5576c;
     box-shadow: 0 0 0 3px rgba(245, 87, 108, 0.3);
+    animation: pulse 1s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(245, 87, 108, 0.3); }
+    50% { box-shadow: 0 0 0 8px rgba(245, 87, 108, 0.15); }
+  }
+
+  .voice-status {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 20px;
+    font-size: 12px;
+    z-index: 9999;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .voice-status.active {
+    display: flex;
+    animation: slideDown 0.3s ease;
+  }
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .voice-status-dot {
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    animation: blink 1s infinite;
+  }
+
+  @keyframes blink {
+    0%, 50%, 100% { opacity: 1; }
+    25% { opacity: 0.5; }
+  }
+
+  .continuous-mode-toggle {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 15px;
+    width: 40px;
+    height: 24px;
+    background: #ccc;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    padding: 0;
+  }
+
+  .continuous-mode-toggle.enabled {
+    background: #4CAF50;
+  }
+
+  .continuous-mode-toggle::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: left 0.3s;
+  }
+
+  .continuous-mode-toggle.enabled::after {
+    left: 18px;
   }
 
   .chatbot-text-input {
@@ -191,7 +278,7 @@
 
   .chatbot-text-input:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #344dbd;
     box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
   }
 
@@ -200,7 +287,7 @@
     height: 40px;
     min-width: 40px;
     border-radius: 50%;
-    background: #667eea;
+    background: #344dbd;
     border: none;
     color: white;
     cursor: pointer;
@@ -256,6 +343,7 @@
   <div class="chatbot-panel" id="chatbot-panel">
     <div class="chatbot-header">
       <h3>X-Ai Assistant</h3>
+      <button class="continuous-mode-toggle" id="continuous-toggle" title="Toggle continuous listening"></button>
       <button class="chatbot-close" id="chatbot-close" title="Close">×</button>
     </div>
 
@@ -283,7 +371,91 @@
   </div>
 </div>
 
+<!-- Voice Status Indicator -->
+<div class="voice-status" id="voice-status">
+  <div class="voice-status-dot"></div>
+  <span id="voice-status-text">Listening...</span>
+</div>
+
 <script>
+// ========== BILINGUAL SUPPORT: English + Urdu ==========
+
+// Detect if text is in Urdu (Urdu Unicode range: 0x0600-0x06FF)
+function detectLanguage(text) {
+  const urduRegex = /[\u0600-\u06FF]/g;
+  const urduChars = (text.match(urduRegex) || []).length;
+  const totalChars = text.replace(/\s/g, '').length;
+  
+  if (totalChars === 0) return 'en';
+  
+  // If more than 30% of characters are Urdu, consider it Urdu
+  return (urduChars / totalChars) > 0.3 ? 'ur' : 'en';
+}
+
+// Translate Urdu text to English using backend API
+async function translateUrduToEnglish(urduText) {
+  try {
+    console.log('🌐 Translating Urdu to English:', urduText);
+    
+    // Use Django backend translation API
+    const response = await fetch('/api/translate/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+      body: JSON.stringify({
+        text: urduText,
+        source_lang: 'ur',
+        target_lang: 'en'
+      })
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      if (data.success) {
+        const translatedText = data.translated_text;
+        console.log('✅ Translated:', translatedText);
+        return translatedText;
+      }
+    }
+    
+    // Fallback: Return original text if translation fails
+    console.warn('⚠️ Translation failed, using original text');
+    return urduText;
+  } catch (error) {
+    console.error('❌ Translation error:', error);
+    return urduText; // Return original if translation fails
+  }
+}
+
+// Process speech text: Detect language and translate if Urdu
+async function processSpokenText(transcript) {
+  const detectedLang = detectLanguage(transcript);
+  console.log(`🗣️ Detected language: ${detectedLang === 'ur' ? 'Urdu' : 'English'}`);
+  
+  let processedText = transcript;
+  let langIndicator = '';
+  
+  if (detectedLang === 'ur') {
+    langIndicator = '(Urdu → English)';
+    processedText = await translateUrduToEnglish(transcript);
+    console.log(`📝 Processing: ${langIndicator} "${transcript}" → "${processedText}"`);
+  } else {
+    langIndicator = '(English)';
+    console.log(`📝 Processing: ${langIndicator} "${processedText}"`);
+  }
+  
+  return {
+    originalText: transcript,
+    processedText: processedText,
+    detectedLang: detectedLang,
+    langIndicator: langIndicator
+  };
+}
+
+// ========== FORM FILLING UTILITY ==========
+
 // Simple Form Filling Utility
 function fillFormFields(formSchema, formFields, buttonToClick) {
   if (!formFields || Object.keys(formFields).length === 0) {
@@ -298,6 +470,7 @@ function fillFormFields(formSchema, formFields, buttonToClick) {
     Object.keys(formFields).forEach(fieldName => {
       const fieldValue = formFields[fieldName];
       let inputElement = document.querySelector(`input[name="${fieldName}"], select[name="${fieldName}"], textarea[name="${fieldName}"]`);
+
       
       if (!inputElement && formSchema && formSchema.fields) {
         const fieldSchema = formSchema.fields.find(f => f.name === fieldName);
@@ -352,17 +525,285 @@ function fillFormFields(formSchema, formFields, buttonToClick) {
   }
 }
 
+// Get CSRF token
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      cookie = cookie.trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+// Global variables
+let isRecording = false;
+let recognition = null;
+let continuousMode = false;
+let lastCommandTime = 0;
+const commandCooldown = 500;
+let wakeWordDetected = false;
+let messagesDiv = null;
+let voiceBtn = null;
+let input = null;
+let voiceStatusText = null;
+let voiceStatus = null;
+
+// Send message function (global scope)
+async function sendMessage() {
+  const text = input.value.trim();
+  if (!text) return;
+
+  // Check cooldown to prevent spam
+  const now = Date.now();
+  if (now - lastCommandTime < commandCooldown) {
+    console.log('Command cooldown - please wait');
+    return;
+  }
+  lastCommandTime = now;
+
+  // Add user message
+  const userMsg = document.createElement('div');
+  userMsg.className = 'message user';
+  userMsg.textContent = text;
+  messagesDiv.appendChild(userMsg);
+  input.value = '';
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+  // Send to backend
+  try {
+    const response = await fetch('/api/chatbot/query/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+      body: JSON.stringify({ query: text })
+    });
+
+    const data = await response.json();
+
+    // ========== DEBUG LOGGING ==========
+    console.log('📥 Full Response from Backend:', data);
+    console.log('📍 Response Type:', data.response_type);
+    console.log('🔢 Total Commands:', data.total_commands);
+    if (data.response_type === 'multi_command') {
+      console.log('📋 Commands Array:', data.commands);
+      data.commands.forEach((cmd, i) => {
+        console.log(`  Command ${i+1}:`, cmd.command, '→', cmd.response_type, cmd.success ? '✅' : '❌');
+      });
+    }
+    // =========================================
+
+    // Add bot response based on response type
+    
+    // Handle multi-command responses
+    if (data.response_type === 'multi_command') {
+      botMsg.textContent = `⚙️ Processing ${data.total_commands} commands...`;
+      messagesDiv.appendChild(botMsg);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      
+      // Process each command with delays
+      let delay = 500;
+      let navigationCommand = null; // Store navigation for last execution
+      
+      data.commands.forEach((cmd, index) => {
+        setTimeout(() => {
+          const cmdMsg = document.createElement('div');
+          cmdMsg.className = 'message bot';
+          
+          if (!cmd.success) {
+            cmdMsg.textContent = `❌ Command ${cmd.command_index}: ${cmd.message}`;
+            messagesDiv.appendChild(cmdMsg);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+          } else {
+            let emoji = '✅';
+            if (cmd.response_type === 'scroll') {
+              emoji = '⬇️';
+            } else if (cmd.response_type === 'button_click') {
+              emoji = '🔘';
+            } else if (cmd.response_type === 'form_fill') {
+              emoji = '📝';
+            } else if (cmd.response_type === 'navigation') {
+              emoji = '🗺️';
+            } else if (cmd.response_type === 'conversation') {
+              emoji = '💬';
+            }
+            
+            cmdMsg.textContent = `${emoji} Command ${cmd.command_index}: ${cmd.message}`;
+            messagesDiv.appendChild(cmdMsg);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            
+            // Execute the action IMMEDIATELY (not delayed again)
+            if (cmd.response_type === 'scroll' && cmd.scroll_direction) {
+              console.log(`⬇️ Executing scroll: ${cmd.scroll_direction}`);
+              window.scrollBy(0, cmd.scroll_direction === 'down' ? 300 : -300);
+            } else if (cmd.response_type === 'button_click' && cmd.button_to_click) {
+              console.log(`🔘 Executing button click: ${cmd.button_to_click}`);
+              const buttons = document.querySelectorAll('button, input[type="submit"]');
+              let found = false;
+              for (let btn of buttons) {
+                if (btn.textContent.toLowerCase().includes(cmd.button_to_click.toLowerCase()) || 
+                    btn.value.toLowerCase().includes(cmd.button_to_click.toLowerCase())) {
+                  console.log(`✅ Found and clicking button: ${btn.textContent}`);
+                  btn.click();
+                  found = true;
+                  break;
+                }
+              }
+              if (!found) {
+                console.warn(`⚠️ Button not found: ${cmd.button_to_click}`);
+              }
+            } else if (cmd.response_type === 'form_fill' && cmd.form_fields) {
+              console.log(`📝 Executing form fill with fields:`, cmd.form_fields);
+              fillFormFields(cmd.form_schema, cmd.form_fields, cmd.button_to_click);
+            } else if (cmd.response_type === 'navigation' && cmd.path) {
+              console.log(`🗺️ Storing navigation for final execution: ${cmd.path}`);
+              navigationCommand = cmd; // Store for last execution
+            } else if (cmd.response_type === 'conversation') {
+              console.log(`💬 Conversation response (no action needed)`);
+            }
+          }
+        }, delay);
+        delay += 800; // Add delay between command messages
+      });
+      
+      // Show completion message and execute navigation if any
+      setTimeout(() => {
+        const completeMsg = document.createElement('div');
+        completeMsg.className = 'message bot';
+        completeMsg.textContent = `✅ Completed ${data.successful_commands}/${data.total_commands} commands`;
+        messagesDiv.appendChild(completeMsg);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        
+        // Execute navigation as the final action (if any)
+        if (navigationCommand && navigationCommand.path) {
+          console.log(`🗺️ Final action - Navigating to: ${navigationCommand.path}`);
+          setTimeout(() => {
+            window.location.href = navigationCommand.path;
+          }, 800);
+        }
+      }, delay);
+    }
+    // Handle single conversation response
+    else if (data.response_type === 'conversation') {
+      botMsg.textContent = data.answer || data.message || 'I didn\'t understand that.';
+      messagesDiv.appendChild(botMsg);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    } 
+    else if (data.response_type === 'form_fill') {
+      if (data.success && data.form_fields) {
+        botMsg.textContent = '📝 ' + (data.message || 'Filling form...');
+        messagesDiv.appendChild(botMsg);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        
+        setTimeout(() => {
+          fillFormFields(data.form_schema, data.form_fields, data.button_to_click);
+        }, 300);
+      } else {
+        botMsg.textContent = data.message || 'Could not fill form.';
+        messagesDiv.appendChild(botMsg);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
+    } 
+    else if (data.response_type === 'button_click') {
+      if (data.success && data.button_to_click) {
+        botMsg.textContent = '🔘 ' + (data.message || 'Clicking button...');
+        messagesDiv.appendChild(botMsg);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        
+        setTimeout(() => {
+          const buttons = document.querySelectorAll('button');
+          let found = false;
+          for (let btn of buttons) {
+            if (btn.textContent.toLowerCase().includes(data.button_to_click.toLowerCase())) {
+              btn.click();
+              found = true;
+              break;
+            }
+          }
+        }, 300);
+      } else {
+        botMsg.textContent = data.message || 'Could not click button.';
+        messagesDiv.appendChild(botMsg);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
+    }
+    else if (data.response_type === 'scroll') {
+      if (data.success && data.scroll_direction) {
+        botMsg.textContent = '⬇️ ' + (data.message || 'Scrolling...');
+        messagesDiv.appendChild(botMsg);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        
+        setTimeout(() => {
+          const scrollAmount = data.scroll_direction === 'down' ? 300 : -300;
+          window.scrollBy(0, scrollAmount);
+        }, 300);
+      } else {
+        botMsg.textContent = data.message || 'Could not scroll.';
+        messagesDiv.appendChild(botMsg);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
+    } 
+    else if (data.response_type === 'navigation') {
+      if (data.success && data.matched_route) {
+        botMsg.textContent = '✅ Navigating to: ' + data.matched_route.description;
+        messagesDiv.appendChild(botMsg);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        
+        setTimeout(() => {
+          window.location.href = data.matched_route.path;
+        }, 800);
+      } else {
+        botMsg.textContent = data.message || 'Could not find that page.';
+        messagesDiv.appendChild(botMsg);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
+    } 
+    else {
+      botMsg.textContent = data.message || data.answer || 'How can I help you?';
+      messagesDiv.appendChild(botMsg);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    const errorMsg = document.createElement('div');
+    errorMsg.className = 'message bot';
+    errorMsg.textContent = '⚠️ Error connecting to chatbot';
+    messagesDiv.appendChild(errorMsg);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+}
+
+// Start continuous listening function
+function startContinuousListening() {
+  if (continuousMode && !isRecording && recognition) {
+    try {
+      recognition.start();
+    } catch (e) {
+      console.log('Already listening');
+    }
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   const toggle = document.getElementById('chatbot-toggle');
   const panel = document.getElementById('chatbot-panel');
   const closeBtn = document.getElementById('chatbot-close');
-  const voiceBtn = document.getElementById('voice-button');
+  const continuousToggle = document.getElementById('continuous-toggle');
+  
+  // Set global references
+  voiceBtn = document.getElementById('voice-button');
   const sendBtn = document.getElementById('send-button');
-  const input = document.getElementById('chatbot-input');
-  const messagesDiv = document.getElementById('chatbot-messages');
-
-  let isRecording = false;
-  let recognition = null;
+  input = document.getElementById('chatbot-input');
+  messagesDiv = document.getElementById('chatbot-messages');
+  voiceStatus = document.getElementById('voice-status');
+  voiceStatusText = document.getElementById('voice-status-text');
 
   // Check for Web Speech API support
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -370,17 +811,23 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!SpeechRecognition) {
     console.warn('⚠️ Speech Recognition not supported in this browser');
     voiceBtn.disabled = true;
+    continuousToggle.disabled = true;
     voiceBtn.title = 'Speech Recognition not supported in your browser';
   } else {
-    // Initialize Speech Recognition
+    // Initialize Speech Recognition with bilingual support
     recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = false;
-    recognition.language = 'en-US';
+    // Support both English and Urdu - will detect and handle both
+    recognition.language = 'en-US'; // Default to English, but will handle Urdu input too
 
     recognition.onstart = function() {
       isRecording = true;
       voiceBtn.classList.add('recording');
+      if (continuousMode) {
+        voiceStatus.classList.add('active');
+        voiceStatusText.textContent = 'Listening for "Hey Bot"...';
+      }
       console.log('🎤 Recording started - speak now!');
     };
 
@@ -388,6 +835,15 @@ document.addEventListener('DOMContentLoaded', function() {
       isRecording = false;
       voiceBtn.classList.remove('recording');
       console.log('⏹️ Recording stopped');
+      
+      // Auto-restart if continuous mode is on
+      if (continuousMode) {
+        setTimeout(() => {
+          startContinuousListening();
+        }, 300);
+      } else {
+        voiceStatus.classList.remove('active');
+      }
     };
 
     recognition.onresult = function(event) {
@@ -397,9 +853,52 @@ document.addEventListener('DOMContentLoaded', function() {
         transcript += event.results[i][0].transcript;
       }
       
-      if (transcript.trim()) {
-        input.value = transcript.trim();
-        console.log('✅ Speech recognized:', transcript.trim());
+      transcript = transcript.trim();
+      
+      if (transcript) {
+        // ========== BILINGUAL PROCESSING ==========
+        const detectedLang = detectLanguage(transcript);
+        console.log(`🗣️ Detected: ${detectedLang === 'ur' ? '🇵🇰 URDU' : '🇬🇧 ENGLISH'}`);
+        console.log('✅ Speech recognized:', transcript);
+        
+        // Process with language detection and translation if needed
+        (async () => {
+          const result = await processSpokenText(transcript);
+          let processedTranscript = result.processedText.trim().toLowerCase();
+          
+          // Show language indicator
+          console.log(`📍 ${result.langIndicator}`);
+          
+          // Check for wake word if in continuous mode
+          if (continuousMode) {
+            if (processedTranscript.includes('hey bot') || processedTranscript.includes('hi bot')) {
+              wakeWordDetected = true;
+              voiceStatusText.textContent = `🎤 Command recognized! ${result.langIndicator}`;
+              // Use processed (translated) text
+              input.value = processedTranscript.replace(/(hey bot|hi bot)/gi, '').trim();
+              
+              // Give user time to complete command
+              setTimeout(() => {
+                if (input.value.trim()) {
+                  sendMessage();
+                } else {
+                  // If no command after wake word, keep listening
+                  startContinuousListening();
+                }
+              }, 1500);
+            } else {
+              // No wake word, keep listening
+              console.log('⏸️ No wake word detected, continuing to listen...');
+              startContinuousListening();
+            }
+          } else {
+            // Manual mode (button activated) - use processed text
+            input.value = processedTranscript;
+            // Show language info in UI
+            const msgIndicator = result.langIndicator !== '(English)' ? ` ${result.langIndicator}` : '';
+            voiceStatusText.textContent = `Recognized${msgIndicator}`;
+          }
+        })();
       }
     };
 
@@ -407,7 +906,38 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error('❌ Speech recognition error:', event.error);
       voiceBtn.classList.remove('recording');
       isRecording = false;
+      
+      if (event.error === 'no-speech') {
+        if (continuousMode) {
+          voiceStatusText.textContent = 'No speech detected, listening...';
+          startContinuousListening();
+        }
+      } else if (event.error === 'network') {
+        if (continuousMode) {
+          voiceStatusText.textContent = 'Network error, retrying...';
+          setTimeout(() => startContinuousListening(), 1000);
+        }
+      }
     };
+
+    // Toggle continuous mode
+    continuousToggle.addEventListener('click', () => {
+      continuousMode = !continuousMode;
+      continuousToggle.classList.toggle('enabled');
+      
+      if (continuousMode) {
+        voiceStatus.classList.add('active');
+        voiceStatusText.textContent = 'Listening for "Hey Bot"...';
+        continuousToggle.title = 'Continuous mode: ON - Say "Hey Bot" to give commands';
+        startContinuousListening();
+      } else {
+        voiceStatus.classList.remove('active');
+        continuousToggle.title = 'Continuous mode: OFF - Click mic to record';
+        if (isRecording) {
+          recognition.stop();
+        }
+      }
+    });
   }
 
   // Toggle chatbot panel
@@ -425,15 +955,21 @@ document.addEventListener('DOMContentLoaded', function() {
     panel.classList.remove('active');
     toggle.classList.remove('active');
     
-    if (isRecording && recognition) {
+    if (isRecording && recognition && !continuousMode) {
       recognition.stop();
     }
   });
 
-  // Voice button - toggle recording
+  // Voice button - toggle recording (manual mode only)
   voiceBtn.addEventListener('click', () => {
     if (!recognition) {
       alert('⚠️ Speech Recognition not supported. Please use Chrome or Edge browser.');
+      return;
+    }
+
+    // Don't allow manual recording if continuous mode is on
+    if (continuousMode) {
+      alert('💬 Continuous listening is enabled. Say "Hey Bot" to give commands.\n\nToggle it off to use manual recording.');
       return;
     }
 
@@ -448,110 +984,6 @@ document.addEventListener('DOMContentLoaded', function() {
       recognition.start();
     }
   });
-
-  // Send message function
-  const sendMessage = async () => {
-    const text = input.value.trim();
-    if (!text) return;
-
-    // Add user message
-    const userMsg = document.createElement('div');
-    userMsg.className = 'message user';
-    userMsg.textContent = text;
-    messagesDiv.appendChild(userMsg);
-    input.value = '';
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-    // Send to backend
-    try {
-      const response = await fetch('/api/chatbot/query/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCookie('csrftoken')
-        },
-        body: JSON.stringify({ query: text })
-      });
-
-      const data = await response.json();
-
-      // Add bot response
-      const botMsg = document.createElement('div');
-      botMsg.className = 'message bot';
-      
-      // Handle different response types
-      if (data.response_type === 'conversation') {
-        botMsg.textContent = data.answer || data.message || 'I didn\'t understand that.';
-        messagesDiv.appendChild(botMsg);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-      } 
-      else if (data.response_type === 'form_fill') {
-        if (data.success && data.form_fields) {
-          botMsg.textContent = '📝 ' + (data.message || 'Filling form...');
-          messagesDiv.appendChild(botMsg);
-          messagesDiv.scrollTop = messagesDiv.scrollHeight;
-          
-          setTimeout(() => {
-            fillFormFields(data.form_schema, data.form_fields, data.button_to_click);
-          }, 300);
-        } else {
-          botMsg.textContent = data.message || 'Could not fill form.';
-          messagesDiv.appendChild(botMsg);
-          messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-      } 
-      else if (data.response_type === 'button_click') {
-        if (data.success && data.button_to_click) {
-          botMsg.textContent = '🔘 ' + (data.message || 'Clicking button...');
-          messagesDiv.appendChild(botMsg);
-          messagesDiv.scrollTop = messagesDiv.scrollHeight;
-          
-          setTimeout(() => {
-            const buttons = document.querySelectorAll('button');
-            let found = false;
-            for (let btn of buttons) {
-              if (btn.textContent.toLowerCase().includes(data.button_to_click.toLowerCase())) {
-                btn.click();
-                found = true;
-                break;
-              }
-            }
-          }, 300);
-        } else {
-          botMsg.textContent = data.message || 'Could not click button.';
-          messagesDiv.appendChild(botMsg);
-          messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-      } 
-      else if (data.response_type === 'navigation') {
-        if (data.success && data.matched_route) {
-          botMsg.textContent = '✅ Navigating to: ' + data.matched_route.description;
-          messagesDiv.appendChild(botMsg);
-          messagesDiv.scrollTop = messagesDiv.scrollHeight;
-          
-          setTimeout(() => {
-            window.location.href = data.matched_route.path;
-          }, 800);
-        } else {
-          botMsg.textContent = data.message || 'Could not find that page.';
-          messagesDiv.appendChild(botMsg);
-          messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-      } 
-      else {
-        botMsg.textContent = data.message || data.answer || 'How can I help you?';
-        messagesDiv.appendChild(botMsg);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      const errorMsg = document.createElement('div');
-      errorMsg.className = 'message bot';
-      errorMsg.textContent = '⚠️ Error connecting to chatbot';
-      messagesDiv.appendChild(errorMsg);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }
-  };
 
   // Send button click
   sendBtn.addEventListener('click', sendMessage);
@@ -569,26 +1001,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (e.key === 'Escape' && panel.classList.contains('active')) {
       panel.classList.remove('active');
       toggle.classList.remove('active');
-      if (isRecording && recognition) {
+      if (isRecording && recognition && !continuousMode) {
         recognition.stop();
       }
     }
   });
-
-  // Get CSRF token
-  function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let cookie of cookies) {
-        cookie = cookie.trim();
-        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-  }
 });
 </script>

@@ -81,6 +81,9 @@ urlpatterns = [
     path('api/password-reset/verify/', views.verify_reset_token, name='verify_reset_token'),
     path('api/password-reset/confirm/', views.reset_password, name='reset_password'),
     
+    # Bilingual Chatbot - Translation API
+    path('api/translate/', views.translate_text, name='translate_text'),
+    
     # Admin Password Change
     path('change_admin_password/', views.change_admin_password, name='change_admin_password'),
     

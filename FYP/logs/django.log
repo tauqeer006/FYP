@@ -1,0 +1,1101 @@
+INFO 2025-11-28 07:31:21 autoreload 7 137681414355840 Watching for file changes with StatReloader
+INFO 2025-11-28 07:31:22 font_manager 7 137681414355840 generated new fontManager
+INFO 2025-11-28 07:53:42 autoreload 7 134564490894208 Watching for file changes with StatReloader
+INFO 2025-11-28 07:53:42 font_manager 7 134564452468416 generated new fontManager
+ERROR 2025-11-28 07:58:43 log 7 134562066724544 Internal Server Error: /
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: main_user.created_at
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/main/views.py", line 279, in MainPage
+    for user in fallback_users:
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 386, in __iter__
+    self._fetch_all()
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/usr/local/lib/python3.11/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: main_user.created_at
+ERROR 2025-11-28 07:58:43 basehttp 7 134562066724544 "GET / HTTP/1.1" 500 132826
+INFO 2025-11-28 08:00:53 autoreload 7 134564490894208 /app/main/migrations/0004_migrate_patient_reports.py changed, reloading.
+INFO 2025-11-28 08:00:53 autoreload 77 124330120145792 Watching for file changes with StatReloader
+INFO 2025-11-28 08:01:25 autoreload 7 135305231457152 Watching for file changes with StatReloader
+INFO 2025-11-28 08:01:25 font_manager 7 135305231457152 generated new fontManager
+INFO 2025-11-28 08:01:48 basehttp 7 135302875182784 "GET / HTTP/1.1" 200 81039
+INFO 2025-11-28 08:02:48 autoreload 7 129570877299584 Watching for file changes with StatReloader
+INFO 2025-11-28 08:02:49 font_manager 7 129570838873792 generated new fontManager
+INFO 2025-11-28 08:02:55 basehttp 7 129568444769984 "GET / HTTP/1.1" 200 81039
+INFO 2025-11-28 08:02:55 basehttp 7 129568444769984 "GET /static/main_page/main-page-styles.css HTTP/1.1" 304 0
+WARNING 2025-11-28 08:02:55 basehttp 7 129568444769984 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+WARNING 2025-11-28 08:03:04 basehttp 7 129568453162688 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 08:03:26 basehttp 7 129568453162688 "GET /admin_login1/ HTTP/1.1" 200 43178
+WARNING 2025-11-28 08:03:48 auth_service 7 129568453162688 Failed authentication for user: Tauqeer Qureshi
+WARNING 2025-11-28 08:03:48 views 7 129568453162688 Failed admin login for user: Tauqeer Qureshi
+INFO 2025-11-28 08:03:48 basehttp 7 129568453162688 "POST /admin_login1/ HTTP/1.1" 200 43178
+INFO 2025-11-28 08:07:22 autoreload 7 136357152136064 Watching for file changes with StatReloader
+INFO 2025-11-28 08:07:23 font_manager 7 136357152136064 generated new fontManager
+WARNING 2025-11-28 08:07:27 auth_service 7 136354797188800 Failed authentication for user: Tauqeer Qureshi
+WARNING 2025-11-28 08:07:27 views 7 136354797188800 Failed admin login for user: Tauqeer Qureshi
+INFO 2025-11-28 08:07:27 basehttp 7 136354797188800 "POST /admin_login1/ HTTP/1.1" 200 43178
+INFO 2025-11-28 08:07:36 auth_service 7 136354797188800 User Tauqeer authenticated successfully
+INFO 2025-11-28 08:07:37 views 7 136354797188800 Admin Tauqeer logged in successfully
+INFO 2025-11-28 08:07:37 basehttp 7 136354797188800 "POST /admin_login1/ HTTP/1.1" 302 0
+INFO 2025-11-28 08:07:37 views 7 136354797188800 Admin dashboard accessed by: Tauqeer (admin) (user_type: admin)
+INFO 2025-11-28 08:07:37 basehttp 7 136354797188800 "GET /index_admin/ HTTP/1.1" 200 101903
+INFO 2025-11-28 08:08:06 basehttp 7 136354797188800 "GET /change_admin_password/ HTTP/1.1" 200 6240
+INFO 2025-11-28 08:08:23 basehttp 7 136354797188800 "POST /change_admin_password/ HTTP/1.1" 302 0
+INFO 2025-11-28 08:08:23 views 7 136354797188800 Admin dashboard accessed by: Tauqeer (admin) (user_type: admin)
+INFO 2025-11-28 08:08:23 basehttp 7 136354797188800 "GET /index_admin/ HTTP/1.1" 200 101286
+INFO 2025-11-28 08:08:36 basehttp 7 136354797188800 "GET /manage_user/ HTTP/1.1" 200 86840
+INFO 2025-11-28 08:09:31 views 7 136354797188800 Admin dashboard accessed by: Tauqeer (admin) (user_type: admin)
+INFO 2025-11-28 08:09:31 basehttp 7 136354797188800 "GET /index_admin/ HTTP/1.1" 200 100607
+INFO 2025-11-28 08:10:13 autoreload 7 136357152136064 /app/main/models.py changed, reloading.
+INFO 2025-11-28 08:10:15 autoreload 43 123822647331712 Watching for file changes with StatReloader
+INFO 2025-11-28 08:10:22 autoreload 43 123822647331712 /app/main/views.py changed, reloading.
+INFO 2025-11-28 08:10:23 autoreload 74 133982796327808 Watching for file changes with StatReloader
+INFO 2025-11-28 08:11:28 basehttp 74 133980506552000 "GET /manage_user HTTP/1.1" 301 0
+INFO 2025-11-28 08:11:28 basehttp 74 133980506552000 "GET /manage_user/ HTTP/1.1" 302 0
+INFO 2025-11-28 08:11:28 basehttp 74 133980506552000 "GET /admin_login1/?next=/manage_user/ HTTP/1.1" 200 43178
+INFO 2025-11-28 08:12:02 autoreload 7 137710761606016 Watching for file changes with StatReloader
+INFO 2025-11-28 08:12:02 font_manager 7 137710761606016 generated new fontManager
+INFO 2025-11-28 08:12:06 views 7 137708397651648 Admin dashboard accessed by: Tauqeer (admin) (user_type: admin)
+INFO 2025-11-28 08:12:06 basehttp 7 137708397651648 "GET /index_admin/ HTTP/1.1" 200 100607
+INFO 2025-11-28 08:12:08 views 7 137708397651648 Admin dashboard accessed by: Tauqeer (admin) (user_type: admin)
+INFO 2025-11-28 08:12:08 basehttp 7 137708397651648 "GET /index_admin/ HTTP/1.1" 200 100607
+INFO 2025-11-28 08:12:17 basehttp 7 137708397651648 "GET / HTTP/1.1" 200 81067
+WARNING 2025-11-28 08:12:18 basehttp 7 137708397651648 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 08:12:22 basehttp 7 137708406044352 "GET /admin_login1/ HTTP/1.1" 200 43178
+INFO 2025-11-28 08:12:43 auth_service 7 137708406044352 User Tauqeer authenticated successfully
+INFO 2025-11-28 08:12:43 views 7 137708406044352 Admin Tauqeer logged in successfully
+INFO 2025-11-28 08:12:43 basehttp 7 137708406044352 "POST /admin_login1/ HTTP/1.1" 302 0
+INFO 2025-11-28 08:12:43 views 7 137708406044352 Admin dashboard accessed by: Tauqeer (admin) (user_type: admin)
+INFO 2025-11-28 08:12:43 basehttp 7 137708406044352 "GET /index_admin/ HTTP/1.1" 200 100607
+INFO 2025-11-28 08:12:53 basehttp 7 137708406044352 "GET /manage_user/ HTTP/1.1" 200 86840
+INFO 2025-11-28 08:13:03 basehttp 7 137708406044352 "GET /logout/ HTTP/1.1" 302 0
+INFO 2025-11-28 08:13:03 basehttp 7 137708406044352 "GET /admin_login1/ HTTP/1.1" 200 43178
+INFO 2025-11-28 08:13:06 basehttp 7 137708406044352 "GET / HTTP/1.1" 200 81067
+WARNING 2025-11-28 08:13:06 basehttp 7 137708406044352 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 08:13:10 basehttp 7 137708397651648 "GET /admin_login1/ HTTP/1.1" 200 43178
+WARNING 2025-11-28 08:13:14 auth_service 7 137708397651648 Failed authentication for user: tauqeer
+WARNING 2025-11-28 08:13:14 views 7 137708397651648 Failed admin login for user: tauqeer
+INFO 2025-11-28 08:13:14 basehttp 7 137708397651648 "POST /admin_login1/ HTTP/1.1" 200 43178
+INFO 2025-11-28 08:13:24 auth_service 7 137708397651648 User Tauqeer authenticated successfully
+INFO 2025-11-28 08:13:24 views 7 137708397651648 Admin Tauqeer logged in successfully
+INFO 2025-11-28 08:13:24 basehttp 7 137708397651648 "POST /admin_login1/ HTTP/1.1" 302 0
+INFO 2025-11-28 08:13:24 views 7 137708397651648 Admin dashboard accessed by: Tauqeer (admin) (user_type: admin)
+INFO 2025-11-28 08:13:24 basehttp 7 137708397651648 "GET /index_admin/ HTTP/1.1" 200 101298
+INFO 2025-11-28 08:13:27 basehttp 7 137708397651648 "GET /add_user/ HTTP/1.1" 200 100613
+INFO 2025-11-28 08:14:11 basehttp 7 137708397651648 "POST /add_user/ HTTP/1.1" 200 101296
+INFO 2025-11-28 08:15:49 basehttp 7 137708397651648 "POST /add_user/ HTTP/1.1" 200 101295
+INFO 2025-11-28 08:17:13 basehttp 7 137708397651648 "GET /manage_user/ HTTP/1.1" 200 91314
+INFO 2025-11-28 08:17:28 views 7 137708397651648 Admin dashboard accessed by: Tauqeer (admin) (user_type: admin)
+INFO 2025-11-28 08:17:28 basehttp 7 137708397651648 "GET /index_admin/ HTTP/1.1" 200 100607
+INFO 2025-11-28 08:17:32 basehttp 7 137708397651648 "GET /logout_doctor/ HTTP/1.1" 302 0
+INFO 2025-11-28 08:17:32 basehttp 7 137708397651648 "GET /login/ HTTP/1.1" 200 51968
+WARNING 2025-11-28 08:17:32 basehttp 7 137708397651648 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 08:17:34 basehttp 7 137708406044352 "GET / HTTP/1.1" 200 81152
+WARNING 2025-11-28 08:17:34 basehttp 7 137708406044352 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 08:17:49 auth_service 7 137708406044352 User bilal authenticated successfully
+INFO 2025-11-28 08:17:49 views 7 137708406044352 Doctor bilal logged in successfully
+INFO 2025-11-28 08:17:49 basehttp 7 137708406044352 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-11-28 08:17:49 views 7 137708406044352 The total number of patients are
+INFO 2025-11-28 08:17:49 views 7 137708406044352 0
+INFO 2025-11-28 08:17:49 basehttp 7 137708406044352 "GET /diagnosis/ HTTP/1.1" 200 62325
+INFO 2025-11-28 08:17:57 views 7 137708406044352 The total number of patients are
+INFO 2025-11-28 08:17:57 views 7 137708406044352 0
+INFO 2025-11-28 08:17:57 basehttp 7 137708406044352 "GET /diagnosis/ HTTP/1.1" 200 62325
+INFO 2025-11-28 08:17:59 basehttp 7 137708406044352 "GET /add_patient_record/ HTTP/1.1" 200 49152
+INFO 2025-11-28 08:18:43 views 7 137708406044352 The given datetime from the dataset i found is:
+INFO 2025-11-28 08:18:43 views 7 137708406044352 2000-03-02
+INFO 2025-11-28 08:18:43 basehttp 7 137708406044352 "POST /add_patient_record/ HTTP/1.1" 200 49152
+INFO 2025-11-28 08:20:16 autoreload 7 137710761606016 /app/main/views.py changed, reloading.
+INFO 2025-11-28 08:20:17 autoreload 48 125811138939776 Watching for file changes with StatReloader
+INFO 2025-11-28 08:20:33 autoreload 48 125811138939776 /app/main/views.py changed, reloading.
+INFO 2025-11-28 08:20:35 autoreload 79 129774823754624 Watching for file changes with StatReloader
+INFO 2025-11-28 08:20:49 autoreload 79 129774823754624 /app/main/views.py changed, reloading.
+INFO 2025-11-28 08:20:51 autoreload 110 127580779961216 Watching for file changes with StatReloader
+INFO 2025-11-28 08:21:08 autoreload 7 135988956711808 Watching for file changes with StatReloader
+WARNING 2025-11-28 08:21:16 log 7 135986667321024 Not Found: /add_patient_record1
+WARNING 2025-11-28 08:21:16 basehttp 7 135986667321024 "GET /add_patient_record1 HTTP/1.1" 404 10327
+INFO 2025-11-28 08:21:25 basehttp 7 135986667321024 "GET /add_patient_record/ HTTP/1.1" 200 50047
+INFO 2025-11-28 08:22:12 autoreload 7 129433038855040 Watching for file changes with StatReloader
+INFO 2025-11-28 08:22:13 font_manager 7 129433000429248 generated new fontManager
+INFO 2025-11-28 08:22:19 basehttp 7 129430615377600 "GET / HTTP/1.1" 200 81152
+WARNING 2025-11-28 08:22:19 basehttp 7 129430615377600 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 08:22:20 basehttp 7 129430606984896 "GET / HTTP/1.1" 200 81152
+WARNING 2025-11-28 08:22:20 basehttp 7 129430606984896 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 08:22:24 basehttp 7 129430615377600 "GET /admin_login1/ HTTP/1.1" 200 43178
+INFO 2025-11-28 08:22:54 auth_service 7 129430615377600 User Tauqeer authenticated successfully
+INFO 2025-11-28 08:22:54 views 7 129430615377600 Admin Tauqeer logged in successfully
+INFO 2025-11-28 08:22:54 basehttp 7 129430615377600 "POST /admin_login1/ HTTP/1.1" 302 0
+INFO 2025-11-28 08:22:54 views 7 129430615377600 Admin dashboard accessed by: Tauqeer (admin) (user_type: admin)
+INFO 2025-11-28 08:22:54 basehttp 7 129430615377600 "GET /index_admin/ HTTP/1.1" 200 100607
+INFO 2025-11-28 08:22:56 basehttp 7 129430615377600 "GET /logout_doctor/ HTTP/1.1" 302 0
+INFO 2025-11-28 08:22:56 basehttp 7 129430615377600 "GET /login/ HTTP/1.1" 200 51968
+WARNING 2025-11-28 08:22:56 basehttp 7 129430615377600 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 08:23:09 auth_service 7 129430606984896 User bilal authenticated successfully
+INFO 2025-11-28 08:23:09 views 7 129430606984896 Doctor bilal logged in successfully
+INFO 2025-11-28 08:23:09 basehttp 7 129430606984896 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-11-28 08:23:09 views 7 129430606984896 The total number of patients are
+INFO 2025-11-28 08:23:09 views 7 129430606984896 1
+INFO 2025-11-28 08:23:09 basehttp 7 129430606984896 "GET /diagnosis/ HTTP/1.1" 200 63633
+INFO 2025-11-28 08:23:17 basehttp 7 129430606984896 "GET /add_patient_record/ HTTP/1.1" 200 50047
+INFO 2025-11-28 08:24:06 views 7 129430606984896 Welcome email sent to tauqeerq34@gmail.com
+INFO 2025-11-28 08:24:06 views 7 129430606984896 Patient malik ahmer created by doctor bilal with username: malik
+INFO 2025-11-28 08:24:06 basehttp 7 129430606984896 "POST /add_patient_record/ HTTP/1.1" 200 50303
+INFO 2025-11-28 08:24:18 basehttp 7 129430606984896 "GET /add_patient_record/ HTTP/1.1" 200 50047
+INFO 2025-11-28 08:24:18 views 7 129430606984896 The total number of patients are
+INFO 2025-11-28 08:24:18 views 7 129430606984896 2
+INFO 2025-11-28 08:24:18 basehttp 7 129430606984896 "GET /diagnosis/ HTTP/1.1" 200 64441
+INFO 2025-11-28 08:24:19 basehttp 7 129430606984896 "GET /patients/ HTTP/1.1" 200 12389
+INFO 2025-11-28 09:41:31 basehttp 7 129430615377600 "GET /predict/ HTTP/1.1" 200 13713
+INFO 2025-11-28 09:41:36 views 7 129430615377600 The total number of patients are
+INFO 2025-11-28 09:41:36 views 7 129430615377600 2
+INFO 2025-11-28 09:41:36 basehttp 7 129430615377600 "GET /diagnosis/ HTTP/1.1" 200 64441
+INFO 2025-11-28 09:41:56 views 7 129430615377600 I get the detail of patient:
+INFO 2025-11-28 09:41:56 views 7 129430615377600 malik ahmer (ID: 3)
+INFO 2025-11-28 09:42:00 views 7 129430615377600 Fracture detection result: {'fracture_types': ['softtissue', 'boneanomaly', 'text', 'fracture']}
+INFO 2025-11-28 09:42:00 views 7 129430615377600 Left/Right prediction result: {'prediction': 'Left (L)'}
+INFO 2025-11-28 09:42:00 views 7 129430615377600 Creating X-ray data for patient 3
+INFO 2025-11-28 09:42:00 views 7 129430615377600 X-ray data saved: 1, created=True
+INFO 2025-11-28 09:42:00 basehttp 7 129430615377600 "POST /predict/ HTTP/1.1" 200 55007
+INFO 2025-11-28 09:43:00 views 7 129430606984896 The latest report is:
+INFO 2025-11-28 09:43:00 views 7 129430606984896 malik ahmer - XRAY-1764322920.50902
+ERROR 2025-11-28 09:43:00 views 7 129430606984896 Gemini API error: 403 Client Error: Forbidden for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyB7fwNrYMa4T05ilokA3YQwjasZcwYRG5Y
+ERROR 2025-11-28 09:43:01 views 7 129430606984896 Gemini API error while generating summary: 403 Client Error: Forbidden for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyB7fwNrYMa4T05ilokA3YQwjasZcwYRG5Y
+ERROR 2025-11-28 09:43:01 views 7 129430606984896 Gemini API error while generating recommendations: 403 Client Error: Forbidden for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyB7fwNrYMa4T05ilokA3YQwjasZcwYRG5Y
+INFO 2025-11-28 09:43:01 views 7 129430606984896 Creating report database entry for patient
+INFO 2025-11-28 09:43:01 views 7 129430606984896 Report content generated for patient
+INFO 2025-11-28 09:43:02 views 7 129430606984896 Previous report deleted for patient
+INFO 2025-11-28 09:43:02 views 7 129430606984896 Till here working fine---------------------
+INFO 2025-11-28 09:43:02 views 7 129430606984896 Insertion has been done
+INFO 2025-11-28 09:43:02 basehttp 7 129430606984896 "GET /Report/ HTTP/1.1" 200 42444
+INFO 2025-11-28 09:44:20 basehttp 7 129430606984896 "GET /predict/ HTTP/1.1" 200 13713
+INFO 2025-11-28 09:44:22 views 7 129430606984896 The total number of patients are
+INFO 2025-11-28 09:44:22 views 7 129430606984896 2
+INFO 2025-11-28 09:44:22 basehttp 7 129430606984896 "GET /diagnosis/ HTTP/1.1" 200 64441
+INFO 2025-11-28 09:44:23 basehttp 7 129430606984896 "GET /video_Recommendation HTTP/1.1" 200 124074
+INFO 2025-11-28 09:46:46 basehttp 7 129430606984896 "GET /user_profile/ HTTP/1.1" 200 1599
+INFO 2025-11-28 09:46:49 basehttp 7 129430606984896 "GET /Patient_dashboard/ HTTP/1.1" 200 50
+INFO 2025-11-28 09:50:24 basehttp 7 129430606984896 "GET /logout_doctor/ HTTP/1.1" 302 0
+INFO 2025-11-28 09:50:24 basehttp 7 129430606984896 "GET /login/ HTTP/1.1" 200 51968
+WARNING 2025-11-28 09:50:24 basehttp 7 129430606984896 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 09:50:27 basehttp 7 129430615377600 "GET / HTTP/1.1" 200 81152
+INFO 2025-11-28 09:50:27 basehttp 7 129430615377600 "GET /static/main_page/main-page-styles.css HTTP/1.1" 304 0
+WARNING 2025-11-28 09:50:27 basehttp 7 129430615377600 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 09:50:31 basehttp 7 129430615377600 "GET /patient_login/ HTTP/1.1" 200 55896
+WARNING 2025-11-28 09:50:54 auth_service 7 129430615377600 Failed authentication for user: malik ahmer
+WARNING 2025-11-28 09:50:54 views 7 129430615377600 Failed patient login for user: malik ahmer
+INFO 2025-11-28 09:50:54 basehttp 7 129430615377600 "POST /patient_login/ HTTP/1.1" 200 55896
+WARNING 2025-11-28 09:51:05 auth_service 7 129430615377600 Failed authentication for user: malik
+WARNING 2025-11-28 09:51:05 views 7 129430615377600 Failed patient login for user: malik
+INFO 2025-11-28 09:51:05 basehttp 7 129430615377600 "POST /patient_login/ HTTP/1.1" 200 55896
+WARNING 2025-11-28 09:51:38 auth_service 7 129430615377600 Failed authentication for user: subhan
+WARNING 2025-11-28 09:51:38 views 7 129430615377600 Failed patient login for user: subhan
+INFO 2025-11-28 09:51:38 basehttp 7 129430615377600 "POST /patient_login/ HTTP/1.1" 200 55896
+INFO 2025-11-28 09:51:54 auth_service 7 129430615377600 User sameer authenticated successfully
+INFO 2025-11-28 09:51:54 views 7 129430615377600 Patient sameer logged in successfully
+INFO 2025-11-28 09:51:54 basehttp 7 129430615377600 "POST /patient_login/ HTTP/1.1" 302 0
+INFO 2025-11-28 09:51:54 views 7 129430615377600 Patient account created at: 2025-11-28 08:14:07.612192+00:00
+INFO 2025-11-28 09:51:54 basehttp 7 129430615377600 "GET /Patient_dashboard/ HTTP/1.1" 200 62470
+WARNING 2025-11-28 09:54:15 auth_service 62 137456862784384 Failed authentication for user: malik
+WARNING 2025-11-28 09:54:15 auth_service 62 137456862784384 Failed authentication for user: subhan
+INFO 2025-11-28 09:54:16 auth_service 62 137456862784384 User sameer34 authenticated successfully
+INFO 2025-11-28 09:54:16 auth_service 62 137456862784384 User tauqeer123455 authenticated successfully
+INFO 2025-11-28 09:55:00 auth_service 86 131661986163584 User malik authenticated successfully
+INFO 2025-11-28 09:55:00 auth_service 86 131661986163584 User subhan authenticated successfully
+INFO 2025-11-28 09:55:01 auth_service 86 131661986163584 User sameer34 authenticated successfully
+INFO 2025-11-28 09:55:01 auth_service 86 131661986163584 User tauqeer123455 authenticated successfully
+INFO 2025-11-28 09:56:07 autoreload 7 123212577287040 Watching for file changes with StatReloader
+INFO 2025-11-28 09:56:08 font_manager 7 123212577287040 generated new fontManager
+INFO 2025-11-28 09:58:53 views 7 123210220697280 Patient account created at: 2025-11-28 08:14:07.612192+00:00
+INFO 2025-11-28 09:58:53 basehttp 7 123210220697280 "GET /Patient_dashboard/ HTTP/1.1" 200 62470
+INFO 2025-11-28 09:58:57 basehttp 7 123210220697280 "GET /patient_logouts HTTP/1.1" 302 0
+INFO 2025-11-28 09:58:57 basehttp 7 123210220697280 "GET /patient_login/ HTTP/1.1" 200 55896
+INFO 2025-11-28 09:59:20 basehttp 7 123210220697280 "GET / HTTP/1.1" 200 81152
+INFO 2025-11-28 09:59:20 basehttp 7 123210220697280 "GET /static/main_page/ai%20based%20tech.jpg HTTP/1.1" 304 0
+INFO 2025-11-28 09:59:20 basehttp 7 123210212304576 "GET /static/main_page/hospital.jpg HTTP/1.1" 304 0
+INFO 2025-11-28 09:59:20 basehttp 7 123210220697280 "GET /static/main_page/doc%201.jpg HTTP/1.1" 304 0
+INFO 2025-11-28 09:59:20 basehttp 7 123210212304576 "GET /static/main_page/fracture%20detections.jpg HTTP/1.1" 304 0
+INFO 2025-11-28 09:59:20 basehttp 7 123210220697280 "GET /static/main_page/ai%20based%20system.jpg HTTP/1.1" 304 0
+INFO 2025-11-28 09:59:20 basehttp 7 123210129471168 "GET /static/main_page/fracture%20operation%20threader.jpg HTTP/1.1" 304 0
+INFO 2025-11-28 09:59:20 basehttp 7 123210121078464 "GET /static/main_page/doc%202.jpg HTTP/1.1" 304 0
+WARNING 2025-11-28 09:59:20 basehttp 7 123210129471168 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 09:59:26 basehttp 7 123210121078464 "GET /login/ HTTP/1.1" 200 51968
+WARNING 2025-11-28 09:59:26 basehttp 7 123210121078464 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 09:59:29 basehttp 7 123210212304576 "GET /admin_login1/ HTTP/1.1" 200 43178
+INFO 2025-11-28 09:59:45 basehttp 7 123210212304576 "GET /login/ HTTP/1.1" 200 51968
+WARNING 2025-11-28 09:59:45 basehttp 7 123210212304576 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+WARNING 2025-11-28 10:00:12 auth_service 7 123210220697280 Failed authentication for user: bilal
+WARNING 2025-11-28 10:00:12 views 7 123210220697280 Failed doctor login for user: bilal
+INFO 2025-11-28 10:00:12 basehttp 7 123210220697280 "POST /login/ HTTP/1.1" 200 51968
+WARNING 2025-11-28 10:00:12 basehttp 7 123210220697280 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 10:00:26 auth_service 7 123210212304576 User bilal112233 authenticated successfully
+INFO 2025-11-28 10:00:26 views 7 123210212304576 Doctor bilal112233 logged in successfully
+INFO 2025-11-28 10:00:26 basehttp 7 123210212304576 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-11-28 10:00:26 views 7 123210212304576 The total number of patients are
+INFO 2025-11-28 10:00:26 views 7 123210212304576 0
+INFO 2025-11-28 10:00:26 basehttp 7 123210212304576 "GET /diagnosis/ HTTP/1.1" 200 62325
+INFO 2025-11-28 10:00:40 basehttp 7 123210212304576 "GET /patients/ HTTP/1.1" 200 12389
+INFO 2025-11-28 10:00:44 basehttp 7 123210212304576 "GET /add_patient_record/ HTTP/1.1" 200 50625
+INFO 2025-11-28 10:00:45 basehttp 7 123210212304576 "GET /add_patient_record/ HTTP/1.1" 200 50047
+INFO 2025-11-28 10:01:10 views 7 123210212304576 Generated password for patient Tauqeer-ahmad: 7toKhx9bCDNz
+INFO 2025-11-28 10:01:17 views 7 123210212304576 Welcome email sent to tauqeerq34@gmail.com
+INFO 2025-11-28 10:01:17 views 7 123210212304576 Patient Tauqeer-ahmad Qureshi created by doctor bilal112233 with username: tauqeer-ahmad
+INFO 2025-11-28 10:01:17 basehttp 7 123210212304576 "POST /add_patient_record/ HTTP/1.1" 200 50313
+INFO 2025-11-28 10:03:32 basehttp 7 123210220697280 "GET /add_patient_record/ HTTP/1.1" 200 50047
+INFO 2025-11-28 10:03:33 views 7 123210220697280 The total number of patients are
+INFO 2025-11-28 10:03:33 views 7 123210220697280 1
+INFO 2025-11-28 10:03:33 basehttp 7 123210220697280 "GET /diagnosis/ HTTP/1.1" 200 63640
+INFO 2025-11-28 10:03:36 basehttp 7 123210220697280 "GET /logout_doctor/ HTTP/1.1" 302 0
+INFO 2025-11-28 10:03:36 basehttp 7 123210220697280 "GET /login/ HTTP/1.1" 200 51968
+WARNING 2025-11-28 10:03:36 basehttp 7 123210220697280 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 10:03:42 basehttp 7 123210212304576 "GET / HTTP/1.1" 200 81152
+WARNING 2025-11-28 10:03:42 basehttp 7 123210212304576 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 10:03:45 basehttp 7 123210212304576 "GET /patient_login/ HTTP/1.1" 200 55896
+INFO 2025-11-28 10:03:57 auth_service 7 123210212304576 User tauqeer-ahmad authenticated successfully
+INFO 2025-11-28 10:03:57 views 7 123210212304576 Patient tauqeer-ahmad logged in successfully
+INFO 2025-11-28 10:03:57 basehttp 7 123210212304576 "POST /patient_login/ HTTP/1.1" 302 0
+INFO 2025-11-28 10:03:57 views 7 123210212304576 Patient account created at: 2025-11-28 10:01:11.105691+00:00
+INFO 2025-11-28 10:03:57 basehttp 7 123210212304576 "GET /Patient_dashboard/ HTTP/1.1" 200 62528
+INFO 2025-11-28 10:04:22 basehttp 7 123210212304576 "GET /user_profile/ HTTP/1.1" 200 1599
+INFO 2025-11-28 10:06:04 basehttp 7 123210212304576 "GET / HTTP/1.1" 200 81152
+WARNING 2025-11-28 10:06:04 basehttp 7 123210212304576 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 10:06:10 basehttp 7 123210212304576 "GET /login/ HTTP/1.1" 200 51968
+WARNING 2025-11-28 10:06:10 basehttp 7 123210212304576 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 10:06:22 auth_service 7 123210220697280 User bilal112233 authenticated successfully
+INFO 2025-11-28 10:06:22 views 7 123210220697280 Doctor bilal112233 logged in successfully
+INFO 2025-11-28 10:06:22 basehttp 7 123210220697280 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-11-28 10:06:22 views 7 123210220697280 The total number of patients are
+INFO 2025-11-28 10:06:22 views 7 123210220697280 1
+INFO 2025-11-28 10:06:22 basehttp 7 123210220697280 "GET /diagnosis/ HTTP/1.1" 200 63640
+INFO 2025-11-28 10:06:33 basehttp 7 123210220697280 "GET /predict/ HTTP/1.1" 200 13961
+INFO 2025-11-28 10:06:38 views 7 123210220697280 I get the detail of patient:
+INFO 2025-11-28 10:06:38 views 7 123210220697280 Tauqeer-ahmad Qureshi (ID: 4)
+INFO 2025-11-28 10:06:41 views 7 123210220697280 Fracture detection result: {'fracture_types': ['text', 'fracture', 'softtissue', 'boneanomaly']}
+INFO 2025-11-28 10:06:41 views 7 123210220697280 Left/Right prediction result: {'prediction': 'Left (L)'}
+INFO 2025-11-28 10:06:41 views 7 123210220697280 Creating X-ray data for patient 4
+INFO 2025-11-28 10:06:41 views 7 123210220697280 X-ray data saved: 2, created=True
+INFO 2025-11-28 10:06:41 basehttp 7 123210220697280 "POST /predict/ HTTP/1.1" 200 55012
+INFO 2025-11-28 10:07:10 basehttp 7 123210220697280 "GET /predict/ HTTP/1.1" 200 13961
+INFO 2025-11-28 10:07:18 views 7 123210220697280 I get the detail of patient:
+INFO 2025-11-28 10:07:18 views 7 123210220697280 Tauqeer-ahmad Qureshi (ID: 4)
+INFO 2025-11-28 10:07:18 views 7 123210220697280 Fracture detection result: {'fracture_types': ['text', 'fracture', 'softtissue', 'boneanomaly']}
+INFO 2025-11-28 10:07:18 views 7 123210220697280 Left/Right prediction result: {'prediction': 'Left (L)'}
+INFO 2025-11-28 10:07:18 views 7 123210220697280 Creating X-ray data for patient 4
+INFO 2025-11-28 10:07:18 views 7 123210220697280 X-ray data saved: 2, created=False
+INFO 2025-11-28 10:07:18 basehttp 7 123210220697280 "POST /predict/ HTTP/1.1" 200 55012
+INFO 2025-11-28 10:07:23 views 7 123210220697280 The latest report is:
+INFO 2025-11-28 10:07:23 views 7 123210220697280 Tauqeer-ahmad Qureshi - XRAY-1764324438.674893
+ERROR 2025-11-28 10:07:23 views 7 123210220697280 Gemini API error: 403 Client Error: Forbidden for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyB7fwNrYMa4T05ilokA3YQwjasZcwYRG5Y
+ERROR 2025-11-28 10:07:24 views 7 123210220697280 Gemini API error while generating summary: 403 Client Error: Forbidden for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyB7fwNrYMa4T05ilokA3YQwjasZcwYRG5Y
+ERROR 2025-11-28 10:07:25 views 7 123210220697280 Gemini API error while generating recommendations: 403 Client Error: Forbidden for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyB7fwNrYMa4T05ilokA3YQwjasZcwYRG5Y
+INFO 2025-11-28 10:07:25 views 7 123210220697280 Creating report database entry for patient
+INFO 2025-11-28 10:07:25 views 7 123210220697280 Report content generated for patient
+INFO 2025-11-28 10:07:25 views 7 123210220697280 Previous report deleted for patient
+INFO 2025-11-28 10:07:25 views 7 123210220697280 Till here working fine---------------------
+INFO 2025-11-28 10:07:25 views 7 123210220697280 Insertion has been done
+INFO 2025-11-28 10:07:25 basehttp 7 123210220697280 "GET /Report/ HTTP/1.1" 200 42131
+INFO 2025-11-28 10:07:40 basehttp 7 123210220697280 "GET /predict/ HTTP/1.1" 200 13961
+INFO 2025-11-28 10:07:42 views 7 123210220697280 The total number of patients are
+INFO 2025-11-28 10:07:42 views 7 123210220697280 1
+INFO 2025-11-28 10:07:42 basehttp 7 123210220697280 "GET /diagnosis/ HTTP/1.1" 200 63640
+INFO 2025-11-28 10:07:45 basehttp 7 123210220697280 "GET /Patient_dashboard/ HTTP/1.1" 200 50
+INFO 2025-11-28 10:07:46 basehttp 7 123210220697280 "GET /Patient_dashboard/ HTTP/1.1" 200 50
+WARNING 2025-11-28 10:07:56 log 7 123210220697280 Forbidden (CSRF token from POST incorrect.): /patient_login/
+WARNING 2025-11-28 10:07:56 basehttp 7 123210220697280 "POST /patient_login/ HTTP/1.1" 403 2503
+WARNING 2025-11-28 10:08:00 log 7 123210220697280 Forbidden (CSRF token from POST incorrect.): /patient_login/
+WARNING 2025-11-28 10:08:00 basehttp 7 123210220697280 "POST /patient_login/ HTTP/1.1" 403 2503
+WARNING 2025-11-28 10:08:02 log 7 123210220697280 Forbidden (CSRF token from POST incorrect.): /patient_login/
+WARNING 2025-11-28 10:08:02 basehttp 7 123210220697280 "POST /patient_login/ HTTP/1.1" 403 2503
+INFO 2025-11-28 10:08:04 basehttp 7 123210220697280 "GET /patient_login/ HTTP/1.1" 200 55896
+INFO 2025-11-28 10:08:37 auth_service 7 123210220697280 User tauqeer-ahmad authenticated successfully
+INFO 2025-11-28 10:08:37 views 7 123210220697280 Patient tauqeer-ahmad logged in successfully
+INFO 2025-11-28 10:08:37 basehttp 7 123210220697280 "POST /patient_login/ HTTP/1.1" 302 0
+INFO 2025-11-28 10:08:37 views 7 123210220697280 Patient account created at: 2025-11-28 10:01:11.105691+00:00
+INFO 2025-11-28 10:08:37 basehttp 7 123210220697280 "GET /Patient_dashboard/ HTTP/1.1" 200 64571
+INFO 2025-11-28 10:08:41 basehttp 7 123210220697280 "GET /media/reports/report_XRAY-1764324438.674893.html HTTP/1.1" 200 1104
+INFO 2025-11-28 10:09:48 basehttp 7 123210220697280 "GET /user_profile/ HTTP/1.1" 200 2566
+INFO 2025-11-28 10:18:48 autoreload 7 125994686655360 Watching for file changes with StatReloader
+INFO 2025-11-28 10:18:53 views 7 125992331900608 Yes found and the folder path is:
+INFO 2025-11-28 10:18:53 views 7 125992331900608 /app/main/static/videos/shoulder abduction
+INFO 2025-11-28 10:18:53 basehttp 7 125992331900608 "GET /Recommend_video/shoulder%20abduction/ HTTP/1.1" 200 22
+INFO 2025-11-28 10:26:57 autoreload 7 137364337961856 Watching for file changes with StatReloader
+INFO 2025-11-28 10:26:58 font_manager 7 137364337961856 generated new fontManager
+INFO 2025-11-28 10:27:05 views 7 137361980651200 The total number of patients are
+INFO 2025-11-28 10:27:05 views 7 137361980651200 0
+INFO 2025-11-28 10:27:05 basehttp 7 137361980651200 "GET /diagnosis/ HTTP/1.1" 200 62325
+INFO 2025-11-28 10:27:07 views 7 137361980651200 The total number of patients are
+INFO 2025-11-28 10:27:07 views 7 137361980651200 0
+INFO 2025-11-28 10:27:07 basehttp 7 137361980651200 "GET /diagnosis/ HTTP/1.1" 200 62325
+INFO 2025-11-28 10:27:08 views 7 137361980651200 The total number of patients are
+INFO 2025-11-28 10:27:08 views 7 137361980651200 0
+INFO 2025-11-28 10:27:08 basehttp 7 137361980651200 "GET /diagnosis/ HTTP/1.1" 200 62325
+INFO 2025-11-28 10:27:08 views 7 137361980651200 The total number of patients are
+INFO 2025-11-28 10:27:08 views 7 137361980651200 0
+INFO 2025-11-28 10:27:08 basehttp 7 137361980651200 "GET /diagnosis/ HTTP/1.1" 200 62325
+INFO 2025-11-28 10:27:09 views 7 137361980651200 The total number of patients are
+INFO 2025-11-28 10:27:09 views 7 137361980651200 0
+INFO 2025-11-28 10:27:09 basehttp 7 137361980651200 "GET /diagnosis/ HTTP/1.1" 200 62325
+INFO 2025-11-28 10:27:09 views 7 137361980651200 The total number of patients are
+INFO 2025-11-28 10:27:09 views 7 137361980651200 0
+INFO 2025-11-28 10:27:09 basehttp 7 137361980651200 "GET /diagnosis/ HTTP/1.1" 200 62325
+INFO 2025-11-28 10:27:09 views 7 137361980651200 The total number of patients are
+INFO 2025-11-28 10:27:09 views 7 137361980651200 0
+INFO 2025-11-28 10:27:09 basehttp 7 137361980651200 "GET /diagnosis/ HTTP/1.1" 200 62325
+INFO 2025-11-28 10:27:09 views 7 137361980651200 The total number of patients are
+INFO 2025-11-28 10:27:09 views 7 137361980651200 0
+INFO 2025-11-28 10:27:09 basehttp 7 137361980651200 "GET /diagnosis/ HTTP/1.1" 200 62325
+INFO 2025-11-28 10:27:10 basehttp 7 137361980651200 "GET /logout_doctor/ HTTP/1.1" 302 0
+INFO 2025-11-28 10:27:10 basehttp 7 137361980651200 "GET /login/ HTTP/1.1" 200 51968
+WARNING 2025-11-28 10:27:10 basehttp 7 137361980651200 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 10:27:38 auth_service 7 137361972258496 User bilal112233 authenticated successfully
+INFO 2025-11-28 10:27:38 views 7 137361972258496 Doctor bilal112233 logged in successfully
+INFO 2025-11-28 10:27:38 basehttp 7 137361972258496 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-11-28 10:27:38 views 7 137361972258496 The total number of patients are
+INFO 2025-11-28 10:27:38 views 7 137361972258496 1
+INFO 2025-11-28 10:27:38 basehttp 7 137361972258496 "GET /diagnosis/ HTTP/1.1" 200 63640
+INFO 2025-11-28 10:27:42 basehttp 7 137361972258496 "GET /predict/ HTTP/1.1" 200 13961
+INFO 2025-11-28 10:30:22 autoreload 7 129731866233728 Watching for file changes with StatReloader
+INFO 2025-11-28 10:30:28 views 7 129729576302272 Yes found and the folder path is:
+INFO 2025-11-28 10:30:28 views 7 129729576302272 /app/main/static/videos/pendulum swing
+INFO 2025-11-28 10:30:28 basehttp 7 129729576302272 "GET /Recommend_video/pendulum%20swing/ HTTP/1.1" 200 22
+INFO 2025-11-28 10:30:35 views 7 129729576302272 Yes found and the folder path is:
+INFO 2025-11-28 10:30:35 views 7 129729576302272 /app/main/static/videos/pendulum swing
+INFO 2025-11-28 10:30:35 basehttp 7 129729576302272 "GET /Recommend_video/pendulum%20swing/ HTTP/1.1" 200 22
+INFO 2025-11-28 10:30:42 views 7 129729576302272 Yes found and the folder path is:
+INFO 2025-11-28 10:30:42 views 7 129729576302272 /app/main/static/videos/pendulum swing
+INFO 2025-11-28 10:30:42 basehttp 7 129729576302272 "GET /Recommend_video/pendulum%20swing/ HTTP/1.1" 200 22
+INFO 2025-11-28 10:30:54 autoreload 7 129165917203328 Watching for file changes with StatReloader
+INFO 2025-11-28 10:30:54 font_manager 7 129165917203328 generated new fontManager
+INFO 2025-11-28 10:31:02 views 7 129163560220352 Yes found and the folder path is:
+INFO 2025-11-28 10:31:02 views 7 129163560220352 /app/main/static/videos/pendulum swing
+INFO 2025-11-28 10:31:02 basehttp 7 129163560220352 "GET /Recommend_video/pendulum%20swing/ HTTP/1.1" 200 22
+INFO 2025-11-28 10:31:11 basehttp 7 129163560220352 "GET / HTTP/1.1" 200 81152
+INFO 2025-11-28 10:31:32 autoreload 7 128507605547904 Watching for file changes with StatReloader
+INFO 2025-11-28 10:31:33 font_manager 7 128507567122112 generated new fontManager
+INFO 2025-11-28 10:31:37 basehttp 7 128505183467200 "GET /video_Recommendation HTTP/1.1" 200 125791
+INFO 2025-11-28 10:33:08 views 7 128505175074496 Yes found and the folder path is:
+INFO 2025-11-28 10:33:08 views 7 128505175074496 /app/main/static/videos/pendulum swing
+INFO 2025-11-28 10:33:08 basehttp 7 128505175074496 "GET /Recommend_video/pendulum%20swing/ HTTP/1.1" 200 22
+INFO 2025-11-28 10:33:20 autoreload 7 125710679210880 Watching for file changes with StatReloader
+INFO 2025-11-28 10:33:30 views 7 125708389054144 Yes found and the folder path is:
+INFO 2025-11-28 10:33:30 views 7 125708389054144 /app/main/static/videos/pendulum swing
+INFO 2025-11-28 10:33:30 basehttp 7 125708389054144 "GET /Recommend_video/pendulum%20swing/ HTTP/1.1" 200 22
+INFO 2025-11-28 10:33:35 views 7 125708389054144 Yes found and the folder path is:
+INFO 2025-11-28 10:33:35 views 7 125708389054144 /app/main/static/videos/pendulum swing
+INFO 2025-11-28 10:33:35 basehttp 7 125708389054144 "GET /Recommend_video/pendulum%20swing/ HTTP/1.1" 200 22
+INFO 2025-11-28 10:33:40 views 7 125708389054144 Yes found and the folder path is:
+INFO 2025-11-28 10:33:40 views 7 125708389054144 /app/main/static/videos/pendulum swing
+INFO 2025-11-28 10:33:40 basehttp 7 125708389054144 "GET /Recommend_video/pendulum%20swing/ HTTP/1.1" 200 22
+INFO 2025-11-28 10:33:46 basehttp 7 125708389054144 "GET / HTTP/1.1" 200 81152
+INFO 2025-11-28 10:33:46 basehttp 7 125708389054144 "GET /video_Recommendation HTTP/1.1" 200 125791
+INFO 2025-11-28 10:33:50 basehttp 7 125708389054144 "GET /video_Recommendation HTTP/1.1" 200 125791
+INFO 2025-11-28 10:33:56 basehttp 7 125708389054144 "GET /video_Recommendation HTTP/1.1" 200 125791
+INFO 2025-11-28 10:34:09 basehttp 7 125708378564288 "GET /video_Recommendation HTTP/1.1" 200 125791
+INFO 2025-11-28 10:34:19 basehttp 7 125708378564288 "GET /video_Recommendation HTTP/1.1" 200 125791
+INFO 2025-11-28 10:34:25 basehttp 7 125708378564288 "GET / HTTP/1.1" 200 81152
+WARNING 2025-11-28 10:34:25 basehttp 7 125708378564288 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 10:34:31 basehttp 7 125708370171584 "GET /login/ HTTP/1.1" 200 51968
+WARNING 2025-11-28 10:34:31 basehttp 7 125708370171584 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 10:34:40 auth_service 7 125708378564288 User bilal112233 authenticated successfully
+INFO 2025-11-28 10:34:40 views 7 125708378564288 Doctor bilal112233 logged in successfully
+INFO 2025-11-28 10:34:40 basehttp 7 125708378564288 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-11-28 10:34:40 views 7 125708378564288 The total number of patients are
+INFO 2025-11-28 10:34:40 views 7 125708378564288 1
+INFO 2025-11-28 10:34:40 basehttp 7 125708378564288 "GET /diagnosis/ HTTP/1.1" 200 63640
+INFO 2025-11-28 10:34:57 autoreload 7 125258806446976 Watching for file changes with StatReloader
+INFO 2025-11-28 10:34:58 font_manager 7 125258806446976 generated new fontManager
+INFO 2025-11-28 10:35:03 basehttp 7 125256450700992 "GET /video_Recommendation HTTP/1.1" 200 125791
+INFO 2025-11-28 10:36:51 basehttp 7 125256442308288 "GET /video_Recommendation HTTP/1.1" 200 125791
+INFO 2025-11-28 10:36:58 basehttp 7 125256442308288 "GET /video_Recommendation HTTP/1.1" 200 125791
+INFO 2025-11-28 10:37:06 basehttp 7 125256442308288 "GET /video_Recommendation HTTP/1.1" 200 125791
+INFO 2025-11-28 10:37:30 basehttp 7 125256450700992 "GET / HTTP/1.1" 200 81152
+WARNING 2025-11-28 10:37:30 basehttp 7 125256450700992 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+WARNING 2025-11-28 10:37:31 log 7 125256450700992 Not Found: //video_Recommendation
+WARNING 2025-11-28 10:37:31 basehttp 7 125256450700992 "GET /%2Fvideo_Recommendation HTTP/1.1" 404 10333
+INFO 2025-11-28 10:40:18 autoreload 7 139912777022336 Watching for file changes with StatReloader
+INFO 2025-11-28 10:40:23 basehttp 7 139910487996096 "GET /video_Recommendation HTTP/1.1" 200 125791
+INFO 2025-11-28 10:40:56 autoreload 7 139759385099136 Watching for file changes with StatReloader
+INFO 2025-11-28 10:41:12 autoreload 7 134125140523904 Watching for file changes with StatReloader
+INFO 2025-11-28 10:41:13 font_manager 7 134125140523904 generated new fontManager
+INFO 2025-11-28 10:41:17 basehttp 7 134122785732288 "GET /video_Recommendation HTTP/1.1" 200 126192
+WARNING 2025-11-28 10:41:37 log 7 134122785732288 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-11-28 10:41:37 basehttp 7 134122785732288 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 10414
+INFO 2025-11-28 10:42:53 basehttp 7 134122785732288 "GET /video_Recommendation HTTP/1.1" 200 126395
+INFO 2025-11-28 11:18:35 autoreload 7 140088637492096 Watching for file changes with StatReloader
+INFO 2025-11-28 11:18:49 basehttp 7 140086347822784 "GET /video_Recommendation HTTP/1.1" 200 129895
+INFO 2025-11-28 11:21:05 autoreload 7 125480331369344 Watching for file changes with StatReloader
+INFO 2025-11-28 11:21:06 font_manager 7 125480292943552 generated new fontManager
+WARNING 2025-11-28 11:21:14 basehttp 7 125477906806464 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 11:21:33 chatbot_service 7 125477906806464 Successfully loaded routes from /app/main/config/routes.yml
+INFO 2025-11-28 11:21:33 chatbot_service 7 125477906806464 Processing query: click on the local button
+INFO 2025-11-28 11:21:35 chatbot_service 7 125477906806464 Gemini response: TYPE: CONVERSATION
+ANSWER: I'm sorry, I can't understand what button you want to click with "local button". Could you please provide the exact button text?
+
+INFO 2025-11-28 11:21:35 chatbot_service 7 125477906806464 Parsed conversation response
+INFO 2025-11-28 11:21:35 chatbot_service 7 125477906806464 Returning conversational response
+INFO 2025-11-28 11:21:35 views 7 125477906806464 Voice command from user_3: click on the local button...
+INFO 2025-11-28 11:21:35 basehttp 7 125477906806464 "POST /api/chatbot/query/ HTTP/1.1" 200 366
+INFO 2025-11-28 11:21:47 chatbot_service 7 125477906806464 Processing query: scroll down
+INFO 2025-11-28 11:21:49 chatbot_service 7 125477906806464 Gemini response: TYPE: SCROLL
+SCROLL_DIRECTION: down
+REASON: User wants to scroll the page
+
+INFO 2025-11-28 11:21:49 chatbot_service 7 125477906806464 Parsed scroll: down
+INFO 2025-11-28 11:21:49 chatbot_service 7 125477906806464 Scroll requested: down
+INFO 2025-11-28 11:21:49 views 7 125477906806464 Voice command from user_3: scroll down...
+INFO 2025-11-28 11:21:49 basehttp 7 125477906806464 "POST /api/chatbot/query/ HTTP/1.1" 200 168
+INFO 2025-11-28 11:22:07 chatbot_service 7 125477906806464 Multi-command detected: 2 commands
+INFO 2025-11-28 11:22:07 chatbot_service 7 125477906806464 Processing 2 commands: ['click on login button', 'open']
+INFO 2025-11-28 11:22:07 chatbot_service 7 125477906806464 Processing command 1/2: click on login button
+INFO 2025-11-28 11:22:10 chatbot_service 7 125477906806464 Gemini response: TYPE: BUTTON_CLICK
+BUTTON_TO_CLICK: Login
+REASON: User wants to click a button
+
+INFO 2025-11-28 11:22:10 chatbot_service 7 125477906806464 Parsed button click: Login
+INFO 2025-11-28 11:22:10 chatbot_service 7 125477906806464 Processing command 2/2: open
+INFO 2025-11-28 11:22:12 chatbot_service 7 125477906806464 Gemini response: TYPE: NAVIGATION
+ROUTE_ID: homepage
+PATH: /
+REASON: Keywords matched: open
+
+INFO 2025-11-28 11:22:12 chatbot_service 7 125477906806464 Parsed navigation route: homepage -> /
+INFO 2025-11-28 11:22:12 views 7 125477906806464 Voice command from user_3: click on login button and open...
+INFO 2025-11-28 11:22:12 basehttp 7 125477906806464 "POST /api/chatbot/query/ HTTP/1.1" 200 893
+INFO 2025-11-28 11:22:54 chatbot_service 7 125477906806464 Multi-command detected: 2 commands
+INFO 2025-11-28 11:22:54 chatbot_service 7 125477906806464 Processing 2 commands: ['click on the login button', 'go to login page']
+INFO 2025-11-28 11:22:54 chatbot_service 7 125477906806464 Processing command 1/2: click on the login button
+INFO 2025-11-28 11:22:57 chatbot_service 7 125477906806464 Gemini response: TYPE: CONVERSATION
+ANSWER: It seems you're trying to click a button, but I need to know which page you're currently on to identify the "login" button. Can you tell me which page you are on?
+
+INFO 2025-11-28 11:22:57 chatbot_service 7 125477906806464 Parsed conversation response
+INFO 2025-11-28 11:22:57 chatbot_service 7 125477906806464 Processing command 2/2: go to login page
+INFO 2025-11-28 11:22:59 chatbot_service 7 125477906806464 Gemini response: TYPE: NAVIGATION
+ROUTE_ID: doctor_login
+PATH: /login/
+REASON: Keywords matched: login, page
+INFO 2025-11-28 11:22:59 chatbot_service 7 125477906806464 Parsed navigation route: doctor_login -> /login/
+INFO 2025-11-28 11:22:59 views 7 125477906806464 Voice command from user_3: click on the login button and go to login page...
+INFO 2025-11-28 11:22:59 basehttp 7 125477906806464 "POST /api/chatbot/query/ HTTP/1.1" 200 1761
+INFO 2025-11-28 11:25:53 autoreload 7 125508565707648 Watching for file changes with StatReloader
+INFO 2025-11-28 11:26:12 basehttp 7 125506276030144 "GET /video_Recommendation HTTP/1.1" 200 131353
+INFO 2025-11-28 11:27:15 autoreload 7 140118744521600 Watching for file changes with StatReloader
+INFO 2025-11-28 11:27:16 font_manager 7 140118744521600 generated new fontManager
+INFO 2025-11-28 11:27:19 basehttp 7 140116383229632 "GET / HTTP/1.1" 200 86110
+INFO 2025-11-28 11:27:19 basehttp 7 140116383229632 "GET /static/main_page/main-page-styles.css HTTP/1.1" 304 0
+WARNING 2025-11-28 11:27:20 basehttp 7 140116383229632 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 11:27:20 basehttp 7 140116391622336 "GET / HTTP/1.1" 200 86110
+WARNING 2025-11-28 11:27:21 basehttp 7 140116391622336 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 11:27:28 chatbot_service 7 140116383229632 Successfully loaded routes from /app/main/config/routes.yml
+INFO 2025-11-28 11:27:28 chatbot_service 7 140116383229632 Processing query: click on the login page
+INFO 2025-11-28 11:27:31 chatbot_service 7 140116383229632 Gemini response: TYPE: NAVIGATION
+ROUTE_ID: doctor_login
+PATH: /login/
+REASON: Keywords matched: login
+INFO 2025-11-28 11:27:31 chatbot_service 7 140116383229632 Parsed navigation route: doctor_login -> /login/
+INFO 2025-11-28 11:27:31 views 7 140116383229632 Voice command from user_3: click on the login page...
+INFO 2025-11-28 11:27:31 basehttp 7 140116383229632 "POST /api/chatbot/query/ HTTP/1.1" 200 1112
+INFO 2025-11-28 11:27:32 basehttp 7 140116383229632 "GET /login/ HTTP/1.1" 200 56926
+WARNING 2025-11-28 11:27:32 basehttp 7 140116383229632 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+WARNING 2025-11-28 11:27:41 basehttp 7 140116391622336 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 11:27:49 chatbot_service 7 140116383229632 Multi-command detected: 2 commands
+INFO 2025-11-28 11:27:49 chatbot_service 7 140116383229632 Processing 2 commands: ['click on the login page', 'go to the main page']
+INFO 2025-11-28 11:27:49 chatbot_service 7 140116383229632 Processing command 1/2: click on the login page
+INFO 2025-11-28 11:27:52 chatbot_service 7 140116383229632 Gemini response: TYPE: NAVIGATION
+ROUTE_ID: homepage
+PATH: /
+REASON: Keywords matched: page
+
+INFO 2025-11-28 11:27:52 chatbot_service 7 140116383229632 Parsed navigation route: homepage -> /
+INFO 2025-11-28 11:27:52 chatbot_service 7 140116383229632 Processing command 2/2: go to the main page
+INFO 2025-11-28 11:27:54 chatbot_service 7 140116383229632 Gemini response: TYPE: NAVIGATION
+ROUTE_ID: homepage
+PATH: /
+REASON: Keywords matched: go, main page
+
+INFO 2025-11-28 11:27:54 chatbot_service 7 140116383229632 Parsed navigation route: homepage -> /
+INFO 2025-11-28 11:27:54 views 7 140116383229632 Voice command from user_3: click on the login page and go to the main page...
+INFO 2025-11-28 11:27:54 basehttp 7 140116383229632 "POST /api/chatbot/query/ HTTP/1.1" 200 1283
+INFO 2025-11-28 11:29:03 chatbot_service 7 140116383229632 Multi-command detected: 2 commands
+INFO 2025-11-28 11:29:03 chatbot_service 7 140116383229632 Processing 2 commands: ['go to the login page', 'come back to the main page']
+INFO 2025-11-28 11:29:03 chatbot_service 7 140116383229632 Processing command 1/2: go to the login page
+INFO 2025-11-28 11:29:05 chatbot_service 7 140116383229632 Gemini response: TYPE: NAVIGATION
+ROUTE_ID: doctor_login
+PATH: /login/
+REASON: Keywords matched: login, page
+INFO 2025-11-28 11:29:05 chatbot_service 7 140116383229632 Parsed navigation route: doctor_login -> /login/
+INFO 2025-11-28 11:29:05 chatbot_service 7 140116383229632 Processing command 2/2: come back to the main page
+INFO 2025-11-28 11:29:06 chatbot_service 7 140116383229632 Gemini response: TYPE: NAVIGATION
+ROUTE_ID: homepage
+PATH: /
+REASON: Keywords matched: main page
+
+INFO 2025-11-28 11:29:06 chatbot_service 7 140116383229632 Parsed navigation route: homepage -> /
+INFO 2025-11-28 11:29:06 views 7 140116383229632 Voice command from user_3: go to the login page and come back to the main pag...
+INFO 2025-11-28 11:29:06 basehttp 7 140116383229632 "POST /api/chatbot/query/ HTTP/1.1" 200 1847
+INFO 2025-11-28 11:30:59 autoreload 7 139778718395264 Watching for file changes with StatReloader
+INFO 2025-11-28 11:31:23 autoreload 7 139778718395264 /app/main/services/chatbot_service.py changed, reloading.
+INFO 2025-11-28 11:31:24 autoreload 38 134127742806912 Watching for file changes with StatReloader
+INFO 2025-11-28 11:31:29 autoreload 38 134127742806912 /app/main/services/chatbot_service.py changed, reloading.
+INFO 2025-11-28 11:31:31 autoreload 69 128304543337344 Watching for file changes with StatReloader
+INFO 2025-11-28 11:53:18 autoreload 7 133582731955072 Watching for file changes with StatReloader
+INFO 2025-11-28 11:53:27 basehttp 7 133580442302144 "GET /video_Recommendation HTTP/1.1" 200 131903
+INFO 2025-11-28 11:55:34 autoreload 7 133106803043200 Watching for file changes with StatReloader
+INFO 2025-11-28 11:55:34 font_manager 7 133106803043200 generated new fontManager
+INFO 2025-11-28 11:55:54 basehttp 7 133104438077120 "GET / HTTP/1.1" 200 86660
+WARNING 2025-11-28 11:55:54 basehttp 7 133104438077120 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 11:56:27 chatbot_service 7 133104446469824 Successfully loaded routes from /app/main/config/routes.yml
+INFO 2025-11-28 11:56:27 chatbot_service 7 133104446469824 Multi-command detected: 2 commands
+INFO 2025-11-28 11:56:27 chatbot_service 7 133104446469824 Processing 2 commands: ['hello could you go to the main page', 'click on login button']
+INFO 2025-11-28 11:56:27 chatbot_service 7 133104446469824 Processing command 1/2: hello could you go to the main page
+INFO 2025-11-28 11:56:29 chatbot_service 7 133104446469824 Gemini response: TYPE: NAVIGATION
+ROUTE_ID: homepage
+PATH: /
+REASON: Keywords matched: main page, go to
+INFO 2025-11-28 11:56:29 chatbot_service 7 133104446469824 Parsed navigation route: homepage -> /
+INFO 2025-11-28 11:56:29 chatbot_service 7 133104446469824 Processing command 2/2: click on login button
+INFO 2025-11-28 11:56:32 chatbot_service 7 133104446469824 Gemini response: TYPE: BUTTON_CLICK
+BUTTON_TO_CLICK: Login
+REASON: User wants to click a button
+
+INFO 2025-11-28 11:56:32 chatbot_service 7 133104446469824 Parsed button click: Login
+INFO 2025-11-28 11:56:32 views 7 133104446469824 Voice command from user_3: hello could you go to the main page and click on l...
+INFO 2025-11-28 11:56:32 basehttp 7 133104446469824 "POST /api/chatbot/query/ HTTP/1.1" 200 924
+INFO 2025-11-28 11:56:53 chatbot_service 7 133104446469824 Multi-command detected: 2 commands
+INFO 2025-11-28 11:56:53 chatbot_service 7 133104446469824 Processing 2 commands: ['click on the login button', 'click on the doctor']
+INFO 2025-11-28 11:56:53 chatbot_service 7 133104446469824 Processing command 1/2: click on the login button
+INFO 2025-11-28 11:56:55 chatbot_service 7 133104446469824 Gemini response: TYPE: CONVERSATION
+ANSWER: It seems there's no route or form with button name as 'login button'. Please specify a valid page or button.
+
+INFO 2025-11-28 11:56:55 chatbot_service 7 133104446469824 Parsed conversation response
+INFO 2025-11-28 11:56:55 chatbot_service 7 133104446469824 Processing command 2/2: click on the doctor
+INFO 2025-11-28 11:56:58 chatbot_service 7 133104446469824 Gemini response: TYPE: CONVERSATION
+ANSWER: Please clarify which "doctor" action you are referring to. Are you trying to log in as a doctor, view the doctor's dashboard, or perform another action related to a doctor?
+
+INFO 2025-11-28 11:56:58 chatbot_service 7 133104446469824 Parsed conversation response
+INFO 2025-11-28 11:56:58 views 7 133104446469824 Voice command from user_3: click on the login button and then click on the do...
+INFO 2025-11-28 11:56:58 basehttp 7 133104446469824 "POST /api/chatbot/query/ HTTP/1.1" 200 1031
+INFO 2025-11-28 11:57:25 chatbot_service 7 133104446469824 Multi-command detected: 2 commands
+INFO 2025-11-28 11:57:25 chatbot_service 7 133104446469824 Processing 2 commands: ['click on the login button', 'click on the doctor button']
+INFO 2025-11-28 11:57:25 chatbot_service 7 133104446469824 Processing command 1/2: click on the login button
+INFO 2025-11-28 11:57:29 chatbot_service 7 133104446469824 Gemini response: TYPE: CONVERSATION
+ANSWER: I am sorry, but I need to know which page you are on to know what buttons are available. Can you tell me which page you are on?
+
+INFO 2025-11-28 11:57:29 chatbot_service 7 133104446469824 Parsed conversation response
+INFO 2025-11-28 11:57:29 chatbot_service 7 133104446469824 Processing command 2/2: click on the doctor button
+INFO 2025-11-28 11:57:32 chatbot_service 7 133104446469824 Gemini response: TYPE: CONVERSATION
+ANSWER: Which route are you currently on? There are no buttons that say "the doctor button". If you can tell me what page you are currently on, I can help you find the right button to click.
+
+INFO 2025-11-28 11:57:32 chatbot_service 7 133104446469824 Parsed conversation response
+INFO 2025-11-28 11:57:32 views 7 133104446469824 Voice command from user_3: click on the login button and then click on the do...
+INFO 2025-11-28 11:57:32 basehttp 7 133104446469824 "POST /api/chatbot/query/ HTTP/1.1" 200 1096
+INFO 2025-11-28 11:58:01 chatbot_service 7 133104446469824 Multi-command detected: 2 commands
+INFO 2025-11-28 11:58:01 chatbot_service 7 133104446469824 Processing 2 commands: ['first click on the login button on the main page', 'click on the doctor button']
+INFO 2025-11-28 11:58:01 chatbot_service 7 133104446469824 Processing command 1/2: first click on the login button on the main page
+INFO 2025-11-28 11:58:03 chatbot_service 7 133104446469824 Gemini response: TYPE: NAVIGATION
+ROUTE_ID: homepage
+PATH: /
+REASON: Keywords matched: main page
+
+INFO 2025-11-28 11:58:03 chatbot_service 7 133104446469824 Parsed navigation route: homepage -> /
+INFO 2025-11-28 11:58:03 chatbot_service 7 133104446469824 Processing command 2/2: click on the doctor button
+INFO 2025-11-28 11:58:06 chatbot_service 7 133104446469824 Gemini response: TYPE: CONVERSATION
+ANSWER: I'm sorry, I cannot help you click the doctor button, because there is no button called "doctor" listed on the current page. If you are on the doctor login page, you should log in using your username and password. If you are already on the doctor dashboard page, I can help you click on buttons such as "New Diagnosis", "View Patients", "Predict Diagnosis", "Generate Report", or "Logout". Please let me know what you would like to do.
+
+INFO 2025-11-28 11:58:06 chatbot_service 7 133104446469824 Parsed conversation response
+INFO 2025-11-28 11:58:06 views 7 133104446469824 Voice command from user_3: first click on the login button on the main page a...
+INFO 2025-11-28 11:58:06 basehttp 7 133104446469824 "POST /api/chatbot/query/ HTTP/1.1" 200 1800
+INFO 2025-11-28 11:58:37 chatbot_service 7 133104446469824 Processing query: I want the main page of the website please click on the doctor button
+INFO 2025-11-28 11:58:40 chatbot_service 7 133104446469824 Gemini response: TYPE: NAVIGATION
+ROUTE_ID: homepage
+PATH: /
+REASON: Keywords matched: main page, homepage, go to home
+
+INFO 2025-11-28 11:58:40 chatbot_service 7 133104446469824 Parsed navigation route: homepage -> /
+INFO 2025-11-28 11:58:40 views 7 133104446469824 Voice command from user_3: I want the main page of the website please click o...
+INFO 2025-11-28 11:58:40 basehttp 7 133104446469824 "POST /api/chatbot/query/ HTTP/1.1" 200 578
+WARNING 2025-11-28 11:58:41 basehttp 7 133104446469824 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 11:58:56 chatbot_service 7 133104438077120 Multi-command detected: 2 commands
+INFO 2025-11-28 11:58:56 chatbot_service 7 133104438077120 Processing 2 commands: ['I want the main page of the website first layer scroll down the page', 'click on the doctor button']
+INFO 2025-11-28 11:58:56 chatbot_service 7 133104438077120 Processing command 1/2: I want the main page of the website first layer scroll down the page
+INFO 2025-11-28 11:58:59 chatbot_service 7 133104438077120 Gemini response: TYPE: NAVIGATION
+ROUTE_ID: homepage
+PATH: /
+REASON: Keywords matched: main page, homepage
+TYPE: SCROLL
+SCROLL_DIRECTION: down
+REASON: User wants to scroll the page
+
+INFO 2025-11-28 11:58:59 chatbot_service 7 133104438077120 Parsed scroll: down
+INFO 2025-11-28 11:58:59 chatbot_service 7 133104438077120 Processing command 2/2: click on the doctor button
+INFO 2025-11-28 11:59:01 chatbot_service 7 133104438077120 Gemini response: TYPE: BUTTON_CLICK
+BUTTON_TO_CLICK: doctor login
+REASON: User wants to click a button
+
+INFO 2025-11-28 11:59:01 chatbot_service 7 133104438077120 Parsed button click: doctor login
+INFO 2025-11-28 11:59:01 views 7 133104438077120 Voice command from user_3: I want the main page of the website first layer sc...
+INFO 2025-11-28 11:59:01 basehttp 7 133104438077120 "POST /api/chatbot/query/ HTTP/1.1" 200 594
+INFO 2025-11-28 11:59:29 chatbot_service 7 133104438077120 Processing query: Mujhe doctor ke men page per Le Jaaye
+INFO 2025-11-28 11:59:32 chatbot_service 7 133104438077120 Gemini response: TYPE: NAVIGATION
+ROUTE_ID: doctor_login
+PATH: /login/
+REASON: Keywords matched: doctor login, doctor panel login, doctor authentication
+INFO 2025-11-28 11:59:32 chatbot_service 7 133104438077120 Parsed navigation route: doctor_login -> /login/
+INFO 2025-11-28 11:59:32 views 7 133104438077120 Voice command from user_3: Mujhe doctor ke men page per Le Jaaye...
+INFO 2025-11-28 11:59:32 basehttp 7 133104438077120 "POST /api/chatbot/query/ HTTP/1.1" 200 1162
+INFO 2025-11-28 11:59:33 basehttp 7 133104438077120 "GET /login/ HTTP/1.1" 200 57476
+WARNING 2025-11-28 11:59:33 basehttp 7 133104438077120 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 11:59:58 chatbot_service 7 133104446469824 Processing query: Mujhe patient ke dashboard per le jaen
+INFO 2025-11-28 12:00:00 chatbot_service 7 133104446469824 Gemini response: TYPE: NAVIGATION
+ROUTE_ID: patient_dashboard
+PATH: /Patient_dashboard/
+REASON: Keywords matched: patient, dashboard
+
+INFO 2025-11-28 12:00:00 chatbot_service 7 133104446469824 Parsed navigation route: patient_dashboard -> /Patient_dashboard/
+INFO 2025-11-28 12:00:00 views 7 133104446469824 Voice command from user_3: Mujhe patient ke dashboard per le jaen...
+INFO 2025-11-28 12:00:00 basehttp 7 133104446469824 "POST /api/chatbot/query/ HTTP/1.1" 200 929
+INFO 2025-11-28 12:00:01 basehttp 7 133104446469824 "GET /Patient_dashboard/ HTTP/1.1" 200 50
+INFO 2025-11-28 12:00:13 chatbot_service 7 133104446469824 Processing query: Mujhe doctor ke login page per le jaen
+INFO 2025-11-28 12:00:16 chatbot_service 7 133104446469824 Gemini response: TYPE: NAVIGATION
+ROUTE_ID: doctor_login
+PATH: /login/
+REASON: Keywords matched: doctor login
+
+INFO 2025-11-28 12:00:16 chatbot_service 7 133104446469824 Parsed navigation route: doctor_login -> /login/
+INFO 2025-11-28 12:00:16 views 7 133104446469824 Voice command from user_3: Mujhe doctor ke login page per le jaen...
+INFO 2025-11-28 12:00:16 basehttp 7 133104446469824 "POST /api/chatbot/query/ HTTP/1.1" 200 1119
+INFO 2025-11-28 12:00:17 basehttp 7 133104446469824 "GET /login/ HTTP/1.1" 200 57476
+WARNING 2025-11-28 12:00:17 basehttp 7 133104446469824 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 12:01:08 chatbot_service 7 133104438077120 Processing query: Mujhe doctor ke login page per le jaen
+INFO 2025-11-28 12:01:12 chatbot_service 7 133104438077120 Gemini response: TYPE: NAVIGATION
+ROUTE_ID: doctor_login
+PATH: /login/
+REASON: Keywords matched: doctor login, page
+INFO 2025-11-28 12:01:12 chatbot_service 7 133104438077120 Parsed navigation route: doctor_login -> /login/
+INFO 2025-11-28 12:01:12 views 7 133104438077120 Voice command from user_3: Mujhe doctor ke login page per le jaen...
+INFO 2025-11-28 12:01:12 basehttp 7 133104438077120 "POST /api/chatbot/query/ HTTP/1.1" 200 1125
+INFO 2025-11-28 12:01:13 basehttp 7 133104438077120 "GET /login/ HTTP/1.1" 200 57476
+WARNING 2025-11-28 12:01:13 basehttp 7 133104438077120 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 12:26:09 autoreload 7 133165057395584 Watching for file changes with StatReloader
+INFO 2025-11-28 12:26:18 basehttp 7 133162700109504 "GET /video_Recommendation HTTP/1.1" 200 116321
+INFO 2025-11-28 12:27:40 autoreload 7 125233910901632 Watching for file changes with StatReloader
+INFO 2025-11-28 12:27:40 font_manager 7 125233910901632 generated new fontManager
+INFO 2025-11-28 12:28:06 basehttp 7 125231554361024 "GET / HTTP/1.1" 200 71079
+WARNING 2025-11-28 12:28:06 basehttp 7 125231554361024 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 12:28:19 chatbot_service 7 125231545968320 Successfully loaded routes from /app/main/config/routes.yml
+INFO 2025-11-28 12:28:19 chatbot_service 7 125231545968320 Processing query: hry bot
+INFO 2025-11-28 12:28:22 chatbot_service 7 125231545968320 Gemini response: TYPE: CONVERSATION
+ANSWER: Hello! How can I help you today?
+
+INFO 2025-11-28 12:28:22 chatbot_service 7 125231545968320 Parsed conversation response
+INFO 2025-11-28 12:28:22 chatbot_service 7 125231545968320 Returning conversational response
+INFO 2025-11-28 12:28:22 views 7 125231545968320 Voice command from user_3: hry bot...
+INFO 2025-11-28 12:28:22 basehttp 7 125231545968320 "POST /api/chatbot/query/ HTTP/1.1" 200 170
+INFO 2025-11-28 12:28:33 chatbot_service 7 125231545968320 Processing query: goto the login page
+INFO 2025-11-28 12:28:36 chatbot_service 7 125231545968320 Gemini response: TYPE: NAVIGATION
+ROUTE_ID: doctor_login
+PATH: /login/
+REASON: Keywords matched: login
+
+INFO 2025-11-28 12:28:36 chatbot_service 7 125231545968320 Parsed navigation route: doctor_login -> /login/
+INFO 2025-11-28 12:28:36 views 7 125231545968320 Voice command from user_3: goto the login page...
+INFO 2025-11-28 12:28:36 basehttp 7 125231545968320 "POST /api/chatbot/query/ HTTP/1.1" 200 1112
+INFO 2025-11-28 12:28:35 basehttp 7 125231545968320 "GET /login/ HTTP/1.1" 200 41894
+WARNING 2025-11-28 12:28:35 basehttp 7 125231545968320 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 12:32:35 autoreload 7 136855262862208 Watching for file changes with StatReloader
+INFO 2025-11-28 12:32:38 basehttp 7 136852974597824 "GET /video_Recommendation HTTP/1.1" 200 119137
+INFO 2025-11-28 12:34:09 autoreload 7 138836264856448 Watching for file changes with StatReloader
+INFO 2025-11-28 12:34:10 font_manager 7 138836264856448 generated new fontManager
+WARNING 2025-11-28 12:34:18 basehttp 7 138833907676864 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+WARNING 2025-11-28 12:34:24 log 7 138833907676864 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-11-28 12:34:24 basehttp 7 138833907676864 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 10594
+WARNING 2025-11-28 12:34:24 basehttp 7 138833907676864 "GET /static/js/popper.min.js.map HTTP/1.1" 404 1874
+WARNING 2025-11-28 12:34:24 basehttp 7 138833899284160 "GET /static/js/bootstrap.min.js.map HTTP/1.1" 404 1883
+WARNING 2025-11-28 12:34:24 basehttp 7 138833899284160 "GET /static/css/bootstrap.min.css.map HTTP/1.1" 404 1889
+INFO 2025-11-28 12:35:52 autoreload 7 128831503350656 Watching for file changes with StatReloader
+INFO 2025-11-28 12:35:58 autoreload 7 128647197412224 Watching for file changes with StatReloader
+INFO 2025-11-28 12:36:57 autoreload 7 134107329153920 Watching for file changes with StatReloader
+INFO 2025-11-28 12:36:58 font_manager 7 134107290715840 generated new fontManager
+INFO 2025-11-28 12:37:08 basehttp 7 134104897021632 "GET / HTTP/1.1" 200 74898
+WARNING 2025-11-28 12:37:08 basehttp 7 134104897021632 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+WARNING 2025-11-28 12:37:12 basehttp 7 134104905414336 "GET /static/js/popper.min.js.map HTTP/1.1" 404 1874
+WARNING 2025-11-28 12:37:12 basehttp 7 134104897021632 "GET /static/js/bootstrap.min.js.map HTTP/1.1" 404 1883
+WARNING 2025-11-28 12:37:12 basehttp 7 134104897021632 "GET /static/css/bootstrap.min.css.map HTTP/1.1" 404 1889
+INFO 2025-11-28 12:38:44 autoreload 7 130904122628992 Watching for file changes with StatReloader
+INFO 2025-11-28 12:38:48 autoreload 7 133819399940992 Watching for file changes with StatReloader
+INFO 2025-11-28 12:39:36 autoreload 7 130103197223808 Watching for file changes with StatReloader
+INFO 2025-11-28 12:39:36 font_manager 7 130103158785728 generated new fontManager
+INFO 2025-11-28 12:39:43 basehttp 7 130100774545088 "GET / HTTP/1.1" 200 74806
+WARNING 2025-11-28 12:39:43 basehttp 7 130100774545088 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+WARNING 2025-11-28 12:39:47 basehttp 7 130100766152384 "GET /static/js/popper.min.js.map HTTP/1.1" 404 1874
+WARNING 2025-11-28 12:39:47 basehttp 7 130100774545088 "GET /static/js/bootstrap.min.js.map HTTP/1.1" 404 1883
+WARNING 2025-11-28 12:39:47 basehttp 7 130100774545088 "GET /static/css/bootstrap.min.css.map HTTP/1.1" 404 1889
+INFO 2025-11-28 12:39:54 chatbot_service 7 130100774545088 Successfully loaded routes from /app/main/config/routes.yml
+INFO 2025-11-28 12:39:54 chatbot_service 7 130100774545088 Processing query: about go to the login page
+INFO 2025-11-28 12:39:57 chatbot_service 7 130100774545088 Gemini response: TYPE: NAVIGATION
+ROUTE_ID: doctor_login
+PATH: /login/
+REASON: Keywords matched: go to, login page
+INFO 2025-11-28 12:39:57 chatbot_service 7 130100774545088 Parsed navigation route: doctor_login -> /login/
+INFO 2025-11-28 12:39:57 views 7 130100774545088 Voice command from user_3: about go to the login page...
+INFO 2025-11-28 12:39:57 basehttp 7 130100774545088 "POST /api/chatbot/query/ HTTP/1.1" 200 1124
+INFO 2025-11-28 12:39:58 basehttp 7 130100774545088 "GET /login/ HTTP/1.1" 200 45621
+WARNING 2025-11-28 12:39:58 basehttp 7 130100774545088 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 12:40:08 chatbot_service 7 130100766152384 Processing query: Now enter the usernasto Peer
+INFO 2025-11-28 12:40:11 chatbot_service 7 130100766152384 Gemini response: TYPE: FORM_FILL
+FIELDS: {"username": "Peer"}
+REASON: User wants to fill form fields
+
+INFO 2025-11-28 12:40:11 chatbot_service 7 130100766152384 Parsed form fill with fields: {'username': 'Peer'}
+INFO 2025-11-28 12:40:11 chatbot_service 7 130100766152384 Form fill requested with fields
+INFO 2025-11-28 12:40:11 views 7 130100766152384 Voice command from user_3: Now enter the usernasto Peer...
+INFO 2025-11-28 12:40:11 basehttp 7 130100766152384 "POST /api/chatbot/query/ HTTP/1.1" 200 224
+INFO 2025-11-28 12:40:34 chatbot_service 7 130100766152384 Processing query: enter the usernasty
+INFO 2025-11-28 12:40:36 chatbot_service 7 130100766152384 Gemini response: TYPE: FORM_FILL
+FIELDS: {"username": "nasty"}
+REASON: User wants to fill form fields
+
+INFO 2025-11-28 12:40:36 chatbot_service 7 130100766152384 Parsed form fill with fields: {'username': 'nasty'}
+INFO 2025-11-28 12:40:36 chatbot_service 7 130100766152384 Form fill requested with fields
+INFO 2025-11-28 12:40:36 views 7 130100766152384 Voice command from user_3: enter the usernasty...
+INFO 2025-11-28 12:40:36 basehttp 7 130100766152384 "POST /api/chatbot/query/ HTTP/1.1" 200 225
+INFO 2025-11-28 12:40:47 chatbot_service 7 130100766152384 Processing query: click on the login button
+INFO 2025-11-28 12:40:50 chatbot_service 7 130100766152384 Gemini response: TYPE: CONVERSATION
+ANSWER: I am unable to identify the button you want to click because I do not know which page you are currently on. Please navigate to a page with buttons, such as the doctor login page or diagnosis page, and try again.
+
+INFO 2025-11-28 12:40:50 chatbot_service 7 130100766152384 Parsed conversation response
+INFO 2025-11-28 12:40:50 chatbot_service 7 130100766152384 Returning conversational response
+INFO 2025-11-28 12:40:50 views 7 130100766152384 Voice command from user_3: click on the login button...
+INFO 2025-11-28 12:40:50 basehttp 7 130100766152384 "POST /api/chatbot/query/ HTTP/1.1" 200 528
+WARNING 2025-11-28 12:41:08 basehttp 7 130100766152384 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 12:46:01 autoreload 7 130103197223808 /app/main/services/chatbot_service.py changed, reloading.
+INFO 2025-11-28 12:46:03 autoreload 46 138888550407040 Watching for file changes with StatReloader
+INFO 2025-11-28 12:46:12 autoreload 46 138888550407040 /app/main/services/chatbot_service.py changed, reloading.
+INFO 2025-11-28 12:46:13 autoreload 77 138724256078720 Watching for file changes with StatReloader
+INFO 2025-11-28 12:46:31 autoreload 77 138724256078720 /app/main/services/chatbot_service.py changed, reloading.
+INFO 2025-11-28 12:46:33 autoreload 108 126061818952576 Watching for file changes with StatReloader
+INFO 2025-11-28 12:48:11 autoreload 7 136307304905600 Watching for file changes with StatReloader
+INFO 2025-11-28 12:48:15 autoreload 7 136007473650560 Watching for file changes with StatReloader
+INFO 2025-11-28 12:49:03 autoreload 7 130775724419968 Watching for file changes with StatReloader
+INFO 2025-11-28 12:49:04 font_manager 7 130775724419968 generated new fontManager
+INFO 2025-11-28 12:49:12 basehttp 7 130773359257280 "GET /login/ HTTP/1.1" 200 47849
+WARNING 2025-11-28 12:49:12 basehttp 7 130773359257280 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+WARNING 2025-11-28 12:49:16 basehttp 7 130773367649984 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 12:49:22 chatbot_service 7 130773367649984 Successfully loaded routes from /app/main/config/routes.yml
+INFO 2025-11-28 12:49:22 chatbot_service 7 130773367649984 Processing query: Guddu ki Naukari bhej
+INFO 2025-11-28 12:49:24 chatbot_service 7 130773367649984 Gemini response: TYPE: CONVERSATION
+ANSWER: I am sorry, I do not understand this request. Can you please rephrase it or ask something else?
+
+INFO 2025-11-28 12:49:24 chatbot_service 7 130773367649984 Parsed conversation response
+INFO 2025-11-28 12:49:24 chatbot_service 7 130773367649984 Returning conversational response
+INFO 2025-11-28 12:49:24 views 7 130773367649984 Voice command from user_3: Guddu ki Naukari bhej...
+INFO 2025-11-28 12:49:24 basehttp 7 130773367649984 "POST /api/chatbot/query/ HTTP/1.1" 200 296
+INFO 2025-11-28 12:49:39 chatbot_service 7 130773367649984 Processing query: Patali
+INFO 2025-11-28 12:49:42 chatbot_service 7 130773367649984 Gemini response: TYPE: CONVERSATION
+ANSWER: I'm sorry, I don't understand. Can you please clarify your request?
+
+INFO 2025-11-28 12:49:42 chatbot_service 7 130773367649984 Parsed conversation response
+INFO 2025-11-28 12:49:42 chatbot_service 7 130773367649984 Returning conversational response
+INFO 2025-11-28 12:49:42 views 7 130773367649984 Voice command from user_3: Patali...
+INFO 2025-11-28 12:49:42 basehttp 7 130773367649984 "POST /api/chatbot/query/ HTTP/1.1" 200 240
+INFO 2025-11-28 12:49:43 chatbot_service 7 130773367649984 Processing query: go to the Lord
+ERROR 2025-11-28 12:49:45 chatbot_service 7 130773367649984 Gemini API error: 429 Client Error: Too Many Requests for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCbN9o3MDS5tWEWeMlwGjoJAWWkzKW0pwA
+WARNING 2025-11-28 12:49:45 chatbot_service 7 130773367649984 Gemini API failed
+INFO 2025-11-28 12:49:45 views 7 130773367649984 Voice command from user_3: go to the Lord...
+INFO 2025-11-28 12:49:45 basehttp 7 130773367649984 "POST /api/chatbot/query/ HTTP/1.1" 206 177
+INFO 2025-11-28 12:51:07 autoreload 7 136643414686592 Watching for file changes with StatReloader
+INFO 2025-11-28 12:51:08 font_manager 7 136643376260800 generated new fontManager
+INFO 2025-11-28 12:52:57 autoreload 7 126089396640640 Watching for file changes with StatReloader
+INFO 2025-11-28 12:53:03 autoreload 7 138819841510272 Watching for file changes with StatReloader
+INFO 2025-11-28 12:53:33 autoreload 7 123527014984576 Watching for file changes with StatReloader
+INFO 2025-11-28 12:53:34 font_manager 7 123527014984576 generated new fontManager
+INFO 2025-11-28 12:53:40 basehttp 7 123524658230976 "GET / HTTP/1.1" 200 79781
+WARNING 2025-11-28 12:53:40 basehttp 7 123524658230976 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 12:53:58 chatbot_service 7 123524649838272 Successfully loaded routes from /app/main/config/routes.yml
+INFO 2025-11-28 12:53:58 chatbot_service 7 123524649838272 Processing query: okay good you open the login page
+INFO 2025-11-28 12:54:01 chatbot_service 7 123524649838272 Gemini response: TYPE: NAVIGATION
+ROUTE_ID: doctor_login
+PATH: /login/
+REASON: Keywords matched: login
+
+INFO 2025-11-28 12:54:01 chatbot_service 7 123524649838272 Parsed navigation route: doctor_login -> /login/
+INFO 2025-11-28 12:54:01 views 7 123524649838272 Voice command from user_3: okay good you open the login page...
+INFO 2025-11-28 12:54:01 basehttp 7 123524649838272 "POST /api/chatbot/query/ HTTP/1.1" 200 1112
+INFO 2025-11-28 12:54:02 basehttp 7 123524649838272 "GET /login/ HTTP/1.1" 200 50596
+WARNING 2025-11-28 12:54:02 basehttp 7 123524649838272 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 12:54:09 chatbot_service 7 123524658230976 Processing query: okay no enter the username Shakeel
+INFO 2025-11-28 12:54:12 chatbot_service 7 123524658230976 Gemini response: TYPE: FORM_FILL
+FIELDS: {"username": "Shakeel"}
+REASON: User wants to fill form fields
+
+INFO 2025-11-28 12:54:12 chatbot_service 7 123524658230976 Parsed form fill with fields: {'username': 'Shakeel'}
+INFO 2025-11-28 12:54:12 chatbot_service 7 123524658230976 Form fill requested with fields
+INFO 2025-11-28 12:54:12 views 7 123524658230976 Voice command from user_3: okay no enter the username Shakeel...
+INFO 2025-11-28 12:54:12 basehttp 7 123524658230976 "POST /api/chatbot/query/ HTTP/1.1" 200 227
+INFO 2025-11-28 12:54:37 chatbot_service 7 123524658230976 Processing query: Sangathan
+INFO 2025-11-28 12:54:41 chatbot_service 7 123524658230976 Gemini response: TYPE: CONVERSATION
+ANSWER: I'm sorry, I don't understand. Can you please clarify your request?
+
+INFO 2025-11-28 12:54:41 chatbot_service 7 123524658230976 Parsed conversation response
+INFO 2025-11-28 12:54:41 chatbot_service 7 123524658230976 Returning conversational response
+INFO 2025-11-28 12:54:41 views 7 123524658230976 Voice command from user_3: Sangathan...
+INFO 2025-11-28 12:54:41 basehttp 7 123524658230976 "POST /api/chatbot/query/ HTTP/1.1" 200 240
+INFO 2025-11-28 12:54:43 chatbot_service 7 123524658230976 Processing query: ke andar login button
+INFO 2025-11-28 12:54:46 chatbot_service 7 123524658230976 Gemini response: TYPE: BUTTON_CLICK
+BUTTON_TO_CLICK: login
+REASON: User wants to click a button
+
+INFO 2025-11-28 12:54:46 chatbot_service 7 123524658230976 Parsed button click: login
+INFO 2025-11-28 12:54:46 chatbot_service 7 123524658230976 Button click requested: login
+INFO 2025-11-28 12:54:46 views 7 123524658230976 Voice command from user_3: ke andar login button...
+INFO 2025-11-28 12:54:46 basehttp 7 123524658230976 "POST /api/chatbot/query/ HTTP/1.1" 200 183
+INFO 2025-11-28 12:55:16 chatbot_service 7 123524658230976 Processing query: the password as 1234
+INFO 2025-11-28 12:55:19 chatbot_service 7 123524658230976 Gemini response: TYPE: FORM_FILL
+FIELDS: {"password": "1234"}
+REASON: User wants to fill form fields
+
+INFO 2025-11-28 12:55:19 chatbot_service 7 123524658230976 Parsed form fill with fields: {'password': '1234'}
+INFO 2025-11-28 12:55:19 chatbot_service 7 123524658230976 Form fill requested with fields
+INFO 2025-11-28 12:55:19 views 7 123524658230976 Voice command from user_3: the password as 1234...
+INFO 2025-11-28 12:55:19 basehttp 7 123524658230976 "POST /api/chatbot/query/ HTTP/1.1" 200 224
+INFO 2025-11-28 12:58:56 autoreload 7 134009183292288 Watching for file changes with StatReloader
+INFO 2025-11-28 12:59:01 autoreload 7 137029243145088 Watching for file changes with StatReloader
+INFO 2025-11-28 12:59:53 chatbot_service 7 137026953279168 Successfully loaded routes from /app/main/config/routes.yml
+INFO 2025-11-28 12:59:53 chatbot_service 7 137026953279168 Processing query: Lamba chalta hai
+INFO 2025-11-28 12:59:55 chatbot_service 7 137026953279168 Gemini response: TYPE: CONVERSATION
+ANSWER: I'm sorry, I don't understand the request. Can you please clarify?
+
+INFO 2025-11-28 12:59:55 chatbot_service 7 137026953279168 Parsed conversation response
+INFO 2025-11-28 12:59:55 chatbot_service 7 137026953279168 Returning conversational response
+INFO 2025-11-28 12:59:55 views 7 137026953279168 Voice command from user_3: Lamba chalta hai...
+INFO 2025-11-28 12:59:55 basehttp 7 137026953279168 "POST /api/chatbot/query/ HTTP/1.1" 200 238
+WARNING 2025-11-28 13:00:25 basehttp 7 137026953279168 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 13:00:47 autoreload 7 133399813995392 Watching for file changes with StatReloader
+INFO 2025-11-28 13:00:48 font_manager 7 133399813995392 generated new fontManager
+WARNING 2025-11-28 13:00:52 basehttp 7 133397459498688 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+WARNING 2025-11-28 13:01:05 basehttp 7 133397459498688 "GET /static/js/popper.min.js.map HTTP/1.1" 404 1874
+WARNING 2025-11-28 13:01:05 basehttp 7 133397449008832 "GET /static/js/bootstrap.min.js.map HTTP/1.1" 404 1883
+WARNING 2025-11-28 13:01:06 basehttp 7 133397449008832 "GET /static/css/bootstrap.min.css.map HTTP/1.1" 404 1889
+INFO 2025-11-28 13:01:13 chatbot_service 7 133397449008832 Successfully loaded routes from /app/main/config/routes.yml
+INFO 2025-11-28 13:01:13 chatbot_service 7 133397449008832 Processing query: good girl
+INFO 2025-11-28 13:01:15 chatbot_service 7 133397449008832 Gemini response: TYPE: CONVERSATION
+ANSWER: I'm here to help with medical diagnoses and system navigation. How can I assist you today?
+
+INFO 2025-11-28 13:01:15 chatbot_service 7 133397449008832 Parsed conversation response
+INFO 2025-11-28 13:01:15 chatbot_service 7 133397449008832 Returning conversational response
+INFO 2025-11-28 13:01:15 views 7 133397449008832 Voice command from user_3: good girl...
+INFO 2025-11-28 13:01:15 basehttp 7 133397449008832 "POST /api/chatbot/query/ HTTP/1.1" 200 286
+INFO 2025-11-28 13:03:56 autoreload 7 133399813995392 /app/main/services/chatbot_service.py changed, reloading.
+INFO 2025-11-28 13:03:57 autoreload 45 137388492733312 Watching for file changes with StatReloader
+INFO 2025-11-28 13:04:08 autoreload 45 137388492733312 /app/main/services/chatbot_service.py changed, reloading.
+INFO 2025-11-28 13:04:09 autoreload 76 130125354462080 Watching for file changes with StatReloader
+INFO 2025-11-28 13:08:02 autoreload 7 137074057358208 Watching for file changes with StatReloader
+INFO 2025-11-28 13:08:50 chatbot_service 7 137071701259968 Successfully loaded routes from /app/main/config/routes.yml
+INFO 2025-11-28 13:08:50 chatbot_service 7 137071701259968 Processing query: Mukesh Yadav
+INFO 2025-11-28 13:08:53 chatbot_service 7 137071701259968 Gemini response: TYPE: CONVERSATION
+ANSWER: I'm sorry, I don't have enough information to answer your request. Can you please be more specific about what you would like me to do with the name "Mukesh Yadav"? Are you trying to add a patient, find a patient, or something else?
+
+INFO 2025-11-28 13:08:53 chatbot_service 7 137071701259968 Parsed conversation response
+INFO 2025-11-28 13:08:53 chatbot_service 7 137071701259968 Returning conversational response
+INFO 2025-11-28 13:08:53 views 7 137071701259968 Voice command from user_3: Mukesh Yadav...
+INFO 2025-11-28 13:08:53 basehttp 7 137071701259968 "POST /api/chatbot/query/ HTTP/1.1" 200 572
+INFO 2025-11-28 13:09:40 autoreload 7 137949259381632 Watching for file changes with StatReloader
+INFO 2025-11-28 13:09:40 font_manager 7 137949259381632 generated new fontManager
+INFO 2025-11-28 13:10:01 basehttp 7 137946902558400 "GET / HTTP/1.1" 200 87568
+INFO 2025-11-28 13:10:01 basehttp 7 137946860594880 "GET /static/css/owl-carousel.css HTTP/1.1" 200 6122
+INFO 2025-11-28 13:10:01 basehttp 7 137946868987584 "GET /static/css/slicknav.min.css HTTP/1.1" 200 2239
+INFO 2025-11-28 13:10:01 basehttp 7 137946894165696 "GET /static/css/nice-select.css HTTP/1.1" 200 4182
+INFO 2025-11-28 13:10:01 basehttp 7 137946885772992 "GET /static/css/font-awesome.min.css HTTP/1.1" 200 31004
+INFO 2025-11-28 13:10:01 basehttp 7 137946860594880 "GET /static/css/datepicker.css HTTP/1.1" 200 3456
+INFO 2025-11-28 13:10:01 basehttp 7 137946877380288 "GET /static/css/icofont.css HTTP/1.1" 200 92217
+INFO 2025-11-28 13:10:01 basehttp 7 137946868987584 "GET /static/css/magnific-popup.css HTTP/1.1" 200 7302
+INFO 2025-11-28 13:10:01 basehttp 7 137946894165696 "GET /static/css/animate.min.css HTTP/1.1" 200 16962
+INFO 2025-11-28 13:10:01 basehttp 7 137946885772992 "GET /static/css/normalize.css HTTP/1.1" 200 21528
+INFO 2025-11-28 13:10:01 basehttp 7 137946902558400 "GET /static/css/bootstrap.min.css HTTP/1.1" 200 174807
+INFO 2025-11-28 13:10:01 basehttp 7 137946877380288 "GET /static/css/responsive.css HTTP/1.1" 200 23246
+INFO 2025-11-28 13:10:01 basehttp 7 137946868987584 "GET /static/main_page/main-page-styles.css HTTP/1.1" 200 4640
+INFO 2025-11-28 13:10:01 basehttp 7 137946860594880 "GET /static/style.css HTTP/1.1" 200 86247
+INFO 2025-11-28 13:10:01 basehttp 7 137946902558400 "GET /static/js/jquery.min.js HTTP/1.1" 200 86661
+INFO 2025-11-28 13:10:01 basehttp 7 137946860594880 "GET /static/img/section-img.png HTTP/1.1" 200 385
+INFO 2025-11-28 13:10:01 basehttp 7 137946868987584 "GET /static/img/blue.png HTTP/1.1" 200 25994
+INFO 2025-11-28 13:10:01 basehttp 7 137946894165696 "GET /static/js/jquery-migrate-3.0.0.js HTTP/1.1" 200 7084
+INFO 2025-11-28 13:10:01 basehttp 7 137946885772992 "GET /static/main_page/hospital.jpg HTTP/1.1" 200 9735
+INFO 2025-11-28 13:10:01 basehttp 7 137946894165696 "GET /static/js/jquery-ui.min.js HTTP/1.1" 200 30936
+INFO 2025-11-28 13:10:01 basehttp 7 137946902558400 "GET /static/main_page/ai%20based%20tech.jpg HTTP/1.1" 200 59910
+INFO 2025-11-28 13:10:01 basehttp 7 137946885772992 "GET /static/js/easing.js HTTP/1.1" 200 2299
+INFO 2025-11-28 13:10:01 basehttp 7 137946894165696 "GET /static/js/colors.js HTTP/1.1" 200 1553
+INFO 2025-11-28 13:10:01 basehttp 7 137946902558400 "GET /static/js/popper.min.js HTTP/1.1" 200 19241
+INFO 2025-11-28 13:10:01 basehttp 7 137946885772992 "GET /static/js/bootstrap-datepicker.js HTTP/1.1" 200 13386
+INFO 2025-11-28 13:10:01 basehttp 7 137946894165696 "GET /static/js/jquery.nav.js HTTP/1.1" 200 5360
+INFO 2025-11-28 13:10:01 basehttp 7 137946902558400 "GET /static/js/slicknav.min.js HTTP/1.1" 200 8416
+INFO 2025-11-28 13:10:01 basehttp 7 137946860594880 "GET /static/js/jquery.scrollUp.min.js HTTP/1.1" 200 2041
+INFO 2025-11-28 13:10:01 basehttp 7 137946868987584 "GET /static/js/niceselect.js HTTP/1.1" 200 2951
+INFO 2025-11-28 13:10:01 basehttp 7 137946860594880 "GET /static/js/tilt.jquery.min.js HTTP/1.1" 200 5318
+INFO 2025-11-28 13:10:01 basehttp 7 137946868987584 "GET /static/js/owl-carousel.js HTTP/1.1" 200 54553
+INFO 2025-11-28 13:10:01 basehttp 7 137946885772992 "GET /static/js/jquery.counterup.min.js HTTP/1.1" 200 1074
+INFO 2025-11-28 13:10:01 basehttp 7 137946894165696 "GET /static/js/steller.js HTTP/1.1" 200 23756
+INFO 2025-11-28 13:10:01 basehttp 7 137946902558400 "GET /static/js/wow.min.js HTTP/1.1" 200 8183
+INFO 2025-11-28 13:10:01 basehttp 7 137946894165696 "GET /static/js/jquery.magnific-popup.min.js HTTP/1.1" 200 20224
+INFO 2025-11-28 13:10:01 basehttp 7 137946894165696 "GET /static/js/main.js HTTP/1.1" 200 6732
+INFO 2025-11-28 13:10:01 basehttp 7 137946860594880 "GET /static/js/bootstrap.min.js HTTP/1.1" 200 94408
+INFO 2025-11-28 13:10:01 basehttp 7 137946868987584 "GET /static/main_page/ai%20based%20system.jpg HTTP/1.1" 200 12744
+INFO 2025-11-28 13:10:01 basehttp 7 137946894165696 "GET /static/main_page/fracture%20detections.jpg HTTP/1.1" 200 9129
+INFO 2025-11-28 13:10:01 basehttp 7 137946885772992 "GET /static/main_page/fracture%20operation%20threader.jpg HTTP/1.1" 200 6616
+INFO 2025-11-28 13:10:01 basehttp 7 137946885772992 "GET /static/main_page/doc%201.jpg HTTP/1.1" 200 5767
+INFO 2025-11-28 13:10:01 basehttp 7 137946885772992 "GET /static/main_page/doc%202.jpg HTTP/1.1" 200 8010
+INFO 2025-11-28 13:10:01 basehttp 7 137946860594880 "GET /static/img/client1.png HTTP/1.1" 200 729
+INFO 2025-11-28 13:10:01 basehttp 7 137946868987584 "GET /static/img/client2.png HTTP/1.1" 200 1058
+INFO 2025-11-28 13:10:01 basehttp 7 137946894165696 "GET /static/img/client4.png HTTP/1.1" 200 695
+INFO 2025-11-28 13:10:01 basehttp 7 137946885772992 "GET /static/img/client3.png HTTP/1.1" 200 775
+INFO 2025-11-28 13:10:01 basehttp 7 137946902558400 "GET /static/img/client5.png HTTP/1.1" 200 695
+WARNING 2025-11-28 13:10:01 basehttp 7 137946868987584 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 13:10:01 basehttp 7 137946894165696 "GET /static/img/client-bg.jpg HTTP/1.1" 200 20866
+INFO 2025-11-28 13:10:01 basehttp 7 137946902558400 "GET /static/img/fun-bg.jpg HTTP/1.1" 200 30682
+INFO 2025-11-28 13:10:01 basehttp 7 137946885772992 "GET /static/img/video-bg.jpg HTTP/1.1" 200 113317
+INFO 2025-11-28 13:10:02 basehttp 7 137946885772992 "GET /static/fonts/fontawesome-webfont.woff2?v=4.7.0 HTTP/1.1" 200 77160
+INFO 2025-11-28 13:10:02 basehttp 7 137946885772992 "GET /static/fonts/icofont.woff2 HTTP/1.1" 200 537868
+INFO 2025-11-28 13:10:03 basehttp 7 137946885772992 "GET /static/img/favicon.png HTTP/1.1" 200 42953
+WARNING 2025-11-28 13:10:35 log 7 137946885772992 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-11-28 13:10:35 basehttp 7 137946885772992 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 10594
+WARNING 2025-11-28 13:10:35 basehttp 7 137946902558400 "GET /static/js/bootstrap.min.js.map HTTP/1.1" 404 1883
+WARNING 2025-11-28 13:10:35 basehttp 7 137946885772992 "GET /static/js/popper.min.js.map HTTP/1.1" 404 1874
+WARNING 2025-11-28 13:10:35 basehttp 7 137946894165696 "GET /static/css/bootstrap.min.css.map HTTP/1.1" 404 1889
+INFO 2025-11-28 13:11:06 chatbot_service 7 137946860594880 Successfully loaded routes from /app/main/config/routes.yml
+INFO 2025-11-28 13:11:06 chatbot_service 7 137946860594880 Processing query: okay please on the login button
+INFO 2025-11-28 13:11:08 chatbot_service 7 137946860594880 Gemini response: TYPE: BUTTON_CLICK
+BUTTON_TO_CLICK: login
+REASON: User wants to click a button
+
+INFO 2025-11-28 13:11:08 chatbot_service 7 137946860594880 Parsed button click: login
+INFO 2025-11-28 13:11:08 chatbot_service 7 137946860594880 Button click requested: login
+INFO 2025-11-28 13:11:08 views 7 137946860594880 Voice command from ip_172.20.0.1: okay please on the login button...
+INFO 2025-11-28 13:11:08 basehttp 7 137946860594880 "POST /api/chatbot/query/ HTTP/1.1" 200 183
+INFO 2025-11-28 13:11:22 chatbot_service 7 137946860594880 Processing query: ok open the login page in Tab
+INFO 2025-11-28 13:11:25 chatbot_service 7 137946860594880 Gemini response: TYPE: OPEN_TAB
+ROUTE_ID: doctor_login
+PATH: /login/
+REASON: User wants to open in new tab
+
+WARNING 2025-11-28 13:11:25 chatbot_service 7 137946860594880 Could not parse Gemini response properly. Type: open_tab
+WARNING 2025-11-28 13:11:25 chatbot_service 7 137946860594880 Could not determine response type for query: ok open the login page in Tab
+INFO 2025-11-28 13:11:25 views 7 137946860594880 Voice command from ip_172.20.0.1: ok open the login page in Tab...
+INFO 2025-11-28 13:11:25 basehttp 7 137946860594880 "POST /api/chatbot/query/ HTTP/1.1" 206 254
+INFO 2025-11-28 13:12:27 basehttp 7 137946860594880 "GET /login/ HTTP/1.1" 200 58383
+WARNING 2025-11-28 13:12:27 basehttp 7 137946860594880 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 13:12:27 basehttp 7 137946877380288 "GET /static/css/login.css HTTP/1.1" 200 6751
+INFO 2025-11-28 13:12:27 basehttp 7 137946860594880 "GET /static/img/blog2.jpg HTTP/1.1" 200 24297
+WARNING 2025-11-28 13:12:27 log 7 137946860594880 Not Found: /favicon.ico
+WARNING 2025-11-28 13:12:27 basehttp 7 137946860594880 "GET /favicon.ico HTTP/1.1" 404 10483
+INFO 2025-11-28 13:12:32 basehttp 7 137946860594880 "GET / HTTP/1.1" 200 87568
+INFO 2025-11-28 13:12:34 basehttp 7 137946860594880 "GET /patient_login/ HTTP/1.1" 200 62312
+INFO 2025-11-28 13:12:34 basehttp 7 137946860594880 "GET /static/Admin/login.css HTTP/1.1" 200 11477
+INFO 2025-11-28 13:12:42 basehttp 7 137946860594880 "GET /admin_login1/ HTTP/1.1" 200 48686
+INFO 2025-11-28 13:12:54 basehttp 7 137946860594880 "GET /admin_login1/ HTTP/1.1" 200 48686
+INFO 2025-11-28 13:13:07 basehttp 7 137946860594880 "GET /admin_login1/ HTTP/1.1" 200 48686
+INFO 2025-11-28 13:13:09 basehttp 7 137946860594880 "GET /admin_login1/ HTTP/1.1" 200 48686
+INFO 2025-11-28 13:16:12 autoreload 7 140564570864512 Watching for file changes with StatReloader
+INFO 2025-11-28 13:16:42 autoreload 7 125491032460160 Watching for file changes with StatReloader
+INFO 2025-11-28 13:16:42 font_manager 7 125490994022080 generated new fontManager
+INFO 2025-11-28 13:16:53 basehttp 7 125488609621696 "GET / HTTP/1.1" 200 87568
+WARNING 2025-11-28 13:16:53 basehttp 7 125488609621696 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 13:16:55 basehttp 7 125488601228992 "GET /admin_login1/ HTTP/1.1" 200 49593
+INFO 2025-11-28 13:17:02 basehttp 7 125488601228992 "GET /login/ HTTP/1.1" 200 58383
+WARNING 2025-11-28 13:17:02 basehttp 7 125488601228992 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 13:17:15 basehttp 7 125488609621696 "GET /admin_login1/ HTTP/1.1" 200 49593
+INFO 2025-11-28 13:17:19 basehttp 7 125488609621696 "GET /login/ HTTP/1.1" 200 58383
+WARNING 2025-11-28 13:17:19 basehttp 7 125488609621696 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 13:18:44 autoreload 7 140635135601536 Watching for file changes with StatReloader
+INFO 2025-11-28 13:19:08 autoreload 7 130899384728448 Watching for file changes with StatReloader
+INFO 2025-11-28 13:19:09 font_manager 7 130899384728448 generated new fontManager
+INFO 2025-11-28 13:19:30 basehttp 7 130897028314816 "GET /login/ HTTP/1.1" 200 58383
+WARNING 2025-11-28 13:19:30 basehttp 7 130897028314816 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 13:19:32 basehttp 7 130897019922112 "GET /login/ HTTP/1.1" 200 58383
+WARNING 2025-11-28 13:19:32 basehttp 7 130897019922112 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+WARNING 2025-11-28 13:19:37 basehttp 7 130897028314816 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 13:19:48 basehttp 7 130897019922112 "GET /login/ HTTP/1.1" 200 58383
+WARNING 2025-11-28 13:19:48 basehttp 7 130897019922112 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 13:19:57 basehttp 7 130897028314816 "GET /admin_login1/ HTTP/1.1" 200 49593
+INFO 2025-11-28 13:20:04 basehttp 7 130897028314816 "GET /login/ HTTP/1.1" 200 58383
+WARNING 2025-11-28 13:20:04 basehttp 7 130897028314816 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 13:22:29 autoreload 7 132025005665152 Watching for file changes with StatReloader
+INFO 2025-11-28 13:22:33 basehttp 7 132022717642432 "GET /login/ HTTP/1.1" 200 58446
+WARNING 2025-11-28 13:22:33 basehttp 7 132022717642432 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 13:22:56 auth_service 7 132022709249728 User bilal112233 authenticated successfully
+INFO 2025-11-28 13:22:56 views 7 132022709249728 Doctor bilal112233 logged in successfully
+INFO 2025-11-28 13:22:56 basehttp 7 132022709249728 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-11-28 13:22:56 views 7 132022709249728 The total number of patients are
+INFO 2025-11-28 13:22:56 views 7 132022709249728 1
+INFO 2025-11-28 13:22:56 basehttp 7 132022709249728 "GET /diagnosis/ HTTP/1.1" 200 70055
+INFO 2025-11-28 13:22:57 basehttp 7 132022709249728 "GET /static/assets/img/favicon.ico HTTP/1.1" 200 1150
+INFO 2025-11-28 13:23:00 basehttp 7 132022709249728 "GET /add_patient_record/ HTTP/1.1" 200 56462
+INFO 2025-11-28 13:23:02 views 7 132022709249728 The total number of patients are
+INFO 2025-11-28 13:23:02 views 7 132022709249728 1
+INFO 2025-11-28 13:23:02 basehttp 7 132022709249728 "GET /diagnosis/ HTTP/1.1" 200 70055
+INFO 2025-11-28 13:23:03 basehttp 7 132022709249728 "GET /patients/ HTTP/1.1" 200 13365
+INFO 2025-11-28 13:23:05 basehttp 7 132022709249728 "GET /predict/ HTTP/1.1" 200 13961
+INFO 2025-11-28 13:23:08 views 7 132022709249728 The total number of patients are
+INFO 2025-11-28 13:23:08 views 7 132022709249728 1
+INFO 2025-11-28 13:23:08 basehttp 7 132022709249728 "GET /diagnosis/ HTTP/1.1" 200 70055
+INFO 2025-11-28 13:23:10 views 7 132022709249728 The total number of patients are
+INFO 2025-11-28 13:23:10 views 7 132022709249728 1
+INFO 2025-11-28 13:23:10 basehttp 7 132022709249728 "GET /diagnosis/ HTTP/1.1" 200 70055
+INFO 2025-11-28 13:23:10 basehttp 7 132022709249728 "GET /video_Recommendation HTTP/1.1" 200 132810
+INFO 2025-11-28 13:23:21 views 7 132022709249728 The total number of patients are
+INFO 2025-11-28 13:23:21 views 7 132022709249728 1
+INFO 2025-11-28 13:23:21 basehttp 7 132022709249728 "GET /diagnosis/ HTTP/1.1" 200 70055
+INFO 2025-11-28 13:23:24 basehttp 7 132022709249728 "GET /logout_doctor/ HTTP/1.1" 302 0
+INFO 2025-11-28 13:23:24 basehttp 7 132022709249728 "GET /login/ HTTP/1.1" 200 58457
+WARNING 2025-11-28 13:23:24 basehttp 7 132022709249728 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1883
+INFO 2025-11-28 13:23:24 basehttp 7 132022717642432 "GET /static/css/login.css?v=2 HTTP/1.1" 200 7061
+INFO 2025-11-28 13:23:27 basehttp 7 132022717642432 "GET / HTTP/1.1" 200 87568
+WARNING 2025-11-28 13:23:27 basehttp 7 132022717642432 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 13:23:37 basehttp 7 132022709249728 "GET /contact/ HTTP/1.1" 200 14986
+INFO 2025-11-28 13:23:38 basehttp 7 132022709249728 "GET /doctors/ HTTP/1.1" 200 18636
+INFO 2025-11-28 13:23:40 basehttp 7 132022709249728 "GET /services/ HTTP/1.1" 200 19598
+INFO 2025-11-28 13:23:41 basehttp 7 132022709249728 "GET /about/ HTTP/1.1" 200 16904
+WARNING 2025-11-28 13:23:41 basehttp 7 132022709249728 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+WARNING 2025-11-28 13:23:46 basehttp 7 132022717642432 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+WARNING 2025-11-28 13:24:55 basehttp 7 132022709249728 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 13:24:57 basehttp 7 132022717642432 "GET /about/ HTTP/1.1" 200 48377
+WARNING 2025-11-28 13:24:57 basehttp 7 132022717642432 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-11-28 13:25:00 basehttp 7 132022709249728 "GET /services/ HTTP/1.1" 200 51071
+INFO 2025-11-28 13:25:02 basehttp 7 132022709249728 "GET /doctors/ HTTP/1.1" 200 50109
+INFO 2025-11-28 13:25:04 basehttp 7 132022709249728 "GET /contact/ HTTP/1.1" 200 46459

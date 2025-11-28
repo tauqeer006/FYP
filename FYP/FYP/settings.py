@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,12 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-1ngo+oo&!ib*f4f&xlw5_+^%jl6u3^u2roce6nucs-k#15_5tz"
+SECRET_KEY = os.getenv('SECRET_KEY', "django-insecure-1ngo+oo&!ib*f4f&xlw5_+^%jl6u3^u2roce6nucs-k#15_5tz")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True').lower() in ['true', '1', 'yes']
 
-ALLOWED_HOSTS = ['*']  # Allow all hosts for development
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
 
 
 # Application definition
@@ -41,14 +46,33 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "main",
 ]
-# settings.py
+# Email configuration from environment
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'tauqeerqureshi112@gmail.com'
-EMAIL_HOST_PASSWORD = 'qeeo buqs itfn olwu' 
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'tauqeerqureshi112@gmail.com')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'qeeo buqs itfn olwu') 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Gemini API Configuration
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
+GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-2.0-flash')
+
+# ==================== EXTERNAL API CONFIGURATION ====================
+# Flask APIs for ML models
+FLASK_CNN_API_URL = os.getenv('FLASK_CNN_API_URL', 'http://localhost:5001')
+FLASK_XRAY_API_URL = os.getenv('FLASK_XRAY_API_URL', 'http://localhost:5002')
+FLASK_POSE_API_URL = os.getenv('FLASK_POSE_API_URL', 'http://localhost:5003')
+
+# API Configuration
+API_REQUEST_TIMEOUT = int(os.getenv('API_REQUEST_TIMEOUT', '30'))  # seconds
+
+# ==================== FILE PATH CONFIGURATION ====================
+# ML Models and configuration files
+ML_MODEL_PATH = os.path.join(BASE_DIR, 'main', 'models')
+EXERCISE_AUTOENCODER_PATH = os.path.join(ML_MODEL_PATH, 'exercise_autoencoder.h5')
+ROUTES_CONFIG_PATH = os.path.join(BASE_DIR, 'main', 'config', 'routes.yml')
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -146,17 +170,46 @@ LOGOUT_REDIRECT_URL = '/login/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Caching configuration for better performance
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake',
+# ==================== CACHING CONFIGURATION ====================
+if not DEBUG:
+    # Use Redis for caching in production
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/1'),
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                'CONNECTION_POOL_KWARGS': {'max_connections': 50},
+                'SOCKET_CONNECT_TIMEOUT': 5,
+                'SOCKET_TIMEOUT': 5,
+                'COMPRESSOR': 'django_redis.compressors.zlib.ZlibCompressor',
+            }
+        }
     }
-}
+else:
+    # Use local memory cache for development
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'unique-snowflake',
+        }
+    }
 
 # Session configuration
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_CACHE_ALIAS = 'default'
+SESSION_COOKIE_AGE = 86400 * 7  # 1 week
+SESSION_COOKIE_HTTPONLY = True
+
+# ==================== RATE LIMITING CONFIGURATION ====================
+# Using django-ratelimit
+RATELIMIT_ENABLE = True
+RATELIMIT_USE_CACHE = 'default'
+
+# Custom rate limit settings
+VOICE_COMMAND_RATE_LIMIT = '10/m'  # 10 requests per minute
+LOGIN_RATE_LIMIT = '5/m'  # 5 login attempts per minute
+API_RATE_LIMIT = '100/h'  # 100 requests per hour
 
 # Template caching
 TEMPLATES[0]['OPTIONS']['loaders'] = [
@@ -165,3 +218,107 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
         'django.template.loaders.app_directories.Loader',
     ]),
 ]
+
+# ==================== SECURITY CONFIGURATION ====================
+# HTTPS and SSL settings (only enable in production)
+if not DEBUG:
+    # HTTPS Redirect
+    SECURE_SSL_REDIRECT = True
+    
+    # HSTS (HTTP Strict Transport Security)
+    SECURE_HSTS_SECONDS = int(os.getenv('SECURE_HSTS_SECONDS', '31536000'))  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    
+    # Secure Cookies
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_HTTPONLY = True
+    
+    # Security Headers
+    SECURE_BROWSER_XSS_FILTER = True
+    X_FRAME_OPTIONS = 'DENY'
+    
+    # Content Security Policy (CSP)
+    SECURE_CONTENT_SECURITY_POLICY = {
+        'default-src': ("'self'",),
+        'script-src': ("'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "fonts.googleapis.com"),
+        'style-src': ("'self'", "'unsafe-inline'", "fonts.googleapis.com", "cdn.jsdelivr.net"),
+        'img-src': ("'self'", "data:", "https:"),
+        'font-src': ("'self'", "fonts.gstatic.com", "cdn.jsdelivr.net"),
+        'connect-src': ("'self'", "generativelanguage.googleapis.com", "localhost:5001", "localhost:5002"),
+    }
+    
+    # Additional security settings
+    SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+
+# ==================== LOGGING CONFIGURATION ====================
+import logging.handlers
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+        'simple': {
+            'format': '{levelname} {asctime} {name} {message}',
+            'style': '{',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO' if DEBUG else 'WARNING',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'django.log'),
+            'maxBytes': 1024 * 1024 * 10,  # 10 MB
+            'backupCount': 10,
+            'formatter': 'verbose',
+        },
+        'error_file': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'errors.log'),
+            'maxBytes': 1024 * 1024 * 10,  # 10 MB
+            'backupCount': 10,
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console', 'file', 'error_file'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file', 'error_file'],
+            'level': 'INFO' if DEBUG else 'WARNING',
+            'propagate': False,
+        },
+        'main': {
+            'handlers': ['console', 'file', 'error_file'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
+# Create logs directory if it doesn't exist
+os.makedirs(os.path.join(BASE_DIR, 'logs'), exist_ok=True)

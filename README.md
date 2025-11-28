@@ -132,3 +132,24 @@ bilal1234
 username: bilal112233 password: 123
 
 hey bot for bot to listen......
+
+
+#### new db reports: 
+Doctor created: bilal112233 / 123
+ Patient created: sameer34 / 1234
+ Patient created: tauqeer123455 / 11223344
+ tauqeer-ahmad , 7toKhx9bCDNz
+ admin:
+ Tauqeer	tauqeerahmad
+ 
+
+
+pateint: 
+sameer , 123456789 , tauqeerq34@gmail.com
+
+pateint created by doctor:
+subhan , qureshi
+malik ahmer , 123456789
+
+doctor:
+bilal , 123456789 , tauqeerqureshi112@gmail.com

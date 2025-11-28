@@ -25,7 +25,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #344dbd 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
             color: var(--text-dark);
@@ -332,11 +332,14 @@
 
         .modal-content {
             background-color: white;
-            margin: 5% auto;
+            margin: 3% auto;
             padding: 0;
             border-radius: 12px;
             width: 90%;
-            max-width: 900px;
+            max-width: 1100px;
+            max-height: 92vh;
+            display: flex;
+            flex-direction: column;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             overflow: hidden;
             animation: slideUp 0.3s ease-out;
@@ -344,7 +347,7 @@
 
         .modal-header {
             padding: 25px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #344dbd 0%, #764ba2 100%);
             color: white;
             display: flex;
             justify-content: space-between;
@@ -377,8 +380,10 @@
 
         .modal-body {
             padding: 30px;
-            max-height: 70vh;
+            flex: 1;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
 
         .modal-video {
@@ -407,9 +412,11 @@
         .modal-actions {
             display: flex;
             gap: 15px;
-            margin-top: 30px;
-            padding-top: 20px;
+            margin-top: auto;
+            padding: 30px;
             border-top: 2px solid var(--border-color);
+            background: white;
+            flex-shrink: 0;
         }
 
         .btn-lg {
@@ -610,30 +617,49 @@
         /* Webcam Exercise Enhancement Styles */
         .exercise-feedback-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            height: 650px;
+            grid-template-columns: 1fr 0.8fr 1.2fr;
+            gap: 15px;
+            height: auto;
+            max-height: 75vh;
         }
 
         .webcam-wrapper {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
+            max-height: 75vh;
+            overflow-y: auto;
+        }
+
+        .skeleton-demo-wrapper {
+            min-width: 180px;
+        }
+
+        .feedback-wrapper {
+            min-width: 240px;
         }
 
         #webcam {
             width: 100%;
-            max-width: 600px;
             border-radius: 12px;
             background: #000;
             border: 3px solid var(--border-color);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            aspect-ratio: 4 / 3;
         }
 
         .webcam-controls {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .webcam-controls .btn {
+            padding: 8px 12px;
+            font-size: 0.85em;
+            flex: 1;
+            min-width: 80px;
         }
 
         .conversation-panel {
@@ -644,10 +670,11 @@
             flex-direction: column;
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-height: 75vh;
         }
 
         .conversation-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #344dbd 0%, #764ba2 100%);
             color: white;
             padding: 12px 15px;
             font-weight: 600;
@@ -815,8 +842,45 @@
                 height: auto;
             }
 
+            .webcam-wrapper {
+                max-height: none;
+                overflow-y: visible;
+            }
+
             .conversation-panel {
                 max-height: 300px;
+            }
+
+            #webcam {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .exercise-feedback-container {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-body {
+                padding: 15px;
+                max-height: 95vh;
+            }
+
+            #webcam {
+                aspect-ratio: auto;
+                width: 100%;
+            }
+
+            .conversation-panel {
+                max-height: 250px;
+            }
+
+            .webcam-controls {
+                flex-direction: column;
+            }
+
+            .webcam-controls .btn {
+                width: 100%;
             }
         }
 
@@ -826,7 +890,7 @@
             gap: 10px;
             align-items: center;
             padding: 10px 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #344dbd 0%, #764ba2 100%);
             border-bottom: 2px solid var(--border-color);
             justify-content: space-between;
         }
@@ -982,8 +1046,10 @@
             </div>
             <div class="modal-body">
                 <div class="exercise-feedback-container">
+                    <!-- Left Column: Webcam -->
                     <div class="webcam-wrapper">
                         <div class="pose-status-badge waiting" id="poseBadge">⏳ Waiting for pose detection...</div>
+                        
                         <div style="position: relative;">
                             <video id="webcam" autoplay playsinline></video>
                             <canvas id="canvas" style="display:none;"></canvas>
@@ -992,17 +1058,38 @@
                                 <div>Right Shoulder: <span class="angle-value-item" id="rightShoulderAngle">--</span>°</div>
                             </div>
                         </div>
+
                         <div class="webcam-controls">
-                            <button class="btn btn-primary" onclick="stopExercising()" style="flex: 1;">
-                                Stop Exercise
+                            <button class="btn btn-primary" onclick="stopExercising()">
+                                ⏹️ Stop
                             </button>
-                            <button class="btn btn-secondary" onclick="clearConversation()" style="flex: 1;">
-                                Clear Messages
+                            <button class="btn btn-secondary" onclick="clearConversation()">
+                                🗑️ Clear
                             </button>
                         </div>
                     </div>
 
-                    <div style="display: grid; grid-template-rows: 1fr auto; gap: 15px; height: 600px;">
+                    <!-- Middle Column: Skeleton Demonstration -->
+                    <div class="skeleton-demo-wrapper">
+                        <div style="background: #f0f4f8; border-radius: 12px; border: 2px solid var(--border-color); padding: 12px; height: 100%; display: flex; flex-direction: column; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                            <div style="font-weight: 600; color: #1f2937; margin-bottom: 8px; font-size: 0.85em; text-align: center;">📊 Form Comparison</div>
+                            
+                            <!-- Your Position (Live) -->
+                            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 2px dashed var(--border-color); padding-right: 8px;">
+                                <div style="font-size: 0.65em; color: #6b7280; margin-bottom: 4px; font-weight: 600;">Your Position</div>
+                                <canvas id="liveSkeletonCanvas" width="100" height="140" style="border: 1px solid #e5e7eb; border-radius: 6px; background: white;"></canvas>
+                            </div>
+
+                            <!-- Target Position (Reference) -->
+                            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-left: 8px;">
+                                <div style="font-size: 0.65em; color: #6b7280; margin-bottom: 4px; font-weight: 600;">Target Position</div>
+                                <canvas id="targetSkeletonCanvas" width="100" height="140" style="border: 1px solid #d1d5db; border-radius: 6px; background: #f3f4f6; opacity: 0.7;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Conversation Panel -->
+                    <div class="feedback-wrapper">
                         <div class="conversation-panel">
                             <div class="conversation-header">Feedback & Messages</div>
                             <div class="audio-controls">
@@ -1014,26 +1101,12 @@
                                     <div class="audio-indicator" id="audioIndicator"></div>
                                 </div>
                                 <div class="volume-control">
-                                    <span style="font-size: 0.85em;">🔊</span>
+                                    <span style="font-size: 0.75em;">🔊</span>
                                     <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="80" onchange="setVolume(this.value)">
                                 </div>
                             </div>
                             <div class="conversation-messages" id="conversationMessages">
                                 <div class="conversation-empty">Messages will appear here...</div>
-                            </div>
-                        </div>
-
-                        <div style="background: #f0f4f8; border-radius: 12px; border: 2px solid var(--border-color); padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                            <div style="font-weight: 600; color: #1f2937; margin-bottom: 10px;">📊 Your Form vs Target</div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: center;">
-                                <div>
-                                    <div style="font-size: 0.75em; color: #6b7280; margin-bottom: 5px; text-align: center;">Your Position</div>
-                                    <canvas id="liveSkeletonCanvas" width="140" height="190" style="border: 1px solid #e5e7eb; border-radius: 6px; background: white; display: block; margin: 0 auto;"></canvas>
-                                </div>
-                                <div>
-                                    <div style="font-size: 0.75em; color: #6b7280; margin-bottom: 5px; text-align: center;">Target Position</div>
-                                    <canvas id="targetSkeletonCanvas" width="140" height="190" style="border: 1px solid #d1d5db; border-radius: 6px; background: #f3f4f6; display: block; margin: 0 auto; opacity: 0.7;"></canvas>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -1800,11 +1873,14 @@
 
         // Open exercise details modal
         function openModal(index) {
+            console.log('✅ Opening modal for exercise index:', index);
             currentExercise = exercises[index];
+            console.log('✅ Current exercise:', currentExercise.name);
             document.getElementById('modalExerciseName').textContent = currentExercise.name;
             document.getElementById('modalDescription').textContent = currentExercise.description;
             document.getElementById('modalVideo').src = currentExercise.video;
             document.getElementById('openYoutubeLink').href = currentExercise.youtubeLink;
+            console.log('✅ Modal elements populated');
 
             const anglesHtml = `
                 <div style="display: grid; gap: 15px;">
@@ -1866,7 +1942,10 @@
             `;
             document.getElementById('modalFeedback').innerHTML = feedbackHtml;
 
-            document.getElementById('exerciseModal').style.display = 'block';
+            const modal = document.getElementById('exerciseModal');
+            modal.style.display = 'block';
+            console.log('✅ Modal displayed - Start Exercising button should be visible');
+            console.log('✅ Modal display value:', modal.style.display);
         }
 
         // Close modal
@@ -2175,6 +2254,6 @@
 {% include 'components/global_voice_recorder.html' %}
 
 <!-- Chatbot Widget -->
-{% include 'components/chatbot_widget.html' %}
+{% include 'components/chatbot_widget_unified.html' %}
 </body>
 </html>

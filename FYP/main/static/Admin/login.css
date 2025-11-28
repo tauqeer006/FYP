@@ -6,7 +6,7 @@
 
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #42a5f5 100%);
+      background: linear-gradient(135deg, #344dbd 0%, #42a5f5 100%);
       min-height: 100vh;
       overflow-x: hidden;
     }
@@ -18,7 +18,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, #667eea 0%, #42a5f5 100%);
+      background: linear-gradient(135deg, #344dbd 0%, #42a5f5 100%);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -165,7 +165,7 @@
 
     /* Info Section */
     .info-section {
-      background: linear-gradient(135deg, #667eea 0%, #42a5f5 100%);
+      background: linear-gradient(135deg, #344dbd 0%, #42a5f5 100%);
       color: white;
       padding: 115px 100px;
       height: 100%;
@@ -272,8 +272,8 @@
 
     .login-icon i {
       font-size: 3rem;
-      color: #667eea;
-      background: linear-gradient(135deg, #667eea 0%, #42a5f5 100%);
+      color: #344dbd;
+      background: linear-gradient(135deg, #344dbd 0%, #42a5f5 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -306,7 +306,7 @@
       transform: translateX(-50%);
       width: 50px;
       height: 3px;
-      background: linear-gradient(135deg, #667eea 0%, #42a5f5 100%);
+      background: linear-gradient(135deg, #344dbd 0%, #42a5f5 100%);
       border-radius: 2px;
     }
 
@@ -339,14 +339,14 @@
 
     .form-control:focus {
       outline: none;
-      border-color: #667eea;
+      border-color: #344dbd;
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
       background: white;
       transform: translateY(-2px);
     }
 
     .form-control:focus + .input-icon {
-      color: #667eea;
+      color: #344dbd;
       transform: translateY(-2px);
     }
 
@@ -366,14 +366,14 @@
     }
 
     .password-container .fas:hover {
-      color: #667eea;
+      color: #344dbd;
     }
 
     /* Button */
     .btn-primary {
       width: 100%;
       padding: 15px;
-      background: linear-gradient(135deg, #667eea 0%, #42a5f5 100%);
+      background: linear-gradient(135deg, #344dbd 0%, #42a5f5 100%);
       border: none;
       border-radius: 12px;
       color: white;
@@ -412,7 +412,7 @@
 
     /* Links */
     .text-center a {
-      color: #667eea;
+      color: #344dbd;
       text-decoration: none;
       font-weight: 500;
       transition: color 0.3s ease;

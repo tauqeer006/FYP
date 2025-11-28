@@ -23,7 +23,10 @@ class ChatbotService:
         """Initialize the chatbot service with routes data"""
         self.routes_file = Path(__file__).parent.parent / "config" / "routes.yml"
         self.routes_data = None
-        self.gemini_api_key = "AIzaSyB7fwNrYMa4T05ilokA3YQwjasZcwYRG5Y"
+        # Load Gemini API key from environment variables
+        self.gemini_api_key = os.getenv('GEMINI_API_KEY', '')
+        if not self.gemini_api_key:
+            logger.warning("⚠️ GEMINI_API_KEY not found in environment variables. Please set it in .env file.")
         self.gemini_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
         self.load_routes()
     
@@ -118,7 +121,9 @@ class ChatbotService:
 1. Match user navigation requests to routes using keywords
 2. Detect when users want to FILL FORM FIELDS
 3. Detect when users want to CLICK BUTTONS
-4. Respond to general questions conversationally
+4. Detect when users want to OPEN LINKS in new tabs
+5. Detect when users want to CLOSE current tab/browser
+6. Respond to general questions conversationally
 
 {routes_context}
 
@@ -130,11 +135,32 @@ CRITICAL INSTRUCTIONS FOR FORM FILLING:
 - Return TYPE: FORM_FILL with FIELDS as JSON
 
 CRITICAL INSTRUCTIONS FOR BUTTON CLICKING:
-- User says "click [button]", "press [button]", "submit [button]", "click on [button]"
-- Examples: "click login", "press submit", "click next button"
-- Extract the button name from what user said
-- Look at the route's buttons array to match button names
-- Return TYPE: BUTTON_CLICK with BUTTON_TO_CLICK
+- User says "click [button]", "press [button]", "submit [button]", "click on [button]", "click the [button]"
+- Examples: "click login", "press submit", "click next button", "click on the login button", "click the login button"
+- Extract JUST the button name/text from what user said
+- DO NOT validate against route buttons - the frontend will find any matching button on current page
+- Return TYPE: BUTTON_CLICK with BUTTON_TO_CLICK set to the button name/text user mentioned
+- The frontend will search for a button matching this text on the current page
+- Examples of extraction:
+  * "click login button" → BUTTON_TO_CLICK: "login"
+  * "click on submit" → BUTTON_TO_CLICK: "submit"
+  * "press the next button" → BUTTON_TO_CLICK: "next"
+  * "click the login button" → BUTTON_TO_CLICK: "login"
+
+CRITICAL INSTRUCTIONS FOR OPENING LINKS IN NEW TAB:
+- User says "open [page] in new tab", "open [page] in a new tab", "open link [url]", "open new tab"
+- User says "open this page in new tab", "open current link in new tab"
+- Examples: "open patient dashboard in new tab", "open recommendation page in new tab"
+- Match keywords from routes list for the page name
+- Return TYPE: OPEN_TAB with ROUTE_ID and PATH (same as navigation, but opens in new tab)
+
+CRITICAL INSTRUCTIONS FOR CLOSING TABS OR BROWSER:
+- CLOSE TAB: User says "close tab", "close this tab", "close current tab", "close the tab"
+  * Return TYPE: CLOSE_TAB (closes only current tab)
+- CLOSE BROWSER: User says "close browser", "close complete browser", "close all", "close everything", "quit browser", "exit browser", "close whole browser"
+  * Return TYPE: CLOSE_BROWSER (closes entire browser window/application)
+- User says "exit", "quit", "close window" → These are ambiguous, default to CLOSE_TAB
+- Do NOT ask for clarification - make best guess from keywords
 
 CRITICAL INSTRUCTIONS FOR PAGE SCROLLING:
 - User says "scroll down", "scroll up", "scroll", "page down", "page up"
@@ -151,17 +177,37 @@ CRITICAL INSTRUCTIONS FOR NAVIGATION:
 USER REQUEST: "{user_query}"
 
 DETECTION LOGIC:
-Step 1: Check if user is trying to FILL a form (keywords: "enter", "fill", "type", "put", "input")
+Step 1: Check if user wants to CLOSE BROWSER (keywords: "close browser", "close complete", "close whole", "close all", "quit browser", "exit browser")
+  - If yes → TYPE: CLOSE_BROWSER
+Step 2: Check if user wants to CLOSE TAB (keywords: "close tab", "close current tab", "close this tab")
+  - If yes → TYPE: CLOSE_TAB
+Step 3: Check if user wants to OPEN in new tab (keywords: "open", "new tab", "open [something] in new tab")
+  - If yes → TYPE: OPEN_TAB
+Step 4: Check if user is trying to FILL a form (keywords: "enter", "fill", "type", "put", "input")
   - If yes → TYPE: FORM_FILL
-Step 2: Check if user is trying to CLICK a button (keywords: "click", "press", "submit", "hit")
+Step 5: Check if user is trying to CLICK a button (keywords: "click", "press", "submit", "hit")
   - If yes → TYPE: BUTTON_CLICK
-Step 3: Check if user is trying to SCROLL (keywords: "scroll", "page", "down", "up", "top", "bottom")
+Step 6: Check if user is trying to SCROLL (keywords: "scroll", "page", "down", "up", "top", "bottom")
   - If yes → TYPE: SCROLL
-Step 4: Check if user is trying to NAVIGATE (keywords: "go", "navigate", "open", "show", "take me")
+Step 7: Check if user is trying to NAVIGATE (keywords: "go", "navigate", "open", "show", "take me")
   - If yes → TYPE: NAVIGATION
-Step 5: Otherwise → TYPE: CONVERSATION
+Step 8: Otherwise → TYPE: CONVERSATION
 
 RESPONSE FORMAT (choose ONE):
+
+FOR CLOSING COMPLETE BROWSER:
+TYPE: CLOSE_BROWSER
+REASON: User wants to close entire browser
+
+FOR CLOSING CURRENT TAB:
+TYPE: CLOSE_TAB
+REASON: User wants to close current tab
+
+FOR OPENING IN NEW TAB:
+TYPE: OPEN_TAB
+ROUTE_ID: exact_route_id
+PATH: /exact/path/
+REASON: User wants to open in new tab
 
 FOR FORM FILLING (user wants to enter data on current page):
 TYPE: FORM_FILL
@@ -194,18 +240,31 @@ EXAMPLES:
 2. User: "fill email test@test.com" → TYPE: FORM_FILL, FIELDS: {{"email": "test@test.com"}}
 3. User: "click login button" → TYPE: BUTTON_CLICK, BUTTON_TO_CLICK: "Login"
 4. User: "press submit" → TYPE: BUTTON_CLICK, BUTTON_TO_CLICK: "Submit"
-5. User: "scroll down" → TYPE: SCROLL, SCROLL_DIRECTION: down
-6. User: "scroll up" → TYPE: SCROLL, SCROLL_DIRECTION: up
-7. User: "go to patient dashboard" → TYPE: NAVIGATION, ROUTE_ID: patient_dashboard, PATH: /Patient_dashboard/
-8. User: "what is diabetes?" → TYPE: CONVERSATION, ANSWER: explanation
+5. User: "open patient dashboard in new tab" → TYPE: OPEN_TAB, ROUTE_ID: patient_dashboard, PATH: /Patient_dashboard/
+6. User: "open recommendation page in new tab" → TYPE: OPEN_TAB, ROUTE_ID: recommendation, PATH: /recommendation/
+7. User: "close tab" → TYPE: CLOSE_TAB
+8. User: "close current tab" → TYPE: CLOSE_TAB
+9. User: "close browser" → TYPE: CLOSE_BROWSER
+10. User: "close complete browser" → TYPE: CLOSE_BROWSER
+11. User: "close whole browser" → TYPE: CLOSE_BROWSER
+12. User: "scroll down" → TYPE: SCROLL, SCROLL_DIRECTION: down
+13. User: "scroll up" → TYPE: SCROLL, SCROLL_DIRECTION: up
+14. User: "go to patient dashboard" → TYPE: NAVIGATION, ROUTE_ID: patient_dashboard, PATH: /Patient_dashboard/
+15. User: "what is diabetes?" → TYPE: CONVERSATION, ANSWER: explanation
 
 IMPORTANT: 
 - For FORM_FILL: Return the extracted field names and values as JSON
 - For BUTTON_CLICK: Return the exact button text you want clicked
+- For OPEN_TAB: Return route_id and path (same as navigation but with OPEN_TAB type)
+- For CLOSE_TAB: Return just the type (no other parameters needed)
+- For CLOSE_BROWSER: Return just the type (no other parameters needed)
 - For SCROLL: Return "up" or "down" as SCROLL_DIRECTION
 - For NAVIGATION: Use exact route IDs and paths from the routes list
+- CLOSE_BROWSER closes entire browser/application, CLOSE_TAB only closes current tab
 - Do NOT confuse form filling with navigation - if user is filling a form on current page, return FORM_FILL, not NAVIGATION
-- Do NOT confuse scrolling with navigation - if user says "scroll down", return SCROLL, not NAVIGATION"""
+- Do NOT confuse scrolling with navigation - if user says "scroll down", return SCROLL, not NAVIGATION
+- Do NOT confuse OPEN_TAB with NAVIGATION - OPEN_TAB opens in new tab, NAVIGATION replaces current page
+- Do NOT confuse CLOSE_BROWSER with CLOSE_TAB - CLOSE_BROWSER closes entire browser, CLOSE_TAB closes current tab only"""
 
             headers = {
                 'Content-Type': 'application/json',
@@ -422,6 +481,187 @@ IMPORTANT:
             logger.error(f"Error getting route info: {str(e)}")
             return None
     
+    def process_multi_commands(self, commands: List[str], user_roles: List[str] = None) -> Dict:
+        """
+        Process multiple commands sequentially and return results for each
+        
+        Args:
+            commands: List of individual commands to process
+            user_roles: List of user roles for filtering
+        
+        Returns:
+            Dictionary with multi_command response containing results for each command
+        """
+        logger.info(f"Processing {len(commands)} commands: {commands}")
+        
+        # Ensure routes are loaded
+        if not self.routes_data:
+            if not self.load_routes():
+                return {
+                    'success': False,
+                    'response_type': 'conversation',
+                    'message': 'System error',
+                    'answer': 'I\'m having technical difficulties. Please try again later.'
+                }
+        
+        processed_commands = []
+        routes_context = self.format_routes_for_context(user_roles)
+        
+        for idx, command in enumerate(commands, 1):
+            logger.info(f"Processing command {idx}/{len(commands)}: {command}")
+            
+            # Call Gemini API for each command
+            gemini_response = self.call_gemini_api(command, routes_context)
+            
+            if not gemini_response:
+                logger.warning(f"Gemini API failed for command {idx}: {command}")
+                processed_commands.append({
+                    'command_index': idx,
+                    'command': command,
+                    'success': False,
+                    'response_type': 'conversation',
+                    'message': 'Could not process this command',
+                    'answer': f'I had trouble processing: "{command}"'
+                })
+                continue
+            
+            # Parse Gemini response
+            response_type, route_id, path, reason, answer, form_fields, button_to_click, scroll_direction = self.parse_gemini_response(gemini_response)
+            
+            # Build response based on type
+            command_response = {
+                'command_index': idx,
+                'command': command,
+                'response_type': response_type,
+                'success': True if response_type else False
+            }
+            
+            if response_type == 'conversation':
+                command_response.update({
+                    'success': True,  # ← Conversation responses are successful (informational)
+                    'message': answer,
+                    'answer': answer
+                })
+            
+            elif response_type == 'scroll':
+                if scroll_direction not in ['up', 'down']:
+                    command_response.update({
+                        'success': False,
+                        'message': 'Could not determine scroll direction'
+                    })
+                else:
+                    command_response.update({
+                        'scroll_direction': scroll_direction,
+                        'message': f"Scrolling page {scroll_direction}"
+                    })
+            
+            elif response_type == 'button_click':
+                if not button_to_click:
+                    command_response.update({
+                        'success': False,
+                        'message': 'Could not determine which button to click'
+                    })
+                else:
+                    command_response.update({
+                        'success': True,  # ← Button clicks are successful (frontend will find and click)
+                        'button_to_click': button_to_click,
+                        'message': f"Clicking button: {button_to_click}"
+                    })
+            
+            elif response_type == 'form_fill':
+                if not form_fields:
+                    command_response.update({
+                        'success': False,
+                        'message': 'Could not determine the form fields to fill'
+                    })
+                else:
+                    command_response.update({
+                        'form_fields': form_fields,
+                        'button_to_click': button_to_click,
+                        'message': "Filling form fields on current page"
+                    })
+            
+            elif response_type == 'navigation':
+                if not route_id or not path:
+                    command_response.update({
+                        'success': False,
+                        'message': 'Could not determine the requested page'
+                    })
+                elif not self.validate_route(route_id, path):
+                    command_response.update({
+                        'success': False,
+                        'message': f'Route not found: {route_id}'
+                    })
+                else:
+                    matched_route = self.get_route_info(route_id)
+                    command_response.update({
+                        'success': True,  # ← FIXED: Set success to True for valid navigation
+                        'matched_route': matched_route,
+                        'path': path,
+                        'message': f"Navigating to {matched_route.get('description', 'requested page')}"
+                    })
+            
+            else:
+                command_response.update({
+                    'success': False,
+                    'message': 'Could not determine action for this command'
+                })
+            
+            processed_commands.append(command_response)
+        
+        # Calculate success rate
+        successful = sum(1 for cmd in processed_commands if cmd.get('success', False))
+        
+        return {
+            'success': successful > 0,
+            'response_type': 'multi_command',
+            'commands': processed_commands,
+            'message': f"Processed {len(commands)} commands ({successful}/{len(commands)} successful)",
+            'total_commands': len(commands),
+            'successful_commands': successful
+        }
+    
+    def split_multi_commands(self, user_query: str) -> List[str]:
+        """
+        Split a single voice input into multiple commands
+        
+        Detects separators like: "then", "and", "next", "after that", "also"
+        Examples:
+            "scroll down then login" → ["scroll down", "login"]
+            "enter name tauqeer and click login" → ["enter name tauqeer", "click login"]
+            "fill email test@test.com then enter password 123" → ["fill email test@test.com", "enter password 123"]
+        
+        Args:
+            user_query: The full voice input
+        
+        Returns:
+            List of individual commands
+        """
+        import re
+        
+        # List of separators used to split commands (case-insensitive)
+        separators = [
+            r'\bthen\b',
+            r'\band\b',
+            r'\bnext\b',
+            r'\bafter\s+that\b',
+            r'\balso\b',
+            r'\bfinally\b',
+            r'\bthen\s+(?!I)',  # "then" but not "then I" (which is conversational)
+            r',',  # Comma as separator
+        ]
+        
+        # Create regex pattern for all separators
+        separator_pattern = '|'.join(separators)
+        
+        # Split by separators, keeping track of what's removed
+        commands = re.split(separator_pattern, user_query, flags=re.IGNORECASE)
+        
+        # Clean up: strip whitespace and remove empty strings
+        commands = [cmd.strip() for cmd in commands if cmd and cmd.strip()]
+        
+        return commands if len(commands) > 1 else [user_query]
+    
     def process_query(self, user_query: str, user_roles: List[str] = None) -> Dict:
         """
         Main method to process a user query and return either a navigation route or a conversational response
@@ -449,6 +689,19 @@ IMPORTANT:
                 'answer': 'Bot response text',
                 'message': 'Conversational answer'
             }
+            
+            For multi_command:
+            {
+                'success': bool,
+                'response_type': 'multi_command',
+                'commands': [
+                    {response for command 1},
+                    {response for command 2},
+                    ...
+                ],
+                'message': 'Processing multiple commands',
+                'total_commands': 3
+            }
         """
         try:
             # Validate input
@@ -460,6 +713,15 @@ IMPORTANT:
                     'answer': 'Sorry, I didn\'t catch that. Could you please rephrase?'
                 }
             
+            # Check if this is a multi-command request
+            commands = self.split_multi_commands(user_query)
+            
+            # If multiple commands detected, process each one
+            if len(commands) > 1:
+                logger.info(f"Multi-command detected: {len(commands)} commands")
+                return self.process_multi_commands(commands, user_roles)
+            
+            # Single command processing - continue with existing logic
             # Ensure routes are loaded
             if not self.routes_data:
                 logger.warning("Routes not loaded, attempting to reload...")

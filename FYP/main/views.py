@@ -1,90 +1,258 @@
-from django.shortcuts import render , redirect , HttpResponse, get_object_or_404, redirect
-from django.contrib.auth import get_user_model , login
-from django.contrib.auth import authenticate,login as auth_login , logout
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
+from django.contrib.auth import get_user_model, login as auth_login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.tokens import default_token_generator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_http_methods
-from django.views.decorators.csrf import csrf_exempt
-import os
-from django.conf import settings
-from django.http import JsonResponse
-from django.contrib import messages
-from django.http import HttpResponseForbidden,JsonResponse
-from .models import PatientCreatedByDoctor,PatientXRayInfo,Doctor,Patient_Report
-from datetime import date
-from datetime import datetime
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.urls import reverse
 from django.utils import timezone
-from django.views.decorators.csrf import csrf_protect
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
 from django.core.mail import send_mail
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.contrib import messages
+from django.conf import settings
+from django.core.files.base import ContentFile
+from django.forms.models import model_to_dict
+
+import os
 import requests
 import markdown
 import logging
 import json
 import matplotlib.pyplot as plt
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str
-from django.urls import reverse
 import uuid
 import io
-import urllib, base64
-from datetime import datetime
-from django.core.files.base import ContentFile
-from io import BytesIO
-from .models import Patient_Report
-### the new data for mediapipe working:
-
-from django.shortcuts import render
-from django.http import JsonResponse
-import cv2, numpy as np, base64
+import urllib
+import base64
+import cv2
+import numpy as np
+import secrets
+import string
+from datetime import date, datetime
 from io import BytesIO
 from PIL import Image
 from collections import deque
+from functools import wraps
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import mediapipe as mp
 
+from .models import PatientCreatedByDoctor, PatientXRayInfo, Doctor, PatientReport, User
+from .decorators import (
+    rate_limit_view,
+    require_ajax,
+    require_post,
+    require_get,
+    check_ajax_and_post,
+    require_user_type,
+    login_required_api,
+    log_view_access,
+    handle_api_errors,
+)
+from .response_helpers import (
+    success_response,
+    error_response,
+    bad_request,
+    unauthorized,
+    forbidden,
+    not_found,
+    conflict,
+    validation_error,
+    rate_limit_exceeded,
+    server_error,
+    service_unavailable,
+    paginated_response,
+    list_response,
+    created_response,
+    no_content_response,
+    handle_validation_errors,
+)
+from .validators import (
+    validate_username,
+    validate_password,
+    validate_email,
+    validate_phone_number,
+    validate_image_file,
+    validate_voice_query,
+    validate_patient_data,
+    validate_xray_data,
+    sanitize_string,
+    validate_request_data,
+)
+
+# Configure logging
+logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
+
+# Alias for backward compatibility
+login = auth_login
 
 User = get_user_model()
 
-# this is login  of doctor
-def login_doctor(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
+# ======================== Rate Limiting Helper ========================
+_voice_command_cache = {}  # Format: {identifier: [timestamps]}
 
-
-        print("Username:", username)
-        print("Password:", password)
-
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            print("Authenticated:", user)
-            if user.user_type == 'doctor': 
-                login(request, user)
-                return redirect('diagnosis_page')  
-
-            else:
-                return HttpResponse("Not a doctor")
+def get_client_identifier(request):
+    """Get unique identifier for rate limiting (user ID or IP address)"""
+    if request.user.is_authenticated:
+        return f"user_{request.user.id}"
+    else:
+        # Get IP address (handle proxy cases)
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
         else:
-            print("Authentication failed")
-            return HttpResponse("Wrong password or username")
+            ip = request.META.get('REMOTE_ADDR')
+        return f"ip_{ip}"
 
+def check_voice_rate_limit(request, max_requests=10, time_window=60):
+    """
+    Rate limit voice commands to prevent spam/abuse
+    
+    Args:
+        request: Django request object
+        max_requests: Maximum requests allowed in time window (default: 10)
+        time_window: Time window in seconds (default: 60 seconds = 1 minute)
+    
+    Returns:
+        tuple: (is_allowed: bool, remaining_requests: int, reset_time_seconds: int)
+    """
+    import time
+    
+    identifier = get_client_identifier(request)
+    current_time = time.time()
+    
+    # Initialize if not exists
+    if identifier not in _voice_command_cache:
+        _voice_command_cache[identifier] = []
+    
+    timestamps = _voice_command_cache[identifier]
+    
+    # Remove old timestamps outside the time window
+    timestamps[:] = [ts for ts in timestamps if current_time - ts < time_window]
+    
+    # Check if limit exceeded
+    if len(timestamps) >= max_requests:
+        # Calculate time until next request is allowed
+        oldest_timestamp = timestamps[0]
+        reset_time = int(oldest_timestamp + time_window - current_time) + 1
+        return False, 0, reset_time
+    
+    # Add current request
+    timestamps.append(current_time)
+    remaining = max_requests - len(timestamps)
+    
+    return True, remaining, 0
+
+
+def require_voice_auth(view_func):
+    """Decorator to require rate limiting for voice commands"""
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        # Check rate limit
+        is_allowed, remaining, reset_time = check_voice_rate_limit(request)
+        
+        if not is_allowed:
+            return JsonResponse({
+                'success': False,
+                'message': f'Rate limit exceeded. Please wait {reset_time} seconds before trying again.',
+                'matched_route': None,
+                'path': None,
+                'error': 'rate_limit_exceeded'
+            }, status=429)  # 429 = Too Many Requests
+        
+        # Store remaining requests in request for logging
+        request.remaining_voice_requests = remaining
+        request.reset_time = reset_time
+        
+        return view_func(request, *args, **kwargs)
+    
+    return wrapper
+
+# ======================== End Rate Limiting Helper ========================
+
+# this is login of doctor
+def login_doctor(request):
+    """
+    Doctor login endpoint with validation.
+    Supports both regular form submission and AJAX requests.
+    """
+    if request.method == "POST":
+        try:
+            username = request.POST.get("username", "").strip()
+            password = request.POST.get("password", "").strip()
+            
+            # Validate input
+            if not username or not password:
+                logger.warning("Login attempt with missing credentials")
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return error_response("Username and password are required", status_code=400)
+                return render(request, "doctor_login.html", {"error": "Missing credentials"})
+            
+            # Authenticate using service
+            from main.services import AuthenticationService
+            user = AuthenticationService.authenticate_user(username, password, user_type='doctor')
+            
+            if user is not None:
+                login(request, user)
+                logger.info(f"Doctor {username} logged in successfully")
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return success_response("Login successful", data={'redirect': 'diagnosis_page'})
+                return redirect('diagnosis_page')
+            else:
+                logger.warning(f"Failed doctor login for user: {username}")
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return error_response("Invalid credentials", status_code=401, error_code='INVALID_CREDENTIALS')
+                return render(request, "doctor_login.html", {"error": "Invalid credentials"})
+        
+        except Exception as e:
+            logger.error(f"Error in doctor login: {e}", exc_info=True)
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return error_response("An error occurred during login", status_code=500)
+            return render(request, "doctor_login.html", {"error": "An error occurred"})
+    
     return render(request, "doctor_login.html")
 
 def signup(request):
+    """
+    Doctor signup endpoint with validation.
+    Creates a new user account with username, email, and password validation.
+    """
     if request.method == "POST":
-       username = request.POST.get("username")
-       password = request.POST.get("password")
-       email = request.POST.get("email")
-       user = User.objects.create_user(username ,  password , "doctor")
-       print("user account created with:" , username , "password" , password)
-       user.save()
-       return redirect("loginSystem")
-    return render(request , "signup.html")
+        try:
+            username = request.POST.get("username", "").strip()
+            password = request.POST.get("password", "").strip()
+            email = request.POST.get("email", "").strip()
+            
+            # Validate inputs
+            try:
+                username = validate_username(username)
+                password = validate_password(password)
+                email = validate_email(email)
+            except ValidationError as e:
+                logger.warning(f"Signup validation failed: {e}")
+                return render(request, "signup.html", {"error": str(e)})
+            
+            # Create user using service
+            from main.services import AuthenticationService
+            user = AuthenticationService.create_user(username, email, password, user_type='doctor')
+            
+            logger.info(f"New doctor account created: {username}")
+            
+            # Redirect to login
+            return redirect("loginSystem")
+        
+        except ValidationError as e:
+            logger.warning(f"Signup error: {e}")
+            return render(request, "signup.html", {"error": str(e)})
+        except Exception as e:
+            logger.error(f"Error during signup: {e}", exc_info=True)
+            return render(request, "signup.html", {"error": "An error occurred during signup"})
+    
+    return render(request, "signup.html")
 
 def MainPage(request):
     """Landing page with appointment form submission."""
@@ -171,17 +339,17 @@ def MainPage(request):
 def dashboard(request):
     try:
         user = request.user
-        print(f"Dashboard accessed by: {user} with user_type: {getattr(user, 'user_type', None)}")
+        logger.info(f"Admin dashboard accessed by: {user} (user_type: {getattr(user, 'user_type', None)})")
         if hasattr(user, 'user_type') and user.user_type == 'admin':
             # Calculate statistics
             all_users = User.objects.all()
             total_users = all_users.count()
             total_doctors = all_users.filter(user_type='doctor').count()
             total_patients = PatientCreatedByDoctor.objects.all().count()
-            total_reports = Patient_Report.objects.all().count()
+            total_reports = PatientReport.objects.all().count()
             
-            # Get recent activity from Patient_Report
-            recent_activity = Patient_Report.objects.all().order_by('-created_at')[:5]
+            # Get recent activity from PatientReport
+            recent_activity = PatientReport.objects.all().order_by('-created_at')[:5]
             
             return render(request, "index_admin.html", {
                 'total_users': total_users,
@@ -203,41 +371,77 @@ def logoutpage(request):
 
 
 def admin_login1(request):
+    """
+    Admin login endpoint with validation.
+    Supports both regular form submission and AJAX requests.
+    """
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        print(username, password)
-        if user is not None and hasattr(user, 'user_type') and user.user_type == 'admin':
+        try:
+            username = request.POST.get('username', '').strip()
+            password = request.POST.get('password', '').strip()
             
-            auth_login(request, user)
-            return redirect('index_admin' )
-        else:
-            messages.error(request, 'Access denied: Not an admin user or invalid credentials.')
+            # Validate input
+            if not username or not password:
+                logger.warning("Admin login attempt with missing credentials")
+                messages.error(request, 'Username and password are required.')
+                return render(request, 'Admin1/admin_login.html')
+            
+            # Authenticate using service
+            from main.services import AuthenticationService
+            user = AuthenticationService.authenticate_user(username, password, user_type='admin')
+            
+            if user is not None:
+                auth_login(request, user)
+                logger.info(f"Admin {username} logged in successfully")
+                return redirect('index_admin')
+            else:
+                logger.warning(f"Failed admin login for user: {username}")
+                messages.error(request, 'Invalid credentials or user is not an admin.')
+                return render(request, 'Admin1/admin_login.html')
+        
+        except Exception as e:
+            logger.error(f"Error during admin login: {e}", exc_info=True)
+            messages.error(request, 'An error occurred during login.')
             return render(request, 'Admin1/admin_login.html')
+    
     return render(request, 'Admin1/admin_login.html')
 
 
 def patient_login(request):
+    """
+    Patient login endpoint with validation.
+    Supports both regular form submission and AJAX requests.
+    """
     if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        user = authenticate(request, username=username, password=password)
-        print(username, password)
-        if user is not None and hasattr(user, 'user_type') and user.user_type == 'patient':      
-
-            auth_login(request, user)
-            return redirect('patient_dashboard' )
+        try:
+            username = request.POST.get("username", "").strip()
+            password = request.POST.get("password", "").strip()
+            
+            # Validate input
+            if not username or not password:
+                logger.warning("Patient login attempt with missing credentials")
+                messages.error(request, 'Username and password are required.')
+                return render(request, "patient/patient_login.html")
+            
+            # Authenticate using service
+            from main.services import AuthenticationService
+            user = AuthenticationService.authenticate_user(username, password, user_type='patient')
+            
+            if user is not None:
+                auth_login(request, user)
+                logger.info(f"Patient {username} logged in successfully")
+                return redirect('patient_dashboard')
+            else:
+                logger.warning(f"Failed patient login for user: {username}")
+                messages.error(request, 'Invalid credentials or user is not a patient.')
+                return render(request, "patient/patient_login.html")
         
-        else:
-            logging.info("Entering the incorrect things")
-            messages.error(request, 'Access denied: Not an patient user or invalid credentials.')
-            return render(request , "patient/patient_login.html")
-        
-
-
-
-    return render(request , "patient/patient_login.html")
+        except Exception as e:
+            logger.error(f"Error during patient login: {e}", exc_info=True)
+            messages.error(request, 'An error occurred during login.')
+            return render(request, "patient/patient_login.html")
+    
+    return render(request, "patient/patient_login.html")
 
 @never_cache
 @login_required(login_url='patient_logins')
@@ -249,28 +453,24 @@ def patient_dashboard(request):
             show_on_dashboard=True
         )
         data = patients.user.username
-        print("the name of patient is:" , data,".")
+        logger.debug(f"Patient created: {data}")
 
         account_created = patients.created_at
 
-        print("This account created at:" , account_created)
-
+        logger.info(f"Patient account created at: {account_created}")
 
         doctor_link = patients.doctor
-        print("the doctor linkage is:" , doctor_link)
+        logger.debug(f"Patient linked to doctor: {doctor_link}")
 
         ### left with the file of doctor:
         
-        reports = Patient_Report.objects.filter(patient=patients)
+        reports = PatientReport.objects.filter(patient=patients)
 
         for report in reports:
-            print("Patient Name:", report.Patient_name)
-            print("Patient ID:", report.Patient_idx)
-            print("Report File URL:", report.report_file.url)   
-            print("Report File Path:", report.report_file.path) 
+            logger.debug(f"Report - Patient Name: {report.patient_name}, ID: {report.patient_idx}") 
 
         doctor = patients.doctor
-        xray_info = PatientXRayInfo.objects.filter(patient=patients).first()
+        xray_info = patients.xray_records.first()  # Use related_name with ForeignKey
         total_reports = reports.count()
         reports = reports.order_by('-created_at')
 
@@ -361,19 +561,21 @@ def user_profile(request):
 
             # Get X-ray info if exists
             try:
-                patients1 = PatientXRayInfo.objects.get(patient=patients)
-            except PatientXRayInfo.DoesNotExist:
+                patients1 = patients.xray_records.first()  # Use related_name with ForeignKey
+                if patients1 is None:
+                    raise Exception("No X-ray records")
+            except Exception:
                 patients1 = None
                 
-            reports = Patient_Report.objects.filter(patient=patients)
+            reports = patients.reports.all()  # Use related_name with ForeignKey
 
             if patients1:
                 print("the data getting from the patients are:" , patients1)
                 print("final conclusion from patient x ray is:" , patients1.name)
 
             for report in reports:
-                print("Patient Name:", report.Patient_name)
-                print("Patient ID:", report.Patient_idx)
+                print("Patient Name:", report.patient_name)
+                print("Patient ID:", report.patient_idx)
                 if report.report_file:
                     print("Report File URL:", report.report_file.url)   
                     print("Report File Path:", report.report_file.path)
@@ -526,13 +728,14 @@ def manage_user(request):
     all_users = User.objects.all()
     total_users = all_users.count()
     total_doctors = all_users.filter(user_type='doctor').count()
-    total_patients = PatientCreatedByDoctor.objects.all().count()
+    total_patients = all_users.filter(user_type='patient').count()  # Count patient users, not PatientCreatedByDoctor
     active_users = all_users.filter(is_active=True).count()
     inactive_users = total_users - active_users
     
-    # Calculate percentages
-    doctor_percentage = round((total_doctors / total_users * 100)) if total_users > 0 else 0
-    patient_percentage = round((total_patients / total_users * 100)) if total_users > 0 else 0
+    # Calculate percentages - fixed to account for both doctors and patients
+    total_non_admin_users = total_doctors + total_patients
+    doctor_percentage = round((total_doctors / total_non_admin_users * 100)) if total_non_admin_users > 0 else 0
+    patient_percentage = round((total_patients / total_non_admin_users * 100)) if total_non_admin_users > 0 else 0
 
     return render(request, 'manage_user.html', {
         'visible_patients': visible_patients,
@@ -593,16 +796,16 @@ def total_patient_graphs(request):
 def diagnosis(request):
     # Get doctor's patients
     total_patient = PatientCreatedByDoctor.objects.filter(doctor=request.user).count()
-    all_patients = PatientXRayInfo.objects.filter(doctor=request.user)
+    all_patients = PatientCreatedByDoctor.objects.filter(doctor=request.user)
     for i in all_patients:
         print("my patient is:" , i)
     logging.info("The total number of patients are")
     logging.info(total_patient)
     
     # Calculate statistics for doctor dashboard
-    total_xray_records = PatientXRayInfo.objects.filter(doctor=request.user).count()
-    total_reports = Patient_Report.objects.filter(patient__doctor=request.user).count()
-    recent_analysis_count = Patient_Report.objects.filter(patient__doctor=request.user).count()
+    total_xray_records = PatientXRayInfo.objects.filter(patient__doctor=request.user).count()
+    total_reports = PatientReport.objects.filter(patient__doctor=request.user).count()
+    recent_analysis_count = PatientReport.objects.filter(patient__doctor=request.user).count()
     recent_patients = PatientCreatedByDoctor.objects.filter(doctor=request.user).order_by('-created_at')[:5]
     
     context = {
@@ -622,8 +825,10 @@ def add_patient(request):
     if request.method == 'POST':
         if not request.user.is_authenticated or request.user.user_type != 'doctor':
             return JsonResponse({"error": "Unauthorized access"}, status=403)
+        
         fname = request.POST.get('fname')
-        password = request.POST.get("lname")
+        lname = request.POST.get('lname')
+        password = request.POST.get('password')
         dob = request.POST.get('dob')
         gender = request.POST.get('gender')
         parents = request.POST.get('parents')
@@ -631,42 +836,111 @@ def add_patient(request):
         email = request.POST.get('email')
         address = request.POST.get('address')
         medical_history = request.POST.get('medical_history')
+        
+        # Validate date of birth
         date_right_now = datetime.now().date()
-        conversion = datetime.strptime(dob, "%Y-%m-%d").date()
-        logging.info("The given datetime from the dataset i found is:")
-        logging.info(conversion)
+        try:
+            conversion = datetime.strptime(dob, "%Y-%m-%d").date()
+        except ValueError:
+            messages.error(request, "Invalid date format.")
+            return render(request, "Doctor/Patient/add_patient.html")
+            
         if date_right_now < conversion:
-            logging.info("I am inside the condition")
-
             messages.error(request, "Date of Birth cannot be in the future.")
-            return render(request, "Doctor/Patient/add_patient.html", { "dob": dob})
+            return render(request, "Doctor/Patient/add_patient.html", {"dob": dob})
         
-
-        user = User.objects.create_user(
-                    username=fname,
-                    password=password,  
-                     user_type='patient' )  
-        user.user_type = 'patient'  
-        user.save()   
+        # Generate password if not provided
+        if not password:
+            password = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(12))
+            logging.info(f"Generated password for patient {fname}: {password}")
         
-        PatientCreatedByDoctor.objects.create(
-            user=user,
-            doctor=request.user if request.user.user_type == 'doctor' else None,
-            fname = fname ,
-            lname = password,
-            dob = dob,
-            gender = gender,
-            parents = parents,
-            contact_number = contact_number  ,
-            email = email ,
-            address = address,
-            medical_history = medical_history,
+        # Validate email format if provided
+        if email:
+            validate_email(email)
+        
+        # Create username (using first name + random string to ensure uniqueness)
+        base_username = fname.lower().replace(" ", "")
+        username = base_username
+        counter = 1
+        while User.objects.filter(username=username).exists():
+            username = f"{base_username}{counter}"
+            counter += 1
+        
+        try:
+            # Create user account
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password,
+                user_type='patient'
+            )
+            user.is_active = True
+            user.save()
+            
+            # Create patient record
+            patient = PatientCreatedByDoctor.objects.create(
+                user=user,
+                doctor=request.user if request.user.user_type == 'doctor' else None,
+                fname=fname,
+                lname=lname,
+                dob=dob,
+                gender=gender,
+                parents=parents,
+                contact_number=contact_number,
+                email=email,
+                address=address,
+                medical_history=medical_history,
+            )
+            
+            # Send welcome email if email is provided
+            if email:
+                try:
+                    subject = "X-AI Medical System - Your Account Created"
+                    message = f"""
+Dear {fname} {lname},
 
-        )
-        print("Storing data to the database here:")
-        return render(request , "Doctor/Patient/add_patient.html")
+Your account has been successfully created in the X-AI Medical System by Dr. {request.user.username}.
 
-    return render(request , 'Doctor/Patient/add_patient.html')
+Your login credentials are:
+Username: {username}
+Password: {password}
+
+Please change your password after your first login for security purposes.
+
+Portal URL: http://localhost:8000/login/
+
+If you have any questions, please contact your doctor or the system administrator.
+
+Best regards,
+X-AI Medical System Team
+                    """
+                    
+                    send_mail(
+                        subject=subject,
+                        message=message,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[email],
+                        fail_silently=False,
+                    )
+                    logging.info(f"Welcome email sent to {email}")
+                    messages.success(request, f"Patient {fname} {lname} added successfully! Welcome email sent to {email}.")
+                except Exception as e:
+                    logging.error(f"Failed to send email to {email}: {str(e)}")
+                    messages.warning(request, f"Patient {fname} {lname} added successfully, but email could not be sent. Credentials: {username} / {password}")
+            else:
+                messages.success(request, f"Patient {fname} {lname} added successfully! Credentials: {username} / {password}")
+            
+            # Log the action
+            logging.info(f"Patient {fname} {lname} created by doctor {request.user.username} with username: {username}")
+            
+            return render(request, "Doctor/Patient/add_patient.html")
+            
+        except Exception as e:
+            logging.error(f"Error creating patient: {str(e)}")
+            messages.error(request, f"Error creating patient: {str(e)}")
+            return render(request, "Doctor/Patient/add_patient.html")
+
+    return render(request, 'Doctor/Patient/add_patient.html')
 
 
 
@@ -734,17 +1008,53 @@ def predict_diagnosis(request):
             image = images[0]  
 
             # ---------------------- Flask API 1: Fracture Detection ----------------------
-            flask_url1 = 'http://xray-api:5002/detect-fracture'
-            response1 = requests.post(flask_url1, files={'image': image})
-            fracture_data = response1.json()
-            print("the data from the yolo model is:" , fracture_data)
+            try:
+                flask_url1 = 'http://xray-api:5002/detect-fracture'
+                response1 = requests.post(
+                    flask_url1,
+                    files={'image': image},
+                    timeout=getattr(settings, 'API_REQUEST_TIMEOUT', 30)
+                )
+                response1.raise_for_status()
+                fracture_data = response1.json()
+                logger.info(f"Fracture detection result: {fracture_data}")
+            except requests.Timeout:
+                logger.error("Fracture detection API timeout")
+                return render(request, 'Doctor/Patient/diagnosis_form.html', {
+                    'patients': patients,
+                    'error': 'Fracture detection API timeout. Please try again.'
+                })
+            except requests.RequestException as e:
+                logger.error(f"Fracture detection API error: {e}")
+                return render(request, 'Doctor/Patient/diagnosis_form.html', {
+                    'patients': patients,
+                    'error': 'Fracture detection service unavailable'
+                })
 
             # ---------------------- Flask API 2: Left/Right Prediction ----------------------
-            image.seek(0) 
-            flask_url2 = 'http://cnn-api:5001/predict-lr'
-            response2 = requests.post(flask_url2, files={'image': image})
-            lr_data = response2.json()
-            print("the data from the left right model is:" , lr_data)
+            try:
+                image.seek(0)
+                flask_url2 = 'http://cnn-api:5001/predict-lr'
+                response2 = requests.post(
+                    flask_url2,
+                    files={'image': image},
+                    timeout=getattr(settings, 'API_REQUEST_TIMEOUT', 30)
+                )
+                response2.raise_for_status()
+                lr_data = response2.json()
+                logger.info(f"Left/Right prediction result: {lr_data}")
+            except requests.Timeout:
+                logger.error("Left/Right prediction API timeout")
+                return render(request, 'Doctor/Patient/diagnosis_form.html', {
+                    'patients': patients,
+                    'error': 'Prediction API timeout. Please try again.'
+                })
+            except requests.RequestException as e:
+                logger.error(f"Left/Right prediction API error: {e}")
+                return render(request, 'Doctor/Patient/diagnosis_form.html', {
+                    'patients': patients,
+                    'error': 'Prediction service unavailable'
+                })
 
             prediction_result = {
                 'patient_name': f"{patient.fname} {patient.lname}",
@@ -756,21 +1066,19 @@ def predict_diagnosis(request):
                 'confidence': 0.95,  # Placeholder
                 'findings': "AI-based fracture and side analysis completed."
             }
-            print("I am creating my x ray data")
+            logger.info(f"Creating X-ray data for patient {patient.id}")
             xray_info, created = PatientXRayInfo.objects.update_or_create(
-            patient=patient,  
-            defaults={
-                "doctor": request.user,
-                'name': prediction_result['patient_name'],
-                'age': prediction_result['patient_age'],
-                'patient_code': prediction_result['patient_id'],
-                'xray_id': prediction_result['xray_id'],
-                'finding': prediction_result['findings'],
-                'fracture_type': prediction_result['fracture_types'][0],  
-                'affected_hand': prediction_result['left_right'],
-            }
-)
-            print("This is my database x ray info i am sending----------------" , xray_info ,"created values:" ,  created)
+                patient=patient,  
+                defaults={
+                    'name': prediction_result['patient_name'],
+                    'age': prediction_result['patient_age'],
+                    'xray_id': prediction_result['xray_id'],
+                    'finding': prediction_result['findings'],
+                    'fracture_type': prediction_result['fracture_types'][0],  
+                    'affected_hand': prediction_result['left_right'],
+                }
+            )
+            logger.info(f"X-ray data saved: {xray_info.id}, created={created}")
             
 
             return render(request, 'Doctor/prediction_result.html', {
@@ -779,6 +1087,7 @@ def predict_diagnosis(request):
             })
 
         except Exception as e:
+            logger.error(f"Error in diagnosis processing: {e}", exc_info=True)
             return render(request, 'Doctor/Patient/diagnosis_form.html', {
                 'patients': patients,
                 'error': str(e)
@@ -793,7 +1102,7 @@ def patients_data(request):
     try:
         from django.forms.models import model_to_dict
 
-        data = PatientXRayInfo.objects.all()
+        data = PatientCreatedByDoctor.objects.all()
         datas = [model_to_dict(i) for i in data]
         return JsonResponse(datas , safe=False)
     
@@ -808,7 +1117,7 @@ def Report(request):
         latest_report = PatientXRayInfo.objects.latest('updated_at')
         logging.info("The latest report is:")
         logging.info(latest_report)
-        doctor_data = PatientXRayInfo.objects.latest('updated_at').doctor
+        doctor_data = latest_report.patient.doctor
         print("the doctor id is:" , doctor_data)
 
         
@@ -876,7 +1185,14 @@ Wall Walks (Finger Walks Up Wall)
 Make sure your output is fully structured with headings.
 """
 
-        api_key = "AIzaSyB7fwNrYMa4T05ilokA3YQwjasZcwYRG5Y"
+        # Load Gemini API key from environment variables
+        api_key = os.getenv('GEMINI_API_KEY', '')
+        if not api_key:
+            return JsonResponse({
+                'error': 'API configuration error',
+                'message': 'Gemini API key not configured. Please check .env file.'
+            }, status=500)
+        
         url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
 
         headers = {
@@ -893,15 +1209,27 @@ Make sure your output is fully structured with headings.
             ]
         }
 
-        response = requests.post(url, headers=headers, json=data)
-        response.raise_for_status()
+        try:
+            response = requests.post(
+                url,
+                headers=headers,
+                json=data,
+                timeout=getattr(settings, 'API_REQUEST_TIMEOUT', 30)
+            )
+            response.raise_for_status()
+            result = response.json()
+            generated_report = result['candidates'][0]['content']['parts'][0]['text']
+            logger.info(f"Report generated successfully for patient {latest_report.patient.id}")
+        except requests.Timeout:
+            logger.error("Gemini API timeout while generating report")
+            generated_report = "Unable to generate report due to API timeout. Please try again."
+        except requests.RequestException as e:
+            logger.error(f"Gemini API error: {e}")
+            generated_report = f"Error generating report: {str(e)}"
+        except (KeyError, IndexError) as e:
+            logger.error(f"Error parsing Gemini API response: {e}")
+            generated_report = "Invalid response from Gemini API"
 
-        result = response.json()
-        generated_report = result['candidates'][0]['content']['parts'][0]['text']
-        #logging.info(generated_report)
-        ## end of report 1.
-
-        """generating table:"""
         test_results = []
 
         
@@ -991,15 +1319,26 @@ Make sure your output is fully structured with headings.
             ]
         }
 
-        response2 = requests.post(url, headers=headers1, json=data1)
-        response2.raise_for_status()
-
-        result = response.json()
-        summary = result['candidates'][0]['content']['parts'][0]['text']
-        logging.info("My Summary is:")
-        logging.info(summary)
-
-
+        try:
+            response2 = requests.post(
+                url,
+                headers=headers1,
+                json=data1,
+                timeout=getattr(settings, 'API_REQUEST_TIMEOUT', 30)
+            )
+            response2.raise_for_status()
+            result = response2.json()
+            summary = result['candidates'][0]['content']['parts'][0]['text']
+            logger.info("Medical summary generated successfully")
+        except requests.Timeout:
+            logger.error("Gemini API timeout while generating summary")
+            summary = "Unable to generate summary due to API timeout."
+        except requests.RequestException as e:
+            logger.error(f"Gemini API error while generating summary: {e}")
+            summary = f"Error generating summary: {str(e)}"
+        except (KeyError, IndexError) as e:
+            logger.error(f"Error parsing summary response: {e}")
+            summary = "Invalid response from Gemini API"
 
         headers2 = {
             'Content-Type': 'application/json',
@@ -1018,19 +1357,34 @@ Make sure your output is fully structured with headings.
             ]
         }
 
-        response3 = requests.post(url, headers=headers2, json=data2)
-        response3.raise_for_status()
+        try:
+            response3 = requests.post(
+                url,
+                headers=headers2,
+                json=data2,
+                timeout=getattr(settings, 'API_REQUEST_TIMEOUT', 30)
+            )
+            response3.raise_for_status()
+            result = response3.json()
+            recommendation = result['candidates'][0]['content']['parts'][0]['text']
+            logger.info("Recommendations generated successfully")
+        except requests.Timeout:
+            logger.error("Gemini API timeout while generating recommendations")
+            recommendation = "Unable to generate recommendations due to API timeout."
+        except requests.RequestException as e:
+            logger.error(f"Gemini API error while generating recommendations: {e}")
+            recommendation = f"Error generating recommendations: {str(e)}"
+        except (KeyError, IndexError) as e:
+            logger.error(f"Error parsing recommendations response: {e}")
+            recommendation = "Invalid response from Gemini API"
 
-        result = response.json()
-        recommendation = result['candidates'][0]['content']['parts'][0]['text']
-
-        logging.info("Now making the model insertion for the database of patient report")
+        logger.info("Creating report database entry for patient")
 
         ###################### report model:
         report_content = f"""
         <h2>Comprehensive Medical Diagnostic Report</h2>
         <p><b>Patient Name:</b> {latest_report.name}</p>
-        <p><b>Patient ID:</b> {latest_report.patient_code}</p>
+        <p><b>Patient ID:</b> {latest_report.xray_id}</p>
         <p><b>Age:</b> {latest_report.age}</p>
         <p><b>Finding:</b> {latest_report.finding}</p>
         <p><b>Fracture type:</b> {latest_report.fracture_type}</p>
@@ -1045,29 +1399,29 @@ Make sure your output is fully structured with headings.
         <h3>Recommendations</h3>
         {recommendation}
         """
-        logging.info("----------------------------------------------------------------------------------------------")
-        logging.info("working on the new work today for")
+        logger.info("Report content generated for patient")
 
         buffer = BytesIO(report_content.encode("utf-8"))
         
-        # Delete previous report if it exists (to avoid UNIQUE constraint error)
+        # Delete previous report if it exists (to avoid duplicate reports)
         try:
-            previous_report = Patient_Report.objects.get(patient=latest_report.patient)
-            previous_report.delete()
-            logging.info("Previous report deleted")
-        except Patient_Report.DoesNotExist:
-            logging.info("No previous report found")
+            previous_report = PatientReport.objects.filter(patient=latest_report.patient).first()
+            if previous_report:
+                previous_report.delete()
+            logger.info("Previous report deleted for patient")
+        except Exception as e:
+            logger.info(f"Error handling previous report: {e}")
         
         # Create new report
-        patient_report_file = Patient_Report(
+        patient_report_file = PatientReport(
             patient=latest_report.patient,
-            Patient_name=latest_report.name,
-            Patient_idx=latest_report.patient_code
+            patient_name=latest_report.name,
+            patient_idx=latest_report.xray_id  # Use xray_id instead of patient_code
         )
         
         logging.info("Till here working fine---------------------")
         patient_report_file.report_file.save(
-            f"report_{latest_report.patient_code}.html", 
+            f"report_{latest_report.xray_id}.html", 
             ContentFile(buffer.getvalue())
         )
         logging.info("Insertion has been done")
@@ -1177,7 +1531,7 @@ def Displaying_videos(request , disease):
 
 def All_patient_reports(request):
     try:
-        data =  Patient_Report.objects.all()
+        data = PatientReport.objects.all()
         print("the data getting is:" , data)
         return render(request, "report_list.html", {"reports": data})
     except Exception as e:
@@ -1292,8 +1646,6 @@ def process_frame(request):
 from main.services.chatbot_service import get_chatbot_service
 
 @csrf_exempt
-@require_http_methods(["POST"])
-@csrf_exempt
 @require_http_methods(["GET"])
 def voice_test(request):
     """
@@ -1303,14 +1655,20 @@ def voice_test(request):
     return render(request, 'voice_test.html')
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
+@require_voice_auth
+@csrf_protect
 def chatbot_query(request):
     """
-    API endpoint for chatbot query processing
+    API endpoint for chatbot query processing - Rate Limited & Secure
     
     Receives a user query, processes it through Gemini AI with RAG on routes.yml,
     and returns the matched route path
+    
+    Features:
+    - Rate limiting: Max 10 requests per minute per user/IP
+    - Authentication: Optional, but tracks by user ID or IP
+    - CSRF protection enabled
     
     Request:
         POST /api/chatbot/query/
@@ -1324,7 +1682,8 @@ def chatbot_query(request):
             "matched_route": {...route info...},
             "path": "/url/path/",
             "message": "Navigation message",
-            "reason": "Why this route was matched"
+            "reason": "Why this route was matched",
+            "rate_limit_remaining": 9  # Requests left in current window
         }
     """
     try:
@@ -1337,8 +1696,19 @@ def chatbot_query(request):
                 'success': False,
                 'message': 'Query cannot be empty',
                 'matched_route': None,
-                'path': None
+                'path': None,
+                'rate_limit_remaining': getattr(request, 'remaining_voice_requests', 0)
             }, status=400)
+        
+        # Optional: Require authentication for voice commands
+        # Uncomment the following lines if you want to require users to be logged in
+        # if not request.user.is_authenticated:
+        #     return JsonResponse({
+        #         'success': False,
+        #         'message': 'Authentication required for voice commands',
+        #         'matched_route': None,
+        #         'path': None
+        #     }, status=401)
         
         # Get user roles (if user is authenticated)
         user_roles = ['anonymous']
@@ -1346,12 +1716,18 @@ def chatbot_query(request):
             if request.user.is_staff or request.user.is_superuser:
                 user_roles = ['admin']
             else:
-                # Check if user is a doctor or patient (based on your models)
-                user_roles = ['doctor', 'patient']  # You may need to adjust this based on your User model
+                user_roles = ['doctor', 'patient']
         
         # Get chatbot service and process query
         chatbot_service = get_chatbot_service()
         result = chatbot_service.process_query(user_query, user_roles)
+        
+        # Add rate limit info to response
+        result['rate_limit_remaining'] = getattr(request, 'remaining_voice_requests', 0)
+        
+        # Log voice command (for audit trail)
+        client_id = get_client_identifier(request)
+        logger.info(f"Voice command from {client_id}: {user_query[:50]}...")
         
         # Return result
         status_code = 200 if result.get('success') else 206  # 206 = Partial Content (fallback used)
@@ -1362,7 +1738,8 @@ def chatbot_query(request):
             'success': False,
             'message': 'Invalid JSON in request body',
             'matched_route': None,
-            'path': None
+            'path': None,
+            'rate_limit_remaining': getattr(request, 'remaining_voice_requests', 0)
         }, status=400)
     
     except Exception as e:
@@ -1372,7 +1749,8 @@ def chatbot_query(request):
             'message': 'An error occurred while processing your request',
             'matched_route': None,
             'path': None,
-            'error': str(e)
+            'error': str(e),
+            'rate_limit_remaining': getattr(request, 'remaining_voice_requests', 0)
         }, status=500)
 
 
@@ -1782,3 +2160,98 @@ def contact_page(request):
 def faq_page(request):
     """View for FAQ page - Lightweight and fast"""
     return render(request, 'faq.html')
+
+
+# ========== BILINGUAL CHATBOT SUPPORT ==========
+
+@csrf_protect
+@require_http_methods(["POST"])
+@login_required
+def translate_text(request):
+    """
+    Translate text between languages (Urdu ↔ English)
+    Used for bilingual chatbot support
+    """
+    try:
+        data = json.loads(request.body)
+        text = data.get('text', '').strip()
+        source_lang = data.get('source_lang', 'ur')  # ur = Urdu, en = English
+        target_lang = data.get('target_lang', 'en')  # Default to English
+        
+        if not text:
+            return JsonResponse({
+                'success': False,
+                'error': 'No text provided'
+            }, status=400)
+        
+        # Using Google Translate API via requests (free method)
+        # Alternative: Use google-cloud-translate library with API key
+        try:
+            # Method 1: Try using simple translation via external API
+            translated_text = translate_via_google(text, source_lang, target_lang)
+            
+            return JsonResponse({
+                'success': True,
+                'original_text': text,
+                'translated_text': translated_text,
+                'source_lang': source_lang,
+                'target_lang': target_lang
+            })
+        except Exception as translation_error:
+            logging.error(f"Translation error: {translation_error}")
+            # Fallback: Return original text if translation fails
+            return JsonResponse({
+                'success': True,
+                'original_text': text,
+                'translated_text': text,  # Return original as fallback
+                'source_lang': source_lang,
+                'target_lang': target_lang,
+                'warning': 'Translation service unavailable, returning original text'
+            })
+            
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'error': 'Invalid JSON'
+        }, status=400)
+    except Exception as e:
+        logging.error(f"Translation API error: {str(e)}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
+
+
+def translate_via_google(text, source_lang='ur', target_lang='en'):
+    """
+    Translate using Google Translate API
+    This uses the free method (no API key required for simple requests)
+    """
+    try:
+        # Using MyMemory Translation API (free, no key required)
+        url = f"https://api.mymemory.translated.net/get"
+        params = {
+            'q': text,
+            'langpair': f'{source_lang}|{target_lang}'
+        }
+        
+        response = requests.get(url, params=params, timeout=5)
+        
+        if response.status_code == 200:
+            result = response.json()
+            if result['responseStatus'] == 200:
+                translated = result['responseData']['translatedText']
+                logging.info(f"✅ Translation successful: {text[:50]}... → {translated[:50]}...")
+                return translated
+        
+        # Fallback
+        logging.warning(f"Translation API returned status: {response.status_code}")
+        return text
+        
+    except requests.Timeout:
+        logging.error("Translation API timeout")
+        return text
+    except Exception as e:
+        logging.error(f"Translation via Google failed: {str(e)}")
+        return text
+

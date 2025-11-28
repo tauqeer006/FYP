@@ -1,7 +1,18 @@
 from django.db import models
 from django.db.models import Q
+from django.utils import timezone
 
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+
+
+class BaseModel(models.Model):
+    """Abstract base model with timestamp fields"""
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
 
 class UserManager(BaseUserManager):
     def create_user(self, username, email=None, password=None, user_type=None):
@@ -32,10 +43,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     USER_TYPES = (
         ('admin', 'Admin'),
         ('doctor', 'Doctor'),
+        ('patient', 'Patient'),
     )
-    username = models.CharField(max_length=100, unique=True)
-    user_type = models.CharField(max_length=10, choices=USER_TYPES)
-    email = models.EmailField(max_length=254, blank=True, null=True)
+    username = models.CharField(max_length=100, unique=True, db_index=True)
+    user_type = models.CharField(max_length=10, choices=USER_TYPES, db_index=True)
+    email = models.EmailField(max_length=254, blank=True, null=True, db_index=True)
 
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -44,11 +56,24 @@ class User(AbstractBaseUser, PermissionsMixin):
     # Password reset fields
     reset_token = models.CharField(max_length=500, blank=True, null=True)
     reset_token_created = models.DateTimeField(blank=True, null=True)
+    
+    # Timestamp fields
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email', 'user_type']
 
     objects = UserManager()
+
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['username']),
+            models.Index(fields=['user_type']),
+            models.Index(fields=['email']),
+            models.Index(fields=['is_active']),
+        ]
 
     def __str__(self):
         return f"{self.username} ({self.user_type})"
@@ -63,31 +88,47 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Admin(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     department = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = "Admins"
+
 
 class Doctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     specialization = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = "Doctors"
+
 
 class Patient(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     age = models.IntegerField()
     medical_history = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
-class PatientCreatedByDoctor(models.Model):
+class PatientCreatedByDoctor(BaseModel):
+    """Patient record created by a doctor"""
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     doctor = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         blank=True,
-        null = True,
+        null=True,
         related_name='created_patients',
-        limit_choices_to=Q(user_type='doctor') | Q(user_type='admin')
+        limit_choices_to=Q(user_type='doctor') | Q(user_type='admin'),
+        db_index=True
     )
-    fname = models.CharField(max_length=100)
+    fname = models.CharField(max_length=100, db_index=True)
     lname = models.CharField(max_length=100)
     dob = models.DateField(blank=True, null=True)
-    parents = models.CharField(max_length=100)
+    parents = models.CharField(max_length=100, blank=True)
     
     GENDER_CHOICES = [
         ('M', 'Male'),
@@ -98,40 +139,76 @@ class PatientCreatedByDoctor(models.Model):
     address = models.TextField()
     contact_number = models.CharField(max_length=15)
     email = models.CharField(max_length=200)
-    medical_history = models.CharField(max_length=500)
+    medical_history = models.TextField(blank=True)
     
-    created_at = models.DateTimeField(auto_now_add=True)
-    show_on_dashboard = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    show_on_dashboard = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True, db_index=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['doctor', 'is_active']),
+            models.Index(fields=['fname', 'lname']),
+            models.Index(fields=['email']),
+            models.Index(fields=['created_at']),
+        ]
+        verbose_name_plural = "Patients Created By Doctor"
 
     def __str__(self):
-        return f"{self.fname} {self.lname}"
+        return f"{self.fname} {self.lname} (ID: {self.id})"
 
 
-class PatientXRayInfo(models.Model):
-    patient = models.OneToOneField('PatientCreatedByDoctor', on_delete=models.CASCADE)
-    doctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="xray_records" , default=1)
+class PatientXRayInfo(BaseModel):
+    """X-ray information for a patient"""
+    patient = models.ForeignKey(
+        'PatientCreatedByDoctor',
+        on_delete=models.CASCADE,
+        related_name='xray_records',
+        db_index=True
+    )
     name = models.CharField(max_length=100)
     age = models.IntegerField()
-    patient_code = models.CharField(max_length=50)
-    xray_id = models.CharField(max_length=50)
+    xray_id = models.CharField(max_length=50, unique=True, db_index=True)
     finding = models.TextField()
     fracture_type = models.CharField(max_length=100)
     affected_hand = models.CharField(max_length=10, choices=[('left', 'Left'), ('right', 'Right')])
-    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['patient', 'created_at']),
+            models.Index(fields=['xray_id']),
+            models.Index(fields=['fracture_type']),
+        ]
+        verbose_name_plural = "Patient X-ray Info"
 
     def __str__(self):
         return f"{self.name} - {self.xray_id}"
     
 
-class Patient_Report(models.Model):
-    patient = models.OneToOneField('PatientCreatedByDoctor', on_delete=models.CASCADE , null=True)
-    Patient_name = models.CharField(max_length=100)
-    Patient_idx   = models.CharField(max_length=50)
+class PatientReport(BaseModel):
+    """Medical report for a patient"""
+    patient = models.ForeignKey(
+        'PatientCreatedByDoctor',
+        on_delete=models.CASCADE,
+        related_name='reports',
+        db_index=True
+    )
+    patient_name = models.CharField(max_length=100)
+    patient_idx = models.CharField(max_length=50, db_index=True)
     report_file = models.FileField(upload_to="reports/")
-    created_at = models.DateTimeField(auto_now_add=True)
-    
+
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['patient', 'created_at']),
+            models.Index(fields=['patient_idx']),
+        ]
+        verbose_name_plural = "Patient Reports"
 
     def __str__(self):
-        return f"{self.Patient_name} ({self.Patient_idx})"
+        return f"{self.patient_name} ({self.patient_idx})"
+
+
+# Keep this for backward compatibility during migration
+Patient_Report = PatientReport

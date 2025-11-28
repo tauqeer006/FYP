@@ -1,6 +1,7 @@
 # Django Web Framework
 Django>=5.0
 python-decouple
+django-cors-headers>=4.0.0
 
 # Utilities
 requests>=2.31.0
@@ -30,6 +31,32 @@ Pillow
 python-dateutil
 cryptography
 djangorestframework
+
+# Caching & Session Management (NEW - for service layer)
+django-redis>=5.4.0
+redis>=4.5.0
+hiredis>=2.2.0
+
+# Security & Rate Limiting (NEW - for TIER 1)
+django-ratelimit>=4.0.0
+
+# Monitoring & Logging (NEW - for TIER 3 & TIER 8)
+sentry-sdk>=1.35.0
+
+# Production deployment (NEW - for TIER 7)
+gunicorn>=21.0.0
+whitenoise>=6.5.0
+psycopg2-binary
+
+# Testing frameworks (NEW - for TIER 4)
+pytest>=7.0.0
+pytest-django>=4.5.0
+coverage>=7.0.0
+
+# Code quality tools
+black>=23.0.0
+flake8>=6.0.0
+isort>=5.12.0
 
 # No ultralytics, no torch, no scikit-learn, no pandas
 # These were causing the 900MB+ downloads
