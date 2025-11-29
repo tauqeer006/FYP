@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import torch
 import torch.nn as nn
 from torchvision import transforms, models
@@ -6,9 +7,17 @@ from PIL import Image
 from io import BytesIO
 import os
 import tempfile
+import logging
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
+
+# Add CORS support
+cors_origins = os.getenv('CORS_ORIGINS', '*').split(',')
+CORS(app, resources={r'/api/*': {'origins': cors_origins}})
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = models.resnet18(pretrained=True)
@@ -25,7 +34,26 @@ transform = transforms.Compose([
 label_map = {0: 'Left (L)', 1: 'Right (R)'}
 
 
-    
+# ==================== Health Check ====================
+@app.route('/api/health', methods=['GET'])
+def health_check():
+    """Health check endpoint for monitoring"""
+    try:
+        return jsonify({
+            'status': 'ok',
+            'service': 'cnn-api',
+            'version': '1.0.0',
+            'device': str(device)
+        }), 200
+    except Exception as e:
+        logger.error(f"Health check failed: {str(e)}")
+        return jsonify({
+            'status': 'error',
+            'service': 'cnn-api',
+            'message': str(e)
+        }), 500
+
+
 @app.route('/predict-lr', methods=['POST'])
 def predict_lr():
     if 'image' not in request.files:

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/signup.css' %}" />
   </head>
   <body>
+    <div style="position: fixed; top: 15px; right: 15px; z-index: 1000;">{% include 'components/back_button.html' %}</div>
     <div class="buttons">
       <div class="backBtn" onclick="window.location.href = '{% url 'MainPage' %}'">
         <i class="uil uil-navigator"></i>

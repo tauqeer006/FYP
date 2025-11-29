@@ -971,9 +971,148 @@
             top: 8px;
             font-size: 0.9em;
         }
+
+        /* Patient Selector Modal */
+        #patientSelectorModal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .patient-selector-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .patient-selector-header {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            font-weight: bold;
+        }
+
+        .patient-selector-body {
+            margin-bottom: 20px;
+        }
+
+        .patient-selector-body label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .patient-selector-body select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .patient-selector-body select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .patient-selector-loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+        }
+
+        .patient-selector-loading::after {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-left: 5px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .patient-selector-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .patient-selector-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .patient-selector-btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .patient-selector-btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .patient-selector-btn-secondary {
+            background: #e5e7eb;
+            color: var(--text-dark);
+        }
+
+        .patient-selector-btn-secondary:hover {
+            background: #d1d5db;
+        }
+
     </style>
 </head>
 <body>
+    <!-- Patient Selector Modal (for doctors supervising patients) -->
+    <div id="patientSelectorModal" class="modal">
+        <div class="patient-selector-content">
+            <div class="patient-selector-header">Select Patient</div>
+            <div class="patient-selector-body">
+                <label for="patientSelect">Choose a patient to supervise:</label>
+                <select id="patientSelect">
+                    <option value="">Loading patients...</option>
+                </select>
+            </div>
+            <div class="patient-selector-footer">
+                <button class="patient-selector-btn patient-selector-btn-primary" onclick="startExerciseWithPatient()">Start Exercise</button>
+                <button class="patient-selector-btn patient-selector-btn-secondary" onclick="closePatientSelector()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div style="position: fixed; top: 15px; right: 15px; z-index: 1000;">{% include 'components/back_button.html' %}</div>
     <div class="container">
         <header>
             <h1>💪 Shoulder Rehabilitation Exercises</h1>
@@ -1026,7 +1165,7 @@
                 </div>
 
                 <div class="modal-actions">
-                    <button class="btn btn-primary btn-lg" onclick="startExercising()">
+                    <button class="btn btn-primary btn-lg" onclick="handleStartExercise()">
                         🎥 Start Exercising (Webcam)
                     </button>
                     <a id="openYoutubeLink" class="btn btn-secondary btn-lg" target="_blank">
@@ -1071,6 +1210,13 @@
 
                     <!-- Middle Column: Skeleton Demonstration -->
                     <div class="skeleton-demo-wrapper">
+                        <!-- Rep Counter -->
+                        <div id="repCounter" style="background: linear-gradient(135deg, #28a745, #20c997); border-radius: 12px; padding: 15px; color: white; text-align: center; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);">
+                            <div style="font-size: 24px; font-weight: bold;">
+                                💪 Reps Completed: <span style="font-size: 32px; display: block;">0</span>
+                            </div>
+                        </div>
+
                         <div style="background: #f0f4f8; border-radius: 12px; border: 2px solid var(--border-color); padding: 12px; height: 100%; display: flex; flex-direction: column; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
                             <div style="font-weight: 600; color: #1f2937; margin-bottom: 8px; font-size: 0.85em; text-align: center;">📊 Form Comparison</div>
                             
@@ -1349,6 +1495,12 @@
                 feedbackRight: ["Walk right fingers up the wall slowly", "Avoid right shoulder hiking"]
             }
         ];
+        
+        // Verify exercises loaded
+        console.log('✅ Exercises array loaded with', exercises.length, 'exercises');
+        if (exercises.length > 0) {
+            console.log('First exercise:', exercises[0].name);
+        }
 
         let currentExercise = null;
         let isExercising = false;
@@ -1357,6 +1509,22 @@
         let currentAudio = null;
         let volumeLevel = 0.8;
         
+        // Session and rep tracking - NEW LOGIC: 1 correct frame = 1 rep
+        let sessionId = null;
+        let repCount = 0;  // Increments by 1 for each correct frame
+        let totalFrames = 0;  // Total frames processed
+        let correctFrames = 0;  // Correct frames counted
+        let incorrectFrames = 0;  // Incorrect frames counted
+        let lastFeedbackTime = 0;  // Track when to show feedback (5 sec delay)
+        let feedbackPending = false;  // Is there pending feedback to show?
+        const FEEDBACK_DELAY = 5000;  // 5 seconds in ms
+        const MAX_REPS = 10;  // Stop at 10 reps
+        
+        // Patient selection (for doctor-supervised exercises)
+        let currentUserType = null;  // 'doctor' or 'patient'
+        let selectedPatientId = null;  // ID of selected patient (if doctor supervising)
+        let allPatients = [];  // List of available patients
+        
         // Speech queue system
         let speechQueue = [];
         let isSpeaking = false;
@@ -1364,7 +1532,7 @@
         // Skeleton visualization
         const SKELETON_WIDTH = 280;
         const SKELETON_HEIGHT = 380;
-        const TOLERANCE = 7; // ±7 degrees
+        const TOLERANCE = 50; // EXTREMELY LENIENT: ±50° - barely any effort counts as correct
         
         // Animation state
         let animationState = {
@@ -1377,12 +1545,32 @@
         };
 
         // Add message to conversation panel
-        function addMessage(text, type = 'info', details = null) {
-            const messagesDiv = document.getElementById('conversationMessages');
+        function addExerciseMessage(text, type = 'info', details = null) {
+            // Only add messages to the exercise modal, NOT to the chatbot widget
+            // Ensure we're in exercise mode
+            if (!isExercising) {
+                console.warn('⚠️ addExerciseMessage called outside exercise mode, ignoring');
+                return;
+            }
+            
+            // Get the conversation messages div from the MODAL ONLY
+            const webcamModal = document.getElementById('webcamModal');
+            if (!webcamModal || webcamModal.style.display === 'none') {
+                console.warn('⚠️ Webcam modal not open, cannot add message');
+                return;
+            }
+            
+            // Find conversationMessages inside the modal specifically
+            const messagesDiv = webcamModal.querySelector('#conversationMessages');
+            if (!messagesDiv) {
+                console.error('❌ conversationMessages element not found in webcam modal');
+                return;
+            }
             
             // Remove empty message if exists
-            if (messagesDiv.querySelector('.conversation-empty')) {
-                messagesDiv.innerHTML = '';
+            const emptyMsg = messagesDiv.querySelector('.conversation-empty');
+            if (emptyMsg) {
+                emptyMsg.remove();
             }
 
             const messageEl = document.createElement('div');
@@ -1490,9 +1678,18 @@
 
         // Clear conversation
         function clearConversation() {
-            const messagesDiv = document.getElementById('conversationMessages');
-            messagesDiv.innerHTML = '<div class="conversation-empty">Messages cleared. Messages will appear here...</div>';
-            messageCount = 0;
+            // Only clear messages from the exercise modal, not the chatbot widget
+            const webcamModal = document.getElementById('webcamModal');
+            if (!webcamModal) {
+                console.warn('⚠️ Webcam modal not found');
+                return;
+            }
+            
+            const messagesDiv = webcamModal.querySelector('#conversationMessages');
+            if (messagesDiv) {
+                messagesDiv.innerHTML = '<div class="conversation-empty">Messages cleared. Messages will appear here...</div>';
+                messageCount = 0;
+            }
         }
 
         // Update pose badge
@@ -1507,9 +1704,46 @@
             }
         }
 
+        // Update rep counter display
+        function updateRepDisplay(reps, totalFrames = 0, correctFrames = 0, incorrectFrames = 0) {
+            const repCounter = document.getElementById('repCounter');
+            if (repCounter) {
+                const accuracy = totalFrames > 0 ? Math.round((correctFrames / totalFrames) * 100) : 0;
+                
+                // Get current angle values from display
+                const leftAngle = document.getElementById('leftShoulderAngle')?.textContent || '--';
+                const rightAngle = document.getElementById('rightShoulderAngle')?.textContent || '--';
+                
+                repCounter.innerHTML = `
+                    <div style="font-size: 24px; font-weight: bold; color: #28a745; text-align: center;">
+                        <div style="margin-bottom: 10px;">💪 Reps: <span style="font-size: 32px;">${reps}/${MAX_REPS}</span></div>
+                        <div style="font-size: 14px; margin-bottom: 5px;">📊 Frames: ${totalFrames}</div>
+                        <div style="font-size: 14px; color: #17a2b8; margin-bottom: 8px;">✅ Accuracy: ${accuracy}%</div>
+                        <div style="font-size: 12px; color: #6c757d;">✅ Correct: ${correctFrames} | ❌ Incorrect: ${incorrectFrames}</div>
+                        <div style="font-size: 13px; color: #495057; border-top: 1px solid rgba(40, 167, 69, 0.3); padding-top: 8px;">
+                            👈 Left: <span style="font-weight: bold; color: #0066cc;">${leftAngle}°</span> | 👉 Right: <span style="font-weight: bold; color: #0066cc;">${rightAngle}°</span>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
         // Initialize exercises grid
         function initializeExercises() {
+            console.log('✅ Initializing exercises, total:', exercises.length);
+            if (exercises.length === 0) {
+                console.error('❌ No exercises found in array!');
+                const grid = document.getElementById('exercisesGrid');
+                grid.innerHTML = `
+                    <div class="no-results">
+                        <h3>Error: No exercises loaded</h3>
+                        <p>Please refresh the page</p>
+                    </div>
+                `;
+                return;
+            }
             renderExercises(exercises);
+            console.log('✅ Exercises rendered successfully');
         }
 
         // Render exercises in grid
@@ -1594,6 +1828,259 @@
         }
 
         // Draw complete human skeleton with animation support
+        // ===== ENHANCED SKELETON DRAWING WITH FEEDBACK =====
+        function drawEnhancedSkeleton(canvasId, leftShoulderAngle, leftElbowAngle, rightShoulderAngle, rightElbowAngle, status = 'neutral', showAccuracy = false, accuracy = 0) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+            
+            // Clear canvas with gradient background
+            let gradient = ctx.createLinearGradient(0, 0, 0, h);
+            if (status === 'correct') {
+                gradient.addColorStop(0, '#f0fdf4');
+                gradient.addColorStop(1, '#dcfce7');
+            } else if (status === 'error') {
+                gradient.addColorStop(0, '#fef2f2');
+                gradient.addColorStop(1, '#fee2e2');
+            } else {
+                gradient.addColorStop(0, '#f9fafb');
+                gradient.addColorStop(1, '#f3f4f6');
+            }
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, w, h);
+            
+            // Border styling
+            ctx.strokeStyle = status === 'correct' ? '#10b981' : status === 'error' ? '#ef4444' : '#e5e7eb';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(2, 2, w - 4, h - 4);
+            
+            // Color scheme based on status
+            let primaryColor = '#1f2937';   // dark gray
+            let accentColor = '#2563eb';    // blue
+            let jointColor = '#2563eb';     // blue
+            
+            if (status === 'correct') {
+                primaryColor = '#10b981';   // green
+                accentColor = '#059669';    // dark green
+                jointColor = '#34d399';     // light green
+            } else if (status === 'error') {
+                primaryColor = '#ef4444';   // red
+                accentColor = '#dc2626';    // dark red
+                jointColor = '#fca5a5';     // light red
+            } else if (status === 'warning') {
+                primaryColor = '#f59e0b';   // orange
+                accentColor = '#d97706';    // dark orange
+                jointColor = '#fbbf24';     // light orange
+            }
+            
+            // Calculate positions
+            const centerX = w / 2;
+            const headY = h * 0.12;
+            const neckY = h * 0.20;
+            const shoulderY = h * 0.28;
+            const torsoY = h * 0.45;
+            const hipY = h * 0.55;
+            const kneeY = h * 0.75;
+            const ankleY = h * 0.92;
+            
+            // ==== DRAW HEAD ====
+            ctx.fillStyle = accentColor;
+            ctx.beginPath();
+            ctx.arc(centerX, headY, 16, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = primaryColor;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Eyes (happy face when correct)
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(centerX - 6, headY - 2, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(centerX + 6, headY - 2, 3, 0, Math.PI * 2);
+            ctx.fill();
+            
+            if (status === 'correct') {
+                // Happy mouth
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(centerX, headY + 2, 5, 0, Math.PI);
+                ctx.stroke();
+            }
+            
+            // ==== DRAW TORSO ====
+            ctx.strokeStyle = primaryColor;
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            ctx.moveTo(centerX, neckY + 10);
+            ctx.lineTo(centerX, torsoY - 5);
+            ctx.stroke();
+            
+            // Shoulders line
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(centerX - 20, shoulderY);
+            ctx.lineTo(centerX + 20, shoulderY);
+            ctx.stroke();
+            
+            // Pelvis
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(centerX - 18, torsoY);
+            ctx.lineTo(centerX + 18, torsoY);
+            ctx.stroke();
+            
+            // ==== LEFT ARM ====
+            const leftShoulderX = centerX - 20;
+            const leftShoulderY = shoulderY;
+            const leftShoulderRad = (leftShoulderAngle - 90) * (Math.PI / 180);
+            const leftElbowX = leftShoulderX + Math.cos(leftShoulderRad) * 35;
+            const leftElbowY = leftShoulderY + Math.sin(leftShoulderRad) * 35;
+            const leftElbowRad = (leftElbowAngle - 180) * (Math.PI / 180);
+            const leftWristX = leftElbowX + Math.cos(leftElbowRad) * 30;
+            const leftWristY = leftElbowY + Math.sin(leftElbowRad) * 30;
+            
+            ctx.strokeStyle = primaryColor;
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(leftShoulderX, leftShoulderY);
+            ctx.lineTo(leftElbowX, leftElbowY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(leftElbowX, leftElbowY);
+            ctx.lineTo(leftWristX, leftWristY);
+            ctx.stroke();
+            
+            // Left arm joints with glow effect
+            ctx.shadowColor = status === 'correct' ? 'rgba(16, 185, 129, 0.5)' : 'rgba(0,0,0,0.2)';
+            ctx.shadowBlur = 8;
+            ctx.fillStyle = accentColor;
+            ctx.beginPath();
+            ctx.arc(leftShoulderX, leftShoulderY, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(leftElbowX, leftElbowY, 7, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(leftWristX, leftWristY, 6, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // ==== RIGHT ARM ====
+            const rightShoulderX = centerX + 20;
+            const rightShoulderY = shoulderY;
+            const rightShoulderRad = (rightShoulderAngle - 90) * (Math.PI / 180);
+            const rightElbowX = rightShoulderX + Math.cos(rightShoulderRad) * 35;
+            const rightElbowY = rightShoulderY + Math.sin(rightShoulderRad) * 35;
+            const rightElbowRad = (rightElbowAngle - 180) * (Math.PI / 180);
+            const rightWristX = rightElbowX + Math.cos(rightElbowRad) * 30;
+            const rightWristY = rightElbowY + Math.sin(rightElbowRad) * 30;
+            
+            ctx.strokeStyle = primaryColor;
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(rightShoulderX, rightShoulderY);
+            ctx.lineTo(rightElbowX, rightElbowY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(rightElbowX, rightElbowY);
+            ctx.lineTo(rightWristX, rightWristY);
+            ctx.stroke();
+            
+            // Right arm joints
+            ctx.fillStyle = accentColor;
+            ctx.beginPath();
+            ctx.arc(rightShoulderX, rightShoulderY, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(rightElbowX, rightElbowY, 7, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(rightWristX, rightWristY, 6, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.shadowColor = 'transparent';
+            
+            // ==== LEFT LEG ====
+            ctx.strokeStyle = primaryColor;
+            ctx.lineWidth = 3;
+            const leftHipX = centerX - 12;
+            const leftKneeX = centerX - 15;
+            ctx.beginPath();
+            ctx.moveTo(leftHipX, torsoY);
+            ctx.lineTo(leftKneeX, kneeY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(leftKneeX, kneeY);
+            ctx.lineTo(leftKneeX - 5, ankleY);
+            ctx.stroke();
+            
+            ctx.fillStyle = accentColor;
+            ctx.beginPath();
+            ctx.arc(leftHipX, torsoY, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(leftKneeX, kneeY, 5, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // ==== RIGHT LEG ====
+            ctx.strokeStyle = primaryColor;
+            ctx.lineWidth = 3;
+            const rightHipX = centerX + 12;
+            const rightKneeX = centerX + 15;
+            ctx.beginPath();
+            ctx.moveTo(rightHipX, torsoY);
+            ctx.lineTo(rightKneeX, kneeY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(rightKneeX, kneeY);
+            ctx.lineTo(rightKneeX + 5, ankleY);
+            ctx.stroke();
+            
+            ctx.fillStyle = accentColor;
+            ctx.beginPath();
+            ctx.arc(rightHipX, torsoY, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(rightKneeX, kneeY, 5, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // ==== DRAW ANGLE LABELS WITH BACKGROUNDS ====
+            ctx.font = 'bold 11px Arial';
+            ctx.textAlign = 'center';
+            
+            // Left shoulder angle
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.fillRect(leftShoulderX - 32, leftShoulderY - 22, 28, 16);
+            ctx.strokeStyle = primaryColor;
+            ctx.lineWidth = 1;
+            ctx.strokeRect(leftShoulderX - 32, leftShoulderY - 22, 28, 16);
+            ctx.fillStyle = primaryColor;
+            ctx.fillText(Math.round(leftShoulderAngle) + '°', leftShoulderX - 18, leftShoulderY - 10);
+            
+            // Right shoulder angle
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.fillRect(rightShoulderX + 4, rightShoulderY - 22, 28, 16);
+            ctx.strokeStyle = primaryColor;
+            ctx.lineWidth = 1;
+            ctx.strokeRect(rightShoulderX + 4, rightShoulderY - 22, 28, 16);
+            ctx.fillStyle = primaryColor;
+            ctx.fillText(Math.round(rightShoulderAngle) + '°', rightShoulderX + 18, rightShoulderY - 10);
+            
+            // Status indicator at bottom
+            if (showAccuracy) {
+                ctx.font = 'bold 10px Arial';
+                ctx.fillStyle = status === 'correct' ? '#10b981' : status === 'error' ? '#ef4444' : '#f59e0b';
+                ctx.textAlign = 'center';
+                const statusText = status === 'correct' ? `✓ ${accuracy}%` : status === 'error' ? `✗ Adjust` : `≈ ${accuracy}%`;
+                ctx.fillText(statusText, centerX, h - 4);
+            }
+        }
+
         function drawCompleteSkeleton(canvasId, leftShoulderAngle, leftElbowAngle, rightShoulderAngle, rightElbowAngle, status = 'neutral', isAnimating = false) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
@@ -1860,15 +2347,34 @@
             animate();
         }
 
-        // Draw skeleton on canvas (original function - now uses drawCompleteSkeleton)
-        function drawSkeleton(canvasId, leftShoulderAngle, leftElbowAngle, rightShoulderAngle, rightElbowAngle, status = 'neutral') {
-            drawCompleteSkeleton(canvasId, leftShoulderAngle, leftElbowAngle, rightShoulderAngle, rightElbowAngle, status, false);
+        // Draw skeleton on canvas (wrapper function that uses enhanced version)
+        function drawSkeleton(canvasId, leftShoulderAngle, leftElbowAngle, rightShoulderAngle, rightElbowAngle, status = 'neutral', accuracy = 0) {
+            drawEnhancedSkeleton(canvasId, leftShoulderAngle, leftElbowAngle, rightShoulderAngle, rightElbowAngle, status, true, accuracy);
         }
 
         // Extract YouTube video ID
         function extractYoutubeId(url) {
-            const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
-            return match ? match[1] : '';
+            // Try to extract video ID from various YouTube URL formats
+            let match;
+            
+            // Standard watch URL: youtube.com/watch?v=VIDEO_ID
+            match = url.match(/(?:youtube\.com\/watch\?v=)([^&\n?#]+)/);
+            if (match) return match[1];
+            
+            // Short URL: youtu.be/VIDEO_ID
+            match = url.match(/(?:youtu\.be\/)([^&\n?#]+)/);
+            if (match) return match[1];
+            
+            // Embed URL: youtube.com/embed/VIDEO_ID
+            match = url.match(/(?:youtube\.com\/embed\/)([^&\n?#]+)/);
+            if (match) return match[1];
+            
+            // Playlist URL: try to extract first video from playlist or use placeholder
+            if (url.includes('playlist')) {
+                return 'dQw4w9WgXcQ'; // Fallback placeholder video ID
+            }
+            
+            return '';
         }
 
         // Open exercise details modal
@@ -1944,6 +2450,13 @@
 
             const modal = document.getElementById('exerciseModal');
             modal.style.display = 'block';
+            
+            // Hide chatbot widget when showing modals
+            const chatbotWidget = document.querySelector('.unified-chatbot-widget');
+            if (chatbotWidget) {
+                chatbotWidget.style.display = 'none';
+            }
+            
             console.log('✅ Modal displayed - Start Exercising button should be visible');
             console.log('✅ Modal display value:', modal.style.display);
         }
@@ -1952,6 +2465,12 @@
         function closeModal() {
             document.getElementById('exerciseModal').style.display = 'none';
             document.getElementById('modalVideo').src = '';
+            
+            // Show chatbot widget again
+            const chatbotWidget = document.querySelector('.unified-chatbot-widget');
+            if (chatbotWidget) {
+                chatbotWidget.style.display = 'block';
+            }
         }
 
         // Start exercising with webcam
@@ -1959,6 +2478,22 @@
             closeModal();
             isExercising = true;
             messageCount = 0;
+            repCount = 0;
+            totalFrames = 0;
+            correctFrames = 0;
+            incorrectFrames = 0;
+            lastFeedbackTime = 0;
+            feedbackPending = false;
+            
+            // Generate unique session ID for this exercise session
+            sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            
+            // Hide the floating chatbot widget during exercise
+            const chatbotWidget = document.querySelector('.unified-chatbot-widget');
+            if (chatbotWidget) {
+                chatbotWidget.style.display = 'none';
+            }
+            
             document.getElementById('webcamModal').style.display = 'block';
             
             // Clear conversation and reinitialize
@@ -1976,7 +2511,7 @@
 
                 // Wait for video to be ready
                 video.onloadedmetadata = () => {
-                    addMessage('✅ Webcam connected successfully', 'success');
+                    addExerciseMessage('✅ Webcam connected successfully', 'success');
                     startPoseFeedback(video);
                 };
             } catch (error) {
@@ -1986,7 +2521,7 @@
                     ? 'No camera found. Please connect a webcam.'
                     : 'Could not access webcam. ' + error.message;
                 
-                addMessage(errorMsg, 'error');
+                addExerciseMessage(errorMsg, 'error');
                 setTimeout(() => {
                     closeWebcamModal();
                 }, 2000);
@@ -1999,6 +2534,7 @@
             let sessionStartTime = Date.now();
             let lastFeedbackTime = Date.now();
             const FEEDBACK_INTERVAL = 5000; // Show feedback every 5 seconds
+            let apiErrorShown = false; // Flag to prevent duplicate error messages
             
             // Accumulator for feedback data
             let feedbackAccumulator = {
@@ -2010,7 +2546,7 @@
                 lastAngles: {}
             };
 
-            addMessage(`Exercise: "${currentExercise.name}" started`, 'info', 'Initializing pose detection...');
+            addExerciseMessage(`Exercise: "${currentExercise.name}" started`, 'info', 'Initializing pose detection...');
 
             const processFrame = async () => {
                 if (!isExercising) return;
@@ -2033,37 +2569,116 @@
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
                                 exercise_name: currentExercise.name,
-                                image: imageData
+                                image: imageData,
+                                session_id: sessionId
                             })
                         });
+
+                        if (!response.ok) {
+                            throw new Error(`API returned ${response.status}: ${response.statusText}`);
+                        }
 
                         const data = await response.json();
                         const currentTime = Date.now();
 
-                        // Always update badge and angles in real-time
-                        updatePoseBadge(data.correct, data.message);
+                        // DEBUG: Log what we received from backend
+                        console.log("📡 API Response received:", data);
+                        console.log("📐 Angles from backend:", data.angles);
+
+                        // Track total frames
+                        totalFrames++;
+
+                        // NEW LOGIC: 1 correct frame = 1 rep
+                        if (data.correct) {
+                            correctFrames++;
+                            repCount++;  // Each correct frame = 1 rep
+                            
+                            console.log(`✅ CORRECT! Rep count: ${repCount}/${MAX_REPS}`);
+                            
+                            // Show positive feedback immediately
+                            updatePoseBadge(true, "✅ Good! Performing well! Keep going!");
+                            
+                            // Reset feedback timer since posture is now correct
+                            feedbackPending = false;
+                            lastFeedbackTime = 0;
+                            
+                            // Check if 10 reps completed
+                            if (repCount >= MAX_REPS) {
+                                console.log("🎉 EXERCISE COMPLETE! 10 reps reached!");
+                                addExerciseMessage(`🎉🎉 Excellent! 10 Reps Complete!`, 'success');
+                                speakMessageFallback(`Exercise complete! 10 reps done! Great job!`);
+                                
+                                // Stop exercise and show final report
+                                await stopExerciseAndShowReport();
+                                return;  // Stop processing frames
+                            }
+                        } else {
+                            // Posture is incorrect
+                            incorrectFrames++;
+                            
+                            // Start 5-second feedback delay
+                            if (!feedbackPending) {
+                                feedbackPending = true;
+                                lastFeedbackTime = currentTime;
+                                console.log("⏱️ Posture incorrect - waiting 5 sec before showing feedback");
+                            }
+                            
+                            // Check if 5 seconds have passed since posture became incorrect
+                            if (feedbackPending && (currentTime - lastFeedbackTime) >= FEEDBACK_DELAY) {
+                                // Only show feedback if still incorrect after 5 sec
+                                console.log("📍 Showing feedback after 5 sec delay");
+                                updatePoseBadge(false, data.message);
+                                feedbackPending = false;  // Reset flag
+                            } else if (!feedbackPending) {
+                                // First frame of incorrect posture
+                                updatePoseBadge(false, "📍 Adjusting...");
+                            }
+                        }
+
+                        // Update rep display
+                        updateRepDisplay(repCount, totalFrames, correctFrames, incorrectFrames);
+                        
+                        // Display real-time statistics in feedback panel (every 10 frames)
+                        if (totalFrames % 10 === 0) {
+                            const accuracy = totalFrames > 0 ? Math.round((correctFrames / totalFrames) * 100) : 0;
+                            const statsMsg = `📊 Frames: ${totalFrames} | Correct: ${correctFrames} (${accuracy}%) | Reps: ${repCount}/10`;
+                            // Silently update (don't spam the message panel)
+                            console.log(statsMsg);
+                        }
 
                         // Display angles in real-time
                         if (data.angles && Object.keys(data.angles).length > 0) {
                             const angleDisplay = document.getElementById('angleDisplay');
                             angleDisplay.style.display = 'block';
                             
-                            if (data.angles.left_shoulder !== undefined) {
+                            // Update LEFT shoulder
+                            if (data.angles.left_shoulder !== undefined && data.angles.left_shoulder !== null) {
                                 const leftEl = document.getElementById('leftShoulderAngle');
                                 const targetLeft = currentExercise.leftArm.shoulderAngle;
                                 const diff = Math.abs(data.angles.left_shoulder - targetLeft);
-                                leftEl.textContent = data.angles.left_shoulder;
-                                leftEl.className = diff <= 7 ? 'angle-value-item success' : 'angle-value-item warning';
+                                leftEl.textContent = Math.round(data.angles.left_shoulder);
+                                leftEl.className = diff <= 50 ? 'angle-value-item success' : 'angle-value-item warning';
                                 feedbackAccumulator.lastAngles.left_shoulder = data.angles.left_shoulder;
+                                console.log(`✅ LEFT angle updated: ${data.angles.left_shoulder}° (target: ${targetLeft}°, diff: ${diff}°)`);
+                            } else {
+                                document.getElementById('leftShoulderAngle').textContent = '--';
+                                document.getElementById('leftShoulderAngle').className = 'angle-value-item';
+                                console.warn("⚠️ LEFT angle not received from backend");
                             }
                             
-                            if (data.angles.right_shoulder !== undefined) {
+                            // Update RIGHT shoulder
+                            if (data.angles.right_shoulder !== undefined && data.angles.right_shoulder !== null) {
                                 const rightEl = document.getElementById('rightShoulderAngle');
                                 const targetRight = currentExercise.rightArm.shoulderAngle;
                                 const diff = Math.abs(data.angles.right_shoulder - targetRight);
-                                rightEl.textContent = data.angles.right_shoulder;
-                                rightEl.className = diff <= 7 ? 'angle-value-item success' : 'angle-value-item warning';
+                                rightEl.textContent = Math.round(data.angles.right_shoulder);
+                                rightEl.className = diff <= 50 ? 'angle-value-item success' : 'angle-value-item warning';
                                 feedbackAccumulator.lastAngles.right_shoulder = data.angles.right_shoulder;
+                                console.log(`✅ RIGHT angle updated: ${data.angles.right_shoulder}° (target: ${targetRight}°, diff: ${diff}°)`);
+                            } else {
+                                document.getElementById('rightShoulderAngle').textContent = '--';
+                                document.getElementById('rightShoulderAngle').className = 'angle-value-item';
+                                console.warn("⚠️ RIGHT angle not received from backend");
                             }
                         }
 
@@ -2075,13 +2690,6 @@
                             feedbackAccumulator.incorrectCount++;
                         }
                         feedbackAccumulator.lastMessage = data.message;
-                        
-                        if (data.feedback) {
-                            const tips = data.feedback.split('|').map(tip => tip.trim());
-                            tips.forEach(tip => {
-                                if (tip) feedbackAccumulator.allFeedbackTips.add(tip);
-                            });
-                        }
 
                         // Display accumulated feedback every 5 seconds
                         if (currentTime - lastFeedbackTime >= FEEDBACK_INTERVAL) {
@@ -2099,8 +2707,22 @@
                             lastFeedbackTime = currentTime;
                         }
                     } catch (error) {
-                        console.error('API Error:', error);
-                        addMessage('Connection error: Unable to reach pose detection API', 'error', error.message);
+                        console.error('❌ Pose API Error:', error);
+                        console.error('Error details:', error.message);
+                        
+                        // Only show error message ONCE per exercise session
+                        if (!apiErrorShown) {
+                            apiErrorShown = true;
+                            
+                            // Show helpful error messages
+                            if (error.message.includes('Failed to fetch')) {
+                                addExerciseMessage('❌ Cannot connect to Pose API at localhost:5003', 'error', 'Make sure the pose detection service is running');
+                            } else if (error.message.includes('timeout')) {
+                                addExerciseMessage('⏱️ Pose API timeout - request took too long', 'error', 'The API may be overloaded or slow');
+                            } else {
+                                addExerciseMessage(`❌ Pose API Error: ${error.message}`, 'error', 'Check browser console for details');
+                            }
+                        }
                     }
                 }
 
@@ -2117,33 +2739,69 @@
                 const status = isCorrect ? 'correct' : 'error';
 
                 if (isCorrect) {
-                    addMessage(accumulator.lastMessage, 'success');
-                    // Queue the message for speech (will play sequentially)
+                    // Show success message from API
+                    addExerciseMessage(`✅ ${accumulator.lastMessage}`, 'success');
                     speakMessageFallback(accumulator.lastMessage);
+                    
+                    // Show positive encouragement feedback
+                    addExerciseMessage('💡 Great form! Keep going!', 'success');
+                    speakMessageFallback('Great form! Keep going!');
                 } else {
-                    // Show main message
-                    addMessage(accumulator.lastMessage, 'error');
-                    
-                    // Queue the main message for speech
+                    // Show the feedback message from API (not angles)
+                    const mainMsg = `❌ ${accumulator.lastMessage}`;
+                    addExerciseMessage(mainMsg, 'error');
                     speakMessageFallback(accumulator.lastMessage);
                     
-                    // Show all accumulated feedback tips and queue them for speech
-                    if (accumulator.allFeedbackTips.size > 0) {
-                        // Add each feedback tip as a message and queue for speech
-                        accumulator.allFeedbackTips.forEach((tip) => {
-                            addMessage(tip, 'feedback');
-                            // Queue each tip for speech - they'll play in sequence
-                            speakMessageFallback(tip);
-                        });
+                    // Get the last response to extract API feedback
+                    const lastResponse = accumulator.responses[accumulator.responses.length - 1];
+                    if (lastResponse && lastResponse.feedback) {
+                        // Split feedback by pipe and clean it
+                        const feedbackTips = lastResponse.feedback
+                            .split('|')
+                            .map(tip => tip.trim())
+                            .filter(tip => tip.length > 0);
+                        
+                        if (feedbackTips.length > 0) {
+                            let tipsText = '';
+                            feedbackTips.forEach((tip, index) => {
+                                if (index > 0) tipsText += '\n';
+                                tipsText += `• ${tip}`;
+                            });
+                            
+                            addExerciseMessage('📋 Feedback from AI:', 'feedback', tipsText);
+                            
+                            // Speak each feedback tip
+                            feedbackTips.forEach((tip) => {
+                                speakMessageFallback(tip);
+                            });
+                        }
+                    }
+                    
+                    // Show current angles from API (just for reference, not target comparison)
+                    if (accumulator.lastAngles && Object.keys(accumulator.lastAngles).length > 0) {
+                        const angles = accumulator.lastAngles;
+                        let angleInfo = '';
+                        
+                        if (angles.left_shoulder !== undefined) {
+                            angleInfo += `Left Shoulder: ${Math.round(angles.left_shoulder)}°\n`;
+                        }
+                        
+                        if (angles.right_shoulder !== undefined) {
+                            angleInfo += `Right Shoulder: ${Math.round(angles.right_shoulder)}°`;
+                        }
+                        
+                        if (angleInfo) {
+                            addExerciseMessage('📐 Current Position:', 'feedback', angleInfo);
+                        }
                     }
                     
                     // Trigger animation from current to target when exercise is WRONG
                     if (!animationState.isAnimating && accumulator.lastAngles.left_shoulder !== undefined) {
                         const fromAngles = {
                             leftShoulder: accumulator.lastAngles.left_shoulder || currentExercise.leftArm.shoulderAngle,
-                            leftElbow: accumulator.lastAngles.left_elbow || currentExercise.leftArm.elbowAngle,
+                            leftElbow: currentExercise.leftArm.elbowAngle,
                             rightShoulder: accumulator.lastAngles.right_shoulder || currentExercise.rightArm.shoulderAngle,
-                            rightElbow: accumulator.lastAngles.right_elbow || currentExercise.rightArm.elbowAngle
+                            rightElbow: currentExercise.rightArm.elbowAngle
                         };
                         
                         const toAngles = {
@@ -2153,35 +2811,149 @@
                             rightElbow: currentExercise.rightArm.elbowAngle
                         };
                         
-                        // Start animation on the live skeleton canvas
                         animateSkeleton('liveSkeletonCanvas', fromAngles, toAngles);
                     }
                 }
-                
-                // Draw live skeleton with current angles (for correct pose)
-                if (accumulator.lastAngles.left_shoulder !== undefined) {
-                    drawSkeleton('liveSkeletonCanvas',
-                        accumulator.lastAngles.left_shoulder || currentExercise.leftArm.shoulderAngle,
-                        accumulator.lastAngles.left_elbow || currentExercise.leftArm.elbowAngle,
-                        accumulator.lastAngles.right_shoulder || currentExercise.rightArm.shoulderAngle,
-                        accumulator.lastAngles.right_elbow || currentExercise.rightArm.elbowAngle,
-                        status);
-                }
-                
-                // Draw target skeleton
-                drawSkeleton('targetSkeletonCanvas',
-                    currentExercise.leftArm.shoulderAngle,
-                    currentExercise.leftArm.elbowAngle,
-                    currentExercise.rightArm.shoulderAngle,
-                    currentExercise.rightArm.elbowAngle,
-                    'neutral');
             }
 
-            addMessage('Webcam initialized. Position yourself in frame.', 'info');
+            addExerciseMessage('Webcam initialized. Position yourself in frame.', 'info');
             processFrame();
         }
 
         // Stop exercising
+        // Stop exercise and show final report
+        async function stopExerciseAndShowReport() {
+            isExercising = false;
+            const video = document.getElementById('webcam');
+            if (video.srcObject) {
+                video.srcObject.getTracks().forEach(track => track.stop());
+            }
+            
+            // Stop audio
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio = null;
+            }
+            window.speechSynthesis.cancel();
+            
+            // Calculate final stats
+            const accuracy = totalFrames > 0 ? Math.round((correctFrames / totalFrames) * 100) : 0;
+            
+            // Show final report modal
+            showFinalReport({
+                exercise: currentExercise.name,
+                totalReps: repCount,
+                correctFrames: correctFrames,
+                incorrectFrames: incorrectFrames,
+                totalFrames: totalFrames,
+                accuracy: accuracy,
+                sessionId: sessionId
+            });
+        }
+
+        // Display final report and save to database
+        function showFinalReport(reportData) {
+            const reportHtml = `
+                <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                            background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); 
+                            z-index: 10000; max-width: 600px; text-align: center;">
+                    <h2 style="color: #28a745; margin-bottom: 20px;">🎉 Exercise Complete!</h2>
+                    
+                    <div style="background: linear-gradient(135deg, #28a745, #20c997); color: white; padding: 20px; 
+                                border-radius: 10px; margin-bottom: 20px;">
+                        <div style="font-size: 28px; font-weight: bold; margin-bottom: 10px;">${reportData.totalReps} / ${MAX_REPS} Reps</div>
+                        <div style="font-size: 18px;">${reportData.exercise}</div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                        <div style="background: #e8f5e9; padding: 15px; border-radius: 8px;">
+                            <div style="font-size: 12px; color: #666;">✅ Correct Frames</div>
+                            <div style="font-size: 24px; font-weight: bold; color: #28a745;">${reportData.correctFrames}</div>
+                        </div>
+                        <div style="background: #ffebee; padding: 15px; border-radius: 8px;">
+                            <div style="font-size: 12px; color: #666;">❌ Incorrect Frames</div>
+                            <div style="font-size: 24px; font-weight: bold; color: #d32f2f;">${reportData.incorrectFrames}</div>
+                        </div>
+                        <div style="background: #e3f2fd; padding: 15px; border-radius: 8px;">
+                            <div style="font-size: 12px; color: #666;">📊 Total Frames</div>
+                            <div style="font-size: 24px; font-weight: bold; color: #1976d2;">${reportData.totalFrames}</div>
+                        </div>
+                        <div style="background: #fff3e0; padding: 15px; border-radius: 8px;">
+                            <div style="font-size: 12px; color: #666;">📈 Accuracy</div>
+                            <div style="font-size: 24px; font-weight: bold; color: #f57c00;">${reportData.accuracy}%</div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: left; background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;">
+                        <p><strong>📋 Summary:</strong></p>
+                        <p>• You completed ${reportData.totalReps} out of ${MAX_REPS} reps</p>
+                        <p>• Accuracy: ${reportData.accuracy}% (${reportData.correctFrames}/${reportData.totalFrames} frames correct)</p>
+                        <p>• Session saved to your dashboard</p>
+                    </div>
+                    
+                    <button onclick="closeReportAndExercise()" style="background: #28a745; color: white; border: none; padding: 12px 30px; 
+                                                            border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;">
+                        ✅ Close Report
+                    </button>
+                </div>
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9999;"></div>
+            `;
+            
+            // Insert report into page
+            const reportContainer = document.createElement('div');
+            reportContainer.id = 'finalReportModal';
+            reportContainer.innerHTML = reportHtml;
+            document.body.appendChild(reportContainer);
+            
+            // Save session to database
+            saveExerciseSession(reportData);
+        }
+
+        // Close report and return to main exercise menu
+        function closeReportAndExercise() {
+            const modal = document.getElementById('finalReportModal');
+            if (modal) modal.remove();
+            
+            // Disable angle display
+            document.getElementById('angleDisplay').style.display = 'none';
+            
+            // Close webcam modal
+            setTimeout(() => {
+                closeWebcamModal();
+            }, 500);
+        }
+
+        // Save exercise session to database
+        async function saveExerciseSession(reportData) {
+            try {
+                const payload = {
+                    exercise_name: reportData.exercise,
+                    total_reps: reportData.totalReps,
+                    correct_frames: reportData.correctFrames,
+                    incorrect_frames: reportData.incorrectFrames,
+                    total_frames: reportData.totalFrames,
+                    accuracy: reportData.accuracy,
+                    session_id: reportData.sessionId
+                };
+                
+                // Include patient_id if doctor supervising
+                if (currentUserType === 'doctor' && selectedPatientId) {
+                    payload.patient_id = selectedPatientId;
+                }
+                
+                const response = await fetch('/api/save-exercise-session/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const result = await response.json();
+                console.log("✅ Session saved to database:", result);
+            } catch (error) {
+                console.error("❌ Error saving session:", error);
+            }
+        }
+
         function stopExercising() {
             isExercising = false;
             const video = document.getElementById('webcam');
@@ -2198,7 +2970,7 @@
             isSpeaking = false;
             speechQueue = [];
             
-            addMessage(`Exercise session ended. Total messages: ${messageCount}`, 'info', 'You can close this window or start another exercise.');
+            addExerciseMessage(`Exercise session ended. Total messages: ${messageCount}`, 'info', 'You can close this window or start another exercise.');
             
             // Disable angle display
             document.getElementById('angleDisplay').style.display = 'none';
@@ -2212,6 +2984,12 @@
         function closeWebcamModal() {
             document.getElementById('webcamModal').style.display = 'none';
             isExercising = false;
+            
+            // Show the chatbot widget again
+            const chatbotWidget = document.querySelector('.unified-chatbot-widget');
+            if (chatbotWidget) {
+                chatbotWidget.style.display = 'block';
+            }
         }
 
         // Filter exercises
@@ -2242,12 +3020,182 @@
             window.addEventListener('click', function(e) {
                 const modal = document.getElementById('exerciseModal');
                 const webcamModal = document.getElementById('webcamModal');
+                const patientModal = document.getElementById('patientSelectorModal');
                 if (e.target === modal) closeModal();
                 if (e.target === webcamModal) closeWebcamModal();
+                if (e.target === patientModal) closePatientSelector();
             });
 
-            initializeExercises();
+            // Detect user type and initialize patient selection if needed
+            console.log('🔍 Starting initialization...');
+            
+            // Run both in parallel
+            detectUserTypeAndInitialize().catch(err => {
+                console.warn('User type detection failed, continuing anyway:', err);
+            });
+            
+            console.log('🔍 Initializing exercises...');
+            try {
+                initializeExercises();
+                console.log('✅ Exercises initialized successfully');
+            } catch (error) {
+                console.error('❌ Error initializing exercises:', error);
+                // Fallback: try to render directly
+                console.log('🔄 Attempting fallback render...');
+                try {
+                    renderExercises(exercises);
+                } catch (fallbackError) {
+                    console.error('❌ Fallback also failed:', fallbackError);
+                }
+            }
         });
+
+        // ========== DOCTOR vs PATIENT DETECTION ==========
+        async function detectUserTypeAndInitialize() {
+            try {
+                const response = await fetch('/api/current-user-type/');
+                if (!response.ok) {
+                    console.warn('User type endpoint not available, defaulting to patient');
+                    currentUserType = 'patient';
+                    return;
+                }
+                
+                const data = await response.json();
+                currentUserType = data.user_type;
+                console.log('✅ User type detected:', currentUserType);
+                
+                if (currentUserType === 'doctor') {
+                    // Load list of patients this doctor is supervising
+                    await loadDoctorPatients();
+                }
+            } catch (error) {
+                console.warn('Error detecting user type:', error);
+                console.warn('Defaulting to patient mode');
+                currentUserType = 'patient'; // Default to patient
+            }
+        }
+
+        async function loadDoctorPatients() {
+            try {
+                const response = await fetch('/api/doctor-patients/');
+                if (!response.ok) {
+                    console.warn('Doctor patients endpoint not available');
+                    return;
+                }
+                
+                const data = await response.json();
+                
+                if (data.success && data.patients) {
+                    allPatients = data.patients;
+                    console.log('✅ Loaded patients for doctor:', allPatients.length);
+                    
+                    // Populate patient selector
+                    const patientSelect = document.getElementById('patientSelect');
+                    patientSelect.innerHTML = '';
+                    
+                    if (allPatients.length === 0) {
+                        patientSelect.innerHTML = '<option value="">No patients assigned</option>';
+                        return;
+                    }
+                    
+                    allPatients.forEach(patient => {
+                        const option = document.createElement('option');
+                        option.value = patient.id;
+                        option.textContent = patient.name;
+                        patientSelect.appendChild(option);
+                    });
+                } else {
+                    console.warn('Failed to load patients');
+                }
+            } catch (error) {
+                console.warn('Error loading patients:', error);
+            }
+        }
+
+        function showPatientSelector() {
+            const modal = document.getElementById('patientSelectorModal');
+            if (currentUserType === 'doctor' && allPatients.length > 0) {
+                // Hide chatbot widget when showing modals
+                const chatbotWidget = document.querySelector('.unified-chatbot-widget');
+                if (chatbotWidget) {
+                    chatbotWidget.style.display = 'none';
+                }
+                modal.style.display = 'block';
+            } else {
+                // Patient or no patients available, proceed directly
+                showExerciseModal(currentExercise);
+            }
+        }
+
+        function closePatientSelector() {
+            const modal = document.getElementById('patientSelectorModal');
+            modal.style.display = 'none';
+            
+            // Show chatbot widget again
+            const chatbotWidget = document.querySelector('.unified-chatbot-widget');
+            if (chatbotWidget) {
+                chatbotWidget.style.display = 'block';
+            }
+        }
+
+        function startExerciseWithPatient() {
+            const patientSelect = document.getElementById('patientSelect');
+            selectedPatientId = patientSelect.value;
+            
+            if (!selectedPatientId) {
+                alert('Please select a patient');
+                return;
+            }
+            
+            closePatientSelector();
+            
+            // Proceed with exercise (will use selectedPatientId when saving)
+            if (currentExercise) {
+                startExercising(currentExercise.name);
+            }
+        }
+
+        // New function to handle start exercise with doctor/patient check
+        function handleStartExercise() {
+            if (currentUserType === 'doctor' && allPatients.length > 0) {
+                // Doctor - show patient selector
+                showPatientSelector();
+            } else {
+                // Patient or no patients - start directly
+                startExercising();
+            }
+        }
+
+        // Override showExerciseModal to check user type first
+        const originalShowExerciseModal = window.showExerciseModal;
+        window.showExerciseModal = function(exercise) {
+            currentExercise = exercise;
+            
+            // If user is doctor, show patient selector before exercise
+            if (currentUserType === 'doctor' && allPatients.length > 0) {
+                showPatientSelector();
+            } else {
+                originalShowExerciseModal(exercise);
+            }
+        }
+
+        // ========== DIAGNOSTIC CHECK ==========
+        // Add a timer to check if exercises rendered after 2 seconds
+        setTimeout(function() {
+            const grid = document.getElementById('exercisesGrid');
+            const childCount = grid ? grid.children.length : 0;
+            console.log('📊 Diagnostic at 2s - Grid children:', childCount);
+            if (childCount === 0 && exercises.length > 0) {
+                console.warn('⚠️ Exercises array has data but grid is empty!');
+                console.log('Attempting emergency render...');
+                try {
+                    renderExercises(exercises);
+                    console.log('✅ Emergency render successful');
+                } catch (e) {
+                    console.error('❌ Emergency render failed:', e);
+                }
+            }
+        }, 2000);
     </script>
 
 <!-- Global Voice Recorder - Always Listening -->

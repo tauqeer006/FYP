@@ -58,8 +58,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     reset_token_created = models.DateTimeField(blank=True, null=True)
     
     # Timestamp fields
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(null=True, blank=True, db_index=True)
+    updated_at = models.DateTimeField(null=True, blank=True)
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email', 'user_type']
@@ -88,8 +88,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Admin(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     department = models.CharField(max_length=100)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Admins"
@@ -98,8 +98,8 @@ class Admin(models.Model):
 class Doctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     specialization = models.CharField(max_length=100)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Doctors"
@@ -109,8 +109,8 @@ class Patient(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     age = models.IntegerField()
     medical_history = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 
 class PatientCreatedByDoctor(BaseModel):
@@ -208,6 +208,70 @@ class PatientReport(BaseModel):
 
     def __str__(self):
         return f"{self.patient_name} ({self.patient_idx})"
+
+
+class ExerciseSession(BaseModel):
+    """Exercise session tracking for rehabilitation exercises"""
+    # Patient association
+    patient = models.ForeignKey(
+        'PatientCreatedByDoctor',
+        on_delete=models.CASCADE,
+        related_name='exercise_sessions',
+        db_index=True,
+        null=True,
+        blank=True
+    )
+    
+    # Doctor who supervised (optional - null if patient doing it themselves)
+    doctor = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        related_name='supervised_exercise_sessions',
+        db_index=True,
+        null=True,
+        blank=True,
+        limit_choices_to={'user_type': 'doctor'}
+    )
+    
+    # Exercise details
+    exercise_name = models.CharField(max_length=200, db_index=True)
+    exercise_date = models.DateTimeField(auto_now_add=True, db_index=True)
+    
+    # Performance metrics
+    total_reps_completed = models.IntegerField(default=0)  # Out of 10
+    correct_frames = models.IntegerField(default=0)  # Frames with correct posture
+    incorrect_frames = models.IntegerField(default=0)  # Frames with incorrect posture
+    total_frames = models.IntegerField(default=0)  # Total frames processed
+    accuracy_percentage = models.FloatField(default=0.0)  # Overall accuracy %
+    
+    # Session tracking
+    session_id = models.CharField(max_length=100, unique=True, db_index=True)
+    session_status = models.CharField(
+        max_length=20,
+        choices=[
+            ('completed', 'Completed'),
+            ('incomplete', 'Incomplete'),
+            ('stopped', 'Stopped Early'),
+        ],
+        default='completed'
+    )
+    
+    # Notes/feedback
+    notes = models.TextField(blank=True, null=True)
+    
+    class Meta:
+        ordering = ['-exercise_date']
+        indexes = [
+            models.Index(fields=['patient', 'exercise_date']),
+            models.Index(fields=['doctor', 'exercise_date']),
+            models.Index(fields=['exercise_name', 'exercise_date']),
+            models.Index(fields=['session_status']),
+        ]
+        verbose_name_plural = "Exercise Sessions"
+    
+    def __str__(self):
+        patient_name = f"{self.patient.fname} {self.patient.lname}" if self.patient else "Unknown"
+        return f"{patient_name} - {self.exercise_name} ({self.exercise_date.strftime('%Y-%m-%d %H:%M')})"
 
 
 # Keep this for backward compatibility during migration

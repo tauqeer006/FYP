@@ -92,6 +92,40 @@ login = auth_login
 
 User = get_user_model()
 
+# ==================== HEALTH CHECK ====================
+@require_http_methods(['GET'])
+def health_check(request):
+    """
+    Health check endpoint for monitoring
+    Returns service status and version
+    """
+    try:
+        from django.db import connection
+        from django.db.utils import OperationalError
+        
+        # Test database connection
+        db_status = 'ok'
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute('SELECT 1')
+        except OperationalError:
+            db_status = 'error'
+        
+        return JsonResponse({
+            'status': 'ok',
+            'service': 'django-app',
+            'version': '1.0.0',
+            'database': db_status,
+            'timestamp': timezone.now().isoformat()
+        }, status=200)
+    except Exception as e:
+        logger.error(f"Health check failed: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'service': 'django-app',
+            'message': str(e)
+        }, status=500)
+
 # ======================== Rate Limiting Helper ========================
 _voice_command_cache = {}  # Format: {identifier: [timestamps]}
 
@@ -915,15 +949,20 @@ Best regards,
 X-AI Medical System Team
                     """
                     
-                    send_mail(
-                        subject=subject,
-                        message=message,
-                        from_email=settings.DEFAULT_FROM_EMAIL,
-                        recipient_list=[email],
-                        fail_silently=False,
-                    )
-                    logging.info(f"Welcome email sent to {email}")
-                    messages.success(request, f"Patient {fname} {lname} added successfully! Welcome email sent to {email}.")
+                    # Only send email if SEND_EMAIL is enabled
+                    if os.getenv('SEND_EMAIL', 'False').lower() in ['true', '1', 'yes']:
+                        send_mail(
+                            subject=subject,
+                            message=message,
+                            from_email=settings.DEFAULT_FROM_EMAIL,
+                            recipient_list=[email],
+                            fail_silently=False,
+                        )
+                        logging.info(f"Welcome email sent to {email}")
+                        messages.success(request, f"Patient {fname} {lname} added successfully! Welcome email sent to {email}.")
+                    else:
+                        logging.info(f"Email sending disabled. Patient {fname} {lname} created with username: {username}")
+                        messages.success(request, f"Patient {fname} {lname} added successfully! Credentials: {username} / {password}")
                 except Exception as e:
                     logging.error(f"Failed to send email to {email}: {str(e)}")
                     messages.warning(request, f"Patient {fname} {lname} added successfully, but email could not be sent. Credentials: {username} / {password}")
@@ -2254,4 +2293,317 @@ def translate_via_google(text, source_lang='ur', target_lang='en'):
     except Exception as e:
         logging.error(f"Translation via Google failed: {str(e)}")
         return text
+
+
+# ========== EXERCISE SESSION ENDPOINTS ==========
+
+@csrf_exempt
+@require_http_methods(["POST"])
+@login_required
+def save_exercise_session(request):
+    """
+    Save exercise session data to database after user completes exercise
+    Endpoint: /api/save-exercise-session
+    
+    Expected POST data:
+    {
+        'exercise_name': str,
+        'total_reps': int (0-10),
+        'correct_frames': int,
+        'incorrect_frames': int,
+        'total_frames': int,
+        'accuracy': float (0-100),
+        'session_id': str (unique),
+        'patient_id': int (optional - for doctor-supervised),
+        'notes': str (optional)
+    }
+    """
+    try:
+        data = json.loads(request.body)
+        
+        # Validate required fields
+        required_fields = ['exercise_name', 'total_reps', 'correct_frames', 'incorrect_frames', 'total_frames', 'accuracy', 'session_id']
+        missing_fields = [field for field in required_fields if field not in data]
+        
+        if missing_fields:
+            return JsonResponse({
+                'success': False,
+                'error': f'Missing required fields: {", ".join(missing_fields)}'
+            }, status=400)
+        
+        # Extract data
+        exercise_name = data.get('exercise_name', '').strip()
+        total_reps = int(data.get('total_reps', 0))
+        correct_frames = int(data.get('correct_frames', 0))
+        incorrect_frames = int(data.get('incorrect_frames', 0))
+        total_frames = int(data.get('total_frames', 0))
+        accuracy = float(data.get('accuracy', 0.0))
+        session_id = data.get('session_id', '').strip()
+        patient_id = data.get('patient_id', None)
+        notes = data.get('notes', '').strip()
+        
+        # Validate exercise name
+        if not exercise_name:
+            return JsonResponse({
+                'success': False,
+                'error': 'Exercise name cannot be empty'
+            }, status=400)
+        
+        # Validate session_id is unique
+        from .models import ExerciseSession
+        if ExerciseSession.objects.filter(session_id=session_id).exists():
+            return JsonResponse({
+                'success': False,
+                'error': 'Session already saved'
+            }, status=409)
+        
+        # Determine patient and doctor based on request user
+        patient = None
+        doctor = None
+        
+        # If patient_id provided, user must be doctor supervising
+        if patient_id:
+            try:
+                patient = PatientCreatedByDoctor.objects.get(id=patient_id)
+                # Verify doctor is the one supervising this patient
+                if patient.doctor.id != request.user.id:
+                    return JsonResponse({
+                        'success': False,
+                        'error': 'Unauthorized: You are not assigned to this patient'
+                    }, status=403)
+                doctor = request.user
+            except PatientCreatedByDoctor.DoesNotExist:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Patient not found'
+                }, status=404)
+        else:
+            # Self-directed exercise - user must be patient
+            if getattr(request.user, 'user_type', None) != 'patient':
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Only patients can save self-directed exercises'
+                }, status=403)
+            
+            # Find patient record for this user
+            try:
+                patient = PatientCreatedByDoctor.objects.get(user=request.user)
+            except PatientCreatedByDoctor.DoesNotExist:
+                # Patient doesn't have a doctor assignment, use null
+                patient = None
+        
+        # Determine session status
+        session_status = 'completed' if total_reps >= 10 else 'incomplete'
+        
+        # Create exercise session record
+        exercise_session = ExerciseSession.objects.create(
+            patient=patient,
+            doctor=doctor,
+            exercise_name=exercise_name,
+            total_reps_completed=total_reps,
+            correct_frames=correct_frames,
+            incorrect_frames=incorrect_frames,
+            total_frames=total_frames,
+            accuracy_percentage=accuracy,
+            session_id=session_id,
+            session_status=session_status,
+            notes=notes
+        )
+        
+        logger.info(f"Exercise session saved: {session_id} - {exercise_name} by user {request.user.id}")
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Exercise session saved successfully',
+            'session_id': exercise_session.session_id,
+            'session_created_at': exercise_session.exercise_date.isoformat()
+        }, status=201)
+        
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'error': 'Invalid JSON in request body'
+        }, status=400)
+    except ValueError as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'Invalid data type: {str(e)}'
+        }, status=400)
+    except Exception as e:
+        logger.error(f"Error saving exercise session: {str(e)}", exc_info=True)
+        return JsonResponse({
+            'success': False,
+            'error': 'Error saving exercise session'
+        }, status=500)
+
+
+@login_required
+@require_http_methods(["GET"])
+def get_exercise_history(request):
+    """
+    Get exercise history for current user
+    Endpoint: /api/exercise-history
+    
+    Query params:
+    - limit: number of records to return (default: 50)
+    - offset: pagination offset (default: 0)
+    - exercise_name: filter by exercise name (optional)
+    """
+    try:
+        from .models import ExerciseSession
+        
+        limit = int(request.GET.get('limit', 50))
+        offset = int(request.GET.get('offset', 0))
+        exercise_name_filter = request.GET.get('exercise_name', '').strip()
+        
+        # Limit bounds
+        limit = min(limit, 100)
+        offset = max(offset, 0)
+        
+        # Build query based on user type
+        user_type = getattr(request.user, 'user_type', 'patient')
+        if user_type == 'doctor':
+            # Doctor sees exercises they supervised
+            query = ExerciseSession.objects.filter(doctor=request.user)
+        else:
+            # Patient sees their own exercises
+            query = ExerciseSession.objects.filter(patient__user=request.user)
+        
+        # Apply filters
+        if exercise_name_filter:
+            query = query.filter(exercise_name__icontains=exercise_name_filter)
+        
+        # Order by date descending
+        query = query.order_by('-exercise_date')
+        
+        # Get total count
+        total_count = query.count()
+        
+        # Apply pagination
+        sessions = query[offset:offset + limit]
+        
+        # Serialize sessions
+        sessions_data = []
+        for session in sessions:
+            # Get patient name from PatientCreatedByDoctor model
+            patient_name = 'Self-directed'
+            if session.patient:
+                patient_name = f"{session.patient.fname} {session.patient.lname}".strip()
+            
+            # Get doctor name from User model
+            doctor_name = 'None'
+            if session.doctor:
+                doctor_name = session.doctor.username
+            
+            sessions_data.append({
+                'id': session.id,
+                'exercise_name': session.exercise_name,
+                'exercise_date': session.exercise_date.isoformat(),
+                'total_reps_completed': session.total_reps_completed,
+                'correct_frames': session.correct_frames,
+                'incorrect_frames': session.incorrect_frames,
+                'total_frames': session.total_frames,
+                'accuracy_percentage': session.accuracy_percentage,
+                'session_status': session.session_status,
+                'notes': session.notes,
+                'patient_name': patient_name,
+                'doctor_name': doctor_name
+            })
+        
+        return JsonResponse({
+            'success': True,
+            'data': sessions_data,
+            'total_count': total_count,
+            'limit': limit,
+            'offset': offset,
+            'has_more': (offset + limit) < total_count
+        })
+        
+    except ValueError as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'Invalid parameter: {str(e)}'
+        }, status=400)
+    except Exception as e:
+        logger.error(f"Error fetching exercise history: {str(e)}", exc_info=True)
+        return JsonResponse({
+            'success': False,
+            'error': 'Error fetching exercise history'
+        }, status=500)
+
+
+@login_required
+@require_http_methods(["GET"])
+def get_current_user_type(request):
+    """
+    Get current user's type (doctor or patient)
+    Endpoint: /api/current-user-type/
+    """
+    try:
+        user_type = getattr(request.user, 'user_type', 'patient')
+        
+        return JsonResponse({
+            'success': True,
+            'user_type': user_type,
+            'user_id': request.user.id,
+            'user_name': request.user.username
+        })
+    except Exception as e:
+        logger.error(f"Error getting user type: {str(e)}", exc_info=True)
+        # Return patient as fallback
+        return JsonResponse({
+            'success': True,
+            'user_type': 'patient',
+            'user_id': request.user.id,
+            'user_name': getattr(request.user, 'username', 'Unknown')
+        })
+
+
+@login_required
+@require_http_methods(["GET"])
+def get_doctor_patients(request):
+    """
+    Get list of patients assigned to the current doctor
+    Endpoint: /api/doctor-patients/
+    
+    Only accessible by doctors
+    """
+    try:
+        # Check if user is a doctor
+        if getattr(request.user, 'user_type', None) != 'doctor':
+            return JsonResponse({
+                'success': False,
+                'error': 'Only doctors can view assigned patients'
+            }, status=403)
+        
+        # Get all patients created by this doctor
+        patients = PatientCreatedByDoctor.objects.filter(doctor=request.user)
+        
+        # Serialize patients
+        patients_data = []
+        for patient in patients:
+            # Use fname and lname from PatientCreatedByDoctor model
+            patient_name = f"{patient.fname} {patient.lname}".strip()
+            
+            patients_data.append({
+                'id': patient.id,
+                'name': patient_name,
+                'email': patient.email or 'N/A',
+                'phone': patient.contact_number or 'N/A',
+                'created_date': patient.created_at.isoformat() if hasattr(patient, 'created_at') else ''
+            })
+        
+        return JsonResponse({
+            'success': True,
+            'patients': patients_data,
+            'total_count': len(patients_data)
+        })
+        
+    except Exception as e:
+        logger.error(f"Error fetching doctor patients: {str(e)}", exc_info=True)
+        return JsonResponse({
+            'success': False,
+            'error': 'Error fetching patients'
+        }, status=500)
+
 

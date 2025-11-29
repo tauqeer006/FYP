@@ -153,3 +153,14 @@ malik ahmer , 123456789
 
 doctor:
 bilal , 123456789 , tauqeerqureshi112@gmail.com
+
+
+
+
+### new:
+Username: tauqeer
+Email: tauqeerqureshi112@gmail.com
+User type: admin (tauqeer056)
+
+
+pateint: tauqeerahmed / 123456789

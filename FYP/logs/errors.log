@@ -57,3 +57,1101 @@ ERROR 2025-11-28 10:07:23 views 7 123210220697280 Gemini API error: 403 Client E
 ERROR 2025-11-28 10:07:24 views 7 123210220697280 Gemini API error while generating summary: 403 Client Error: Forbidden for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyB7fwNrYMa4T05ilokA3YQwjasZcwYRG5Y
 ERROR 2025-11-28 10:07:25 views 7 123210220697280 Gemini API error while generating recommendations: 403 Client Error: Forbidden for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyB7fwNrYMa4T05ilokA3YQwjasZcwYRG5Y
 ERROR 2025-11-28 12:49:45 chatbot_service 7 130773367649984 Gemini API error: 429 Client Error: Too Many Requests for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCbN9o3MDS5tWEWeMlwGjoJAWWkzKW0pwA
+ERROR 2025-11-29 09:59:53 chatbot_service 135 132916942202560 Gemini API error: 429 Client Error: Too Many Requests for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyC5tpXDWE045NA9JNRd4Sg_GuQpi_kb-wk
+ERROR 2025-11-29 10:28:43 chatbot_service 7 140628791912128 Gemini API error: 429 Client Error: Too Many Requests for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyC5tpXDWE045NA9JNRd4Sg_GuQpi_kb-wk
+ERROR 2025-11-29 16:01:48 views 7 125793353070272 Error getting user type: 'User' object has no attribute 'get_full_name'
+ERROR 2025-11-29 16:01:48 log 7 125793353070272 Internal Server Error: /api/current-user-type/
+ERROR 2025-11-29 16:01:48 basehttp 7 125793353070272 "GET /api/current-user-type/ HTTP/1.1" 500 54
+ERROR 2025-11-29 16:02:33 views 7 125793353070272 Error getting user type: 'User' object has no attribute 'get_full_name'
+ERROR 2025-11-29 16:02:33 log 7 125793353070272 Internal Server Error: /api/current-user-type/
+ERROR 2025-11-29 16:02:33 basehttp 7 125793353070272 "GET /api/current-user-type/ HTTP/1.1" 500 54
+ERROR 2025-11-29 16:03:50 log 7 125793353070272 Internal Server Error: /api/save-exercise-session
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/utils/deprecation.py", line 122, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 108, in process_response
+    return self.response_redirect_class(self.get_full_path_with_slash(request))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/api/save-exercise-session/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+ERROR 2025-11-29 16:03:50 basehttp 7 125793353070272 "POST /api/save-exercise-session HTTP/1.1" 500 70478
+ERROR 2025-11-29 16:04:06 views 7 125793344677568 Error getting user type: 'User' object has no attribute 'get_full_name'
+ERROR 2025-11-29 16:04:06 log 7 125793344677568 Internal Server Error: /api/current-user-type/
+ERROR 2025-11-29 16:04:06 basehttp 7 125793344677568 "GET /api/current-user-type/ HTTP/1.1" 500 54
+ERROR 2025-11-29 16:07:56 views 7 129675822102208 Error getting user type: 'User' object has no attribute 'get_full_name'
+Traceback (most recent call last):
+  File "/app/main/views.py", line 2498, in get_current_user_type
+    'user_name': request.user.get_full_name() or request.user.username
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/utils/functional.py", line 253, in inner
+    return func(_wrapped, *args)
+           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'User' object has no attribute 'get_full_name'
+ERROR 2025-11-29 16:07:56 log 7 129675822102208 Internal Server Error: /api/current-user-type/
+Traceback (most recent call last):
+  File "/app/main/views.py", line 2498, in get_current_user_type
+    'user_name': request.user.get_full_name() or request.user.username
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/utils/functional.py", line 253, in inner
+    return func(_wrapped, *args)
+           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'User' object has no attribute 'get_full_name'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/views/decorators/http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/main/views.py", line 2507, in get_current_user_type
+    'user_name': request.user.get_full_name() or request.user.username
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/utils/functional.py", line 253, in inner
+    return func(_wrapped, *args)
+           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'User' object has no attribute 'get_full_name'
+ERROR 2025-11-29 16:07:56 basehttp 7 129675822102208 "GET /api/current-user-type/ HTTP/1.1" 500 86589
+ERROR 2025-11-29 16:08:24 views 7 129675822102208 Error getting user type: 'User' object has no attribute 'get_full_name'
+Traceback (most recent call last):
+  File "/app/main/views.py", line 2498, in get_current_user_type
+    'user_name': request.user.get_full_name() or request.user.username
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/utils/functional.py", line 253, in inner
+    return func(_wrapped, *args)
+           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'User' object has no attribute 'get_full_name'
+ERROR 2025-11-29 16:08:24 log 7 129675822102208 Internal Server Error: /api/current-user-type/
+Traceback (most recent call last):
+  File "/app/main/views.py", line 2498, in get_current_user_type
+    'user_name': request.user.get_full_name() or request.user.username
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/utils/functional.py", line 253, in inner
+    return func(_wrapped, *args)
+           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'User' object has no attribute 'get_full_name'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/views/decorators/http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/main/views.py", line 2507, in get_current_user_type
+    'user_name': request.user.get_full_name() or request.user.username
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/utils/functional.py", line 253, in inner
+    return func(_wrapped, *args)
+           ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'User' object has no attribute 'get_full_name'
+ERROR 2025-11-29 16:08:24 basehttp 7 129675822102208 "GET /api/current-user-type/ HTTP/1.1" 500 87099
+ERROR 2025-11-29 16:09:53 views 106 126023333050048 Error fetching doctor patients: 'PatientCreatedByDoctor' object has no attribute 'patient_user'
+Traceback (most recent call last):
+  File "/app/main/views.py", line 2539, in get_doctor_patients
+    patient_user = patient.patient_user
+                   ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PatientCreatedByDoctor' object has no attribute 'patient_user'
+ERROR 2025-11-29 16:09:53 log 106 126023333050048 Internal Server Error: /api/doctor-patients/
+ERROR 2025-11-29 16:09:53 basehttp 106 126023333050048 "GET /api/doctor-patients/ HTTP/1.1" 500 54
+ERROR 2025-11-29 16:12:02 views 7 130711662098112 Error fetching doctor patients: 'PatientCreatedByDoctor' object has no attribute 'patient_user'
+Traceback (most recent call last):
+  File "/app/main/views.py", line 2535, in get_doctor_patients
+    patient_user = patient.patient_user
+                   ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PatientCreatedByDoctor' object has no attribute 'patient_user'
+ERROR 2025-11-29 16:12:02 log 7 130711662098112 Internal Server Error: /api/doctor-patients/
+ERROR 2025-11-29 16:12:02 basehttp 7 130711662098112 "GET /api/doctor-patients/ HTTP/1.1" 500 54
+ERROR 2025-11-29 16:12:31 views 7 130711662098112 Error fetching doctor patients: 'PatientCreatedByDoctor' object has no attribute 'patient_user'
+Traceback (most recent call last):
+  File "/app/main/views.py", line 2535, in get_doctor_patients
+    patient_user = patient.patient_user
+                   ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PatientCreatedByDoctor' object has no attribute 'patient_user'
+ERROR 2025-11-29 16:12:31 log 7 130711662098112 Internal Server Error: /api/doctor-patients/
+ERROR 2025-11-29 16:12:31 basehttp 7 130711662098112 "GET /api/doctor-patients/ HTTP/1.1" 500 54
+ERROR 2025-11-29 16:18:45 log 7 130675178989248 Internal Server Error: /api/save-exercise-session
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/utils/deprecation.py", line 122, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 108, in process_response
+    return self.response_redirect_class(self.get_full_path_with_slash(request))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/api/save-exercise-session/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+ERROR 2025-11-29 16:18:45 basehttp 7 130675178989248 "POST /api/save-exercise-session HTTP/1.1" 500 70478
+ERROR 2025-11-29 16:27:12 log 6 136306502919872 Internal Server Error: /api/save-exercise-session
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/utils/deprecation.py", line 122, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 108, in process_response
+    return self.response_redirect_class(self.get_full_path_with_slash(request))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/api/save-exercise-session/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+ERROR 2025-11-29 16:27:12 basehttp 6 136306502919872 "POST /api/save-exercise-session HTTP/1.1" 500 70478
+ERROR 2025-11-29 16:33:31 log 6 136306511312576 Internal Server Error: /api/save-exercise-session
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/utils/deprecation.py", line 122, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 108, in process_response
+    return self.response_redirect_class(self.get_full_path_with_slash(request))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/api/save-exercise-session/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+ERROR 2025-11-29 16:33:31 basehttp 6 136306511312576 "POST /api/save-exercise-session HTTP/1.1" 500 69964
+ERROR 2025-11-29 16:37:41 log 6 136306511312576 Internal Server Error: /api/save-exercise-session
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/utils/deprecation.py", line 122, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 108, in process_response
+    return self.response_redirect_class(self.get_full_path_with_slash(request))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/api/save-exercise-session/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+ERROR 2025-11-29 16:37:41 basehttp 6 136306511312576 "POST /api/save-exercise-session HTTP/1.1" 500 70474
+ERROR 2025-11-29 16:41:42 log 6 136306502919872 Internal Server Error: /api/save-exercise-session
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/utils/deprecation.py", line 122, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 108, in process_response
+    return self.response_redirect_class(self.get_full_path_with_slash(request))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/api/save-exercise-session/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+ERROR 2025-11-29 16:41:42 basehttp 6 136306502919872 "POST /api/save-exercise-session HTTP/1.1" 500 70474
+ERROR 2025-11-29 16:42:55 log 7 125564744627904 Internal Server Error: /api/save-exercise-session
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/utils/deprecation.py", line 122, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 108, in process_response
+    return self.response_redirect_class(self.get_full_path_with_slash(request))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/api/save-exercise-session/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+ERROR 2025-11-29 16:42:55 basehttp 7 125564744627904 "POST /api/save-exercise-session HTTP/1.1" 500 70474
+ERROR 2025-11-29 16:50:12 log 7 136246798051008 Internal Server Error: /api/save-exercise-session
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/utils/deprecation.py", line 122, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 108, in process_response
+    return self.response_redirect_class(self.get_full_path_with_slash(request))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/api/save-exercise-session/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+ERROR 2025-11-29 16:50:12 basehttp 7 136246798051008 "POST /api/save-exercise-session HTTP/1.1" 500 70474
+ERROR 2025-11-29 16:55:00 log 7 136246806443712 Internal Server Error: /api/save-exercise-session
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/utils/deprecation.py", line 122, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 108, in process_response
+    return self.response_redirect_class(self.get_full_path_with_slash(request))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/api/save-exercise-session/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+ERROR 2025-11-29 16:55:00 basehttp 7 136246806443712 "POST /api/save-exercise-session HTTP/1.1" 500 70474
+ERROR 2025-11-29 16:56:23 log 7 136246798051008 Internal Server Error: /api/save-exercise-session
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/utils/deprecation.py", line 122, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 108, in process_response
+    return self.response_redirect_class(self.get_full_path_with_slash(request))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/api/save-exercise-session/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+ERROR 2025-11-29 16:56:23 basehttp 7 136246798051008 "POST /api/save-exercise-session HTTP/1.1" 500 70474
+ERROR 2025-11-29 17:14:51 views 7 136246798051008 Error fetching exercise history: no such table: main_exercisesession
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: main_exercisesession
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/main/views.py", line 2441, in get_exercise_history
+    total_count = query.count()
+                  ^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 606, in count
+    return self.query.get_count(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/sql/query.py", line 644, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/sql/query.py", line 626, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/usr/local/lib/python3.11/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: main_exercisesession
+ERROR 2025-11-29 17:14:51 log 7 136246798051008 Internal Server Error: /api/exercise-history/
+ERROR 2025-11-29 17:14:51 basehttp 7 136246798051008 "GET /api/exercise-history/?limit=50 HTTP/1.1" 500 62
+ERROR 2025-11-29 17:15:56 log 7 136246798051008 Internal Server Error: /api/save-exercise-session
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/utils/deprecation.py", line 122, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 108, in process_response
+    return self.response_redirect_class(self.get_full_path_with_slash(request))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/middleware/common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/api/save-exercise-session/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+ERROR 2025-11-29 17:15:56 basehttp 7 136246798051008 "POST /api/save-exercise-session HTTP/1.1" 500 70474
+ERROR 2025-11-29 17:17:34 views 7 124309311841984 Error saving exercise session: no such table: main_exercisesession
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: main_exercisesession
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/main/views.py", line 2315, in save_exercise_session
+    if ExerciseSession.objects.filter(session_id=session_id).exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 1298, in exists
+    return self.query.has_results(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/sql/query.py", line 674, in has_results
+    return compiler.has_results()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/sql/compiler.py", line 1591, in has_results
+    return bool(self.execute_sql(SINGLE))
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/usr/local/lib/python3.11/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: main_exercisesession
+ERROR 2025-11-29 17:17:34 log 7 124309311841984 Internal Server Error: /api/save-exercise-session/
+ERROR 2025-11-29 17:17:34 basehttp 7 124309311841984 "POST /api/save-exercise-session/ HTTP/1.1" 500 60
+ERROR 2025-11-29 19:16:00 basehttp 44 133963003721408 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:16:00 basehttp 44 133963003721408 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:16:03 basehttp 44 133963003721408 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:16:03 basehttp 44 133963003721408 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:21:52 basehttp 46 133856270218944 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:21:52 basehttp 46 133856270218944 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:21:55 basehttp 46 133856270218944 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:21:55 basehttp 46 133856251336384 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:21:55 basehttp 46 133856251336384 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:21:55 basehttp 46 133856270218944 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:21:57 basehttp 46 133856242943680 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:21:57 basehttp 46 133856242943680 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:25:11 basehttp 46 132223275620032 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:25:11 basehttp 46 132223275620032 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:09 basehttp 38 127434513970880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:09 basehttp 38 127434431133376 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:09 basehttp 38 127434431133376 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:09 basehttp 38 127434513970880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:12 basehttp 38 127434513970880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:12 basehttp 38 127434431133376 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:12 basehttp 38 127434431133376 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:12 basehttp 38 127434513970880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:12 basehttp 38 127434431133376 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:12 basehttp 38 127434513970880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:12 basehttp 38 127434513970880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:12 basehttp 38 127434431133376 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:13 basehttp 38 127434431133376 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:13 basehttp 38 127434513970880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:13 basehttp 38 127434513970880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:13 basehttp 38 127434431133376 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:13 basehttp 38 127434431133376 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:13 basehttp 38 127434513970880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:13 basehttp 38 127434513970880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:30:13 basehttp 38 127434431133376 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:34:46 basehttp 46 133274751989440 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:34:46 basehttp 46 133274733106880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:34:46 basehttp 46 133274733106880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:34:46 basehttp 46 133274751989440 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:34:47 basehttp 46 133274751989440 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:34:47 basehttp 46 133274733106880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:34:47 basehttp 46 133274733106880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:34:47 basehttp 46 133274751989440 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:34:47 basehttp 46 133274751989440 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:34:47 basehttp 46 133274733106880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:34:47 basehttp 46 133274733106880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:34:47 basehttp 46 133274751989440 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:34:47 basehttp 46 133274751989440 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:34:47 basehttp 46 133274733106880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:34:47 basehttp 46 133274733106880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:34:47 basehttp 46 133274751989440 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:35:01 basehttp 46 133274751989440 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:35:01 basehttp 46 133274733106880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:35:01 basehttp 46 133274733106880 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:35:01 basehttp 46 133274751989440 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:36:51 basehttp 46 124644270008000 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:36:51 basehttp 46 124644261615296 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:36:51 basehttp 46 124644261615296 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:36:51 basehttp 46 124644270008000 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:37:47 basehttp 46 124644019390144 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:37:47 basehttp 46 124644010997440 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:37:47 basehttp 46 124644010997440 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:37:47 basehttp 46 124644019390144 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:43:00 basehttp 44 140216044086976 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:43:00 basehttp 44 140216044086976 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:43:01 basehttp 44 140216044086976 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:43:01 basehttp 44 140216035694272 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:43:01 basehttp 44 140216035694272 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:43:01 basehttp 44 140216044086976 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:43:47 basehttp 46 128903813260992 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:43:47 basehttp 46 128903804868288 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:43:47 basehttp 46 128903804868288 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:43:47 basehttp 46 128903813260992 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:46:17 basehttp 44 128376757016256 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:46:17 basehttp 44 128376748623552 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:46:17 basehttp 44 128376748623552 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:46:17 basehttp 44 128376757016256 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:46:25 basehttp 44 128376757016256 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:46:25 basehttp 44 128376757016256 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:46:34 basehttp 44 128376757016256 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:46:34 basehttp 44 128376757016256 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:46:34 basehttp 44 128376748623552 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 19:46:34 basehttp 44 128376748623552 You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2025-11-29 20:05:18 log 46 126110625953472 Internal Server Error: /diagnosis/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column main_patientcreatedbydoctor.updated_at does not exist
+LINE 1: ..."id", "main_patientcreatedbydoctor"."created_at", "main_pati...
+                                                             ^
+HINT:  Perhaps you meant to reference the column "main_patientcreatedbydoctor.created_at".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/main/views.py", line 834, in diagnosis
+    for i in all_patients:
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 386, in __iter__
+    self._fetch_all()
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/usr/local/lib/python3.11/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column main_patientcreatedbydoctor.updated_at does not exist
+LINE 1: ..."id", "main_patientcreatedbydoctor"."created_at", "main_pati...
+                                                             ^
+HINT:  Perhaps you meant to reference the column "main_patientcreatedbydoctor.created_at".
+
+ERROR 2025-11-29 20:05:18 basehttp 46 126110625953472 "GET /diagnosis/ HTTP/1.1" 500 144853
+ERROR 2025-11-29 20:09:54 views 46 128400373053120 Error in doctor login: relation "django_session" does not exist
+LINE 1: ...ession_data", "django_session"."expire_date" FROM "django_se...
+                                                             ^
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedTable: relation "django_session" does not exist
+LINE 1: ...ession_data", "django_session"."expire_date" FROM "django_se...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/main/views.py", line 234, in login_doctor
+    login(request, user)
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/auth/__init__.py", line 175, in login
+    if SESSION_KEY in request.session:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/sessions/backends/base.py", line 52, in __contains__
+    return key in self._session
+                  ^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 631, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 368, in __len__
+    self._fetch_all()
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/usr/local/lib/python3.11/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: relation "django_session" does not exist
+LINE 1: ...ession_data", "django_session"."expire_date" FROM "django_se...
+                                                             ^
+
+ERROR 2025-11-29 20:10:01 views 46 128400361514688 Error in doctor login: relation "django_session" does not exist
+LINE 1: ...ession_data", "django_session"."expire_date" FROM "django_se...
+                                                             ^
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedTable: relation "django_session" does not exist
+LINE 1: ...ession_data", "django_session"."expire_date" FROM "django_se...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/main/views.py", line 234, in login_doctor
+    login(request, user)
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/auth/__init__.py", line 175, in login
+    if SESSION_KEY in request.session:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/sessions/backends/base.py", line 52, in __contains__
+    return key in self._session
+                  ^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 631, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 368, in __len__
+    self._fetch_all()
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/usr/local/lib/python3.11/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: relation "django_session" does not exist
+LINE 1: ...ession_data", "django_session"."expire_date" FROM "django_se...
+                                                             ^
+
+ERROR 2025-11-29 20:10:36 views 46 128400373053120 Error in doctor login: relation "django_session" does not exist
+LINE 1: ...ession_data", "django_session"."expire_date" FROM "django_se...
+                                                             ^
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedTable: relation "django_session" does not exist
+LINE 1: ...ession_data", "django_session"."expire_date" FROM "django_se...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/main/views.py", line 234, in login_doctor
+    login(request, user)
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/auth/__init__.py", line 175, in login
+    if SESSION_KEY in request.session:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/sessions/backends/base.py", line 52, in __contains__
+    return key in self._session
+                  ^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 631, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 368, in __len__
+    self._fetch_all()
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/usr/local/lib/python3.11/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: relation "django_session" does not exist
+LINE 1: ...ession_data", "django_session"."expire_date" FROM "django_se...
+                                                             ^
+
+ERROR 2025-11-29 20:16:06 log 46 128400361514688 Internal Server Error: /diagnosis/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column main_patientcreatedbydoctor.updated_at does not exist
+LINE 1: ..."id", "main_patientcreatedbydoctor"."created_at", "main_pati...
+                                                             ^
+HINT:  Perhaps you meant to reference the column "main_patientcreatedbydoctor.created_at".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/main/views.py", line 834, in diagnosis
+    for i in all_patients:
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 386, in __iter__
+    self._fetch_all()
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/usr/local/lib/python3.11/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column main_patientcreatedbydoctor.updated_at does not exist
+LINE 1: ..."id", "main_patientcreatedbydoctor"."created_at", "main_pati...
+                                                             ^
+HINT:  Perhaps you meant to reference the column "main_patientcreatedbydoctor.created_at".
+
+ERROR 2025-11-29 20:16:06 basehttp 46 128400361514688 "GET /diagnosis/ HTTP/1.1" 500 144853
+ERROR 2025-11-29 20:16:14 log 46 128400373053120 Internal Server Error: /diagnosis/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column main_patientcreatedbydoctor.updated_at does not exist
+LINE 1: ..."id", "main_patientcreatedbydoctor"."created_at", "main_pati...
+                                                             ^
+HINT:  Perhaps you meant to reference the column "main_patientcreatedbydoctor.created_at".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/main/views.py", line 834, in diagnosis
+    for i in all_patients:
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 386, in __iter__
+    self._fetch_all()
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/usr/local/lib/python3.11/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column main_patientcreatedbydoctor.updated_at does not exist
+LINE 1: ..."id", "main_patientcreatedbydoctor"."created_at", "main_pati...
+                                                             ^
+HINT:  Perhaps you meant to reference the column "main_patientcreatedbydoctor.created_at".
+
+ERROR 2025-11-29 20:16:14 basehttp 46 128400373053120 "GET /diagnosis/ HTTP/1.1" 500 144853
+ERROR 2025-11-29 20:18:14 views 46 128400351024832 Error creating patient: null value in column "is_staff" of relation "main_patientcreatedbydoctor" violates not-null constraint
+DETAIL:  Failing row contains (1, Tauqeer, Qureshi, 2000-03-02, tanver ahmed, M, shalley valley rwp pak, 03045450049, tauqeerq34@gmail.com, , 2025-11-29 20:18:14.175484+00, t, null, t, 3, 5, 2025-11-29 20:18:14.175495+00).
+
+ERROR 2025-11-29 20:20:06 views 46 128400351024832 Failed to send email to tauqeerq34@gmail.com: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-7d150b685aesm8703302b3a.8 - gsmtp')
+ERROR 2025-11-29 20:30:40 views 46 129144563168960 Error in diagnosis processing: column main_patientxrayinfo.created_at does not exist
+LINE 1: SELECT "main_patientxrayinfo"."id", "main_patientxrayinfo"."...
+                                            ^
+HINT:  Perhaps you meant to reference the column "main_patientxrayinfo.updated_at".
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column main_patientxrayinfo.created_at does not exist
+LINE 1: SELECT "main_patientxrayinfo"."id", "main_patientxrayinfo"."...
+                                            ^
+HINT:  Perhaps you meant to reference the column "main_patientxrayinfo.updated_at".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/main/views.py", line 1109, in predict_diagnosis
+    xray_info, created = PatientXRayInfo.objects.update_or_create(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 990, in update_or_create
+    obj, created = self.select_for_update().get_or_create(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 948, in get_or_create
+    return self.get(**kwargs), False
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 631, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 368, in __len__
+    self._fetch_all()
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/usr/local/lib/python3.11/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column main_patientxrayinfo.created_at does not exist
+LINE 1: SELECT "main_patientxrayinfo"."id", "main_patientxrayinfo"."...
+                                            ^
+HINT:  Perhaps you meant to reference the column "main_patientxrayinfo.updated_at".
+
+ERROR 2025-11-29 20:31:26 views 46 129144563168960 Error in diagnosis processing: null value in column "patient_code" of relation "main_patientxrayinfo" violates not-null constraint
+DETAIL:  Failing row contains (1, Tauqeer Qureshi, 24, null, XRAY-1764448286.827149, AI-based fracture and side analysis completed., text, Left (L), 2025-11-29 20:31:26.830998+00, null, 4, 2025-11-29 20:31:26.830964+00).
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 948, in get_or_create
+    return self.get(**kwargs), False
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 635, in get
+    raise self.model.DoesNotExist(
+main.models.PatientXRayInfo.DoesNotExist: PatientXRayInfo matching query does not exist.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.NotNullViolation: null value in column "patient_code" of relation "main_patientxrayinfo" violates not-null constraint
+DETAIL:  Failing row contains (1, Tauqeer Qureshi, 24, null, XRAY-1764448286.827149, AI-based fracture and side analysis completed., text, Left (L), 2025-11-29 20:31:26.830998+00, null, 4, 2025-11-29 20:31:26.830964+00).
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/main/views.py", line 1109, in predict_diagnosis
+    xray_info, created = PatientXRayInfo.objects.update_or_create(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 990, in update_or_create
+    obj, created = self.select_for_update().get_or_create(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 955, in get_or_create
+    return self.create(**params), True
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 665, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/base.py", line 902, in save
+    self.save_base(
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/base.py", line 1008, in save_base
+    updated = self._save_table(
+              ^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/base.py", line 1169, in _save_table
+    results = self._do_insert(
+              ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/base.py", line 1210, in _do_insert
+    return manager._insert(
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 1873, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/sql/compiler.py", line 1882, in execute_sql
+    cursor.execute(sql, params)
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/usr/local/lib/python3.11/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.IntegrityError: null value in column "patient_code" of relation "main_patientxrayinfo" violates not-null constraint
+DETAIL:  Failing row contains (1, Tauqeer Qureshi, 24, null, XRAY-1764448286.827149, AI-based fracture and side analysis completed., text, Left (L), 2025-11-29 20:31:26.830998+00, null, 4, 2025-11-29 20:31:26.830964+00).
+
+ERROR 2025-11-29 20:32:19 views 46 129144563168960 Error in diagnosis processing: null value in column "doctor_id" of relation "main_patientxrayinfo" violates not-null constraint
+DETAIL:  Failing row contains (2, Tauqeer Qureshi, 24, XRAY-1764448339.855388, AI-based fracture and side analysis completed., text, Left (L), 2025-11-29 20:32:19.858012+00, null, 4, 2025-11-29 20:32:19.857987+00).
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 948, in get_or_create
+    return self.get(**kwargs), False
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 635, in get
+    raise self.model.DoesNotExist(
+main.models.PatientXRayInfo.DoesNotExist: PatientXRayInfo matching query does not exist.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.NotNullViolation: null value in column "doctor_id" of relation "main_patientxrayinfo" violates not-null constraint
+DETAIL:  Failing row contains (2, Tauqeer Qureshi, 24, XRAY-1764448339.855388, AI-based fracture and side analysis completed., text, Left (L), 2025-11-29 20:32:19.858012+00, null, 4, 2025-11-29 20:32:19.857987+00).
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/main/views.py", line 1109, in predict_diagnosis
+    xray_info, created = PatientXRayInfo.objects.update_or_create(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 990, in update_or_create
+    obj, created = self.select_for_update().get_or_create(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 955, in get_or_create
+    return self.create(**params), True
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 665, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/base.py", line 902, in save
+    self.save_base(
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/base.py", line 1008, in save_base
+    updated = self._save_table(
+              ^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/base.py", line 1169, in _save_table
+    results = self._do_insert(
+              ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/base.py", line 1210, in _do_insert
+    return manager._insert(
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/query.py", line 1873, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/models/sql/compiler.py", line 1882, in execute_sql
+    cursor.execute(sql, params)
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/usr/local/lib/python3.11/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.IntegrityError: null value in column "doctor_id" of relation "main_patientxrayinfo" violates not-null constraint
+DETAIL:  Failing row contains (2, Tauqeer Qureshi, 24, XRAY-1764448339.855388, AI-based fracture and side analysis completed., text, Left (L), 2025-11-29 20:32:19.858012+00, null, 4, 2025-11-29 20:32:19.857987+00).
+

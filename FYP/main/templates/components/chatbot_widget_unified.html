@@ -399,7 +399,7 @@
 let recognition = null;
 let isListening = false;
 let continuousMode = true; // Always ON
-let messageCount = 0;
+// NOTE: messageCount is declared globally in predict_vid.html, don't redeclare here
 let selectedLanguage = 'en'; // Default language (English or Urdu)
 
 // Detect Language (Urdu vs English)
@@ -654,7 +654,8 @@ async function sendChatMessage(text) {
           let emoji = '✅';
           let speechText = '';
           
-          if (cmd.response_type === 'scroll') emoji = '⬇️';
+          if (cmd.response_type === 'back') emoji = '↩️';
+          else if (cmd.response_type === 'scroll') emoji = '⬇️';
           else if (cmd.response_type === 'button_click') emoji = '🔘';
           else if (cmd.response_type === 'form_fill') emoji = '📝';
           else if (cmd.response_type === 'navigation') emoji = '🗺️';
@@ -667,7 +668,20 @@ async function sendChatMessage(text) {
           addMessage(`${emoji} ${cmd.message}`, 'system');
 
           // Execute command
-          if (cmd.response_type === 'scroll' && cmd.scroll_direction) {
+          if (cmd.response_type === 'back') {
+            console.log('↩️ Going back to previous page');
+            speechText = 'Going back to previous page';
+            speakMessage(speechText);
+            setTimeout(() => {
+              console.log('↩️ Using stored previous page for back');
+              const previousPage = localStorage.getItem('previousPage');
+              if (previousPage && previousPage !== window.location.href) {
+                window.location.href = previousPage;
+              } else {
+                window.history.back();
+              }
+            }, 500);
+          } else if (cmd.response_type === 'scroll' && cmd.scroll_direction) {
             console.log('⬇️ Scrolling:', cmd.scroll_direction);
             speechText = `Scrolling ${cmd.scroll_direction}`;
             speakMessage(speechText);
@@ -696,13 +710,66 @@ async function sendChatMessage(text) {
             console.log('🔘 Finding button:', cmd.button_to_click);
             speechText = `Clicking ${cmd.button_to_click} button`;
             speakMessage(speechText);
+            
+            let found = false;
+            const searchText = cmd.button_to_click.toLowerCase();
+            
+            // Method 1: Look for <button> elements
             const buttons = document.querySelectorAll('button, input[type="submit"]');
             for (let btn of buttons) {
-              if (btn.textContent.toLowerCase().includes(cmd.button_to_click.toLowerCase())) {
+              if (btn.textContent.toLowerCase().includes(searchText)) {
                 console.log('✅ Clicking button:', cmd.button_to_click);
                 btn.click();
+                found = true;
                 break;
               }
+            }
+            
+            // Method 2: Look for <a> links (navigation)
+            if (!found) {
+              const links = document.querySelectorAll('a');
+              for (let link of links) {
+                const linkText = link.textContent.toLowerCase();
+                const linkTitle = (link.getAttribute('title') || '').toLowerCase();
+                const linkId = (link.id || '').toLowerCase();
+                
+                if (linkText.includes(searchText) || linkTitle.includes(searchText) || linkId.includes(searchText)) {
+                  console.log('✅ Clicking link:', cmd.button_to_click);
+                  link.click();
+                  found = true;
+                  break;
+                }
+              }
+            }
+            
+            // Method 3: Look for elements with onclick handlers
+            if (!found) {
+              const clickableElements = document.querySelectorAll('[onclick]');
+              for (let elem of clickableElements) {
+                if (elem.textContent.toLowerCase().includes(searchText)) {
+                  console.log('✅ Clicking clickable element:', cmd.button_to_click);
+                  elem.click();
+                  found = true;
+                  break;
+                }
+              }
+            }
+            
+            // Method 4: Look for nav items or sidebar items
+            if (!found) {
+              const navItems = document.querySelectorAll('.nav-menu a, .sidebar a, .navbar a, li a, [role="menuitem"]');
+              for (let item of navItems) {
+                if (item.textContent.toLowerCase().includes(searchText)) {
+                  console.log('✅ Clicking navigation item:', cmd.button_to_click);
+                  item.click();
+                  found = true;
+                  break;
+                }
+              }
+            }
+            
+            if (!found) {
+              console.log('❌ Could not find clickable element for:', cmd.button_to_click);
             }
           } else if (cmd.response_type === 'form_fill' && cmd.form_fields) {
             console.log('📝 Filling form with:', cmd.form_fields);
@@ -745,7 +812,20 @@ async function sendChatMessage(text) {
       }, delay);
     }
     // Handle single command
-    if (data.response_type === 'close_browser') {
+    if (data.response_type === 'back') {
+      console.log('↩️ Back command');
+      addMessage(`↩️ ${data.message || 'Going back...'}`, 'system');
+      speakMessage('Going back to previous page');
+      setTimeout(() => {
+        console.log('↩️ Executing back - using stored previous page');
+        const previousPage = localStorage.getItem('previousPage');
+        if (previousPage && previousPage !== window.location.href) {
+          window.location.href = previousPage;
+        } else {
+          window.history.back();
+        }
+      }, 1000);
+    } else if (data.response_type === 'close_browser') {
       console.log('💻 Close browser command');
       addMessage(`💻 ${data.message || 'Closing browser...'}`, 'system');
       speakMessage('Closing browser');
@@ -783,13 +863,66 @@ async function sendChatMessage(text) {
       console.log('🔘 Single button click:', data.button_to_click);
       addMessage(`🔘 ${data.message}`, 'system');
       speakMessage(`Clicking ${data.button_to_click} button`);
+      
+      let found = false;
+      const searchText = data.button_to_click.toLowerCase();
+      
+      // Method 1: Look for <button> elements
       const buttons = document.querySelectorAll('button');
       for (let btn of buttons) {
-        if (btn.textContent.toLowerCase().includes(data.button_to_click.toLowerCase())) {
+        if (btn.textContent.toLowerCase().includes(searchText)) {
           console.log('✅ Clicking button:', data.button_to_click);
           btn.click();
+          found = true;
           break;
         }
+      }
+      
+      // Method 2: Look for <a> links (navigation)
+      if (!found) {
+        const links = document.querySelectorAll('a');
+        for (let link of links) {
+          const linkText = link.textContent.toLowerCase();
+          const linkTitle = (link.getAttribute('title') || '').toLowerCase();
+          const linkId = (link.id || '').toLowerCase();
+          
+          if (linkText.includes(searchText) || linkTitle.includes(searchText) || linkId.includes(searchText)) {
+            console.log('✅ Clicking link:', data.button_to_click);
+            link.click();
+            found = true;
+            break;
+          }
+        }
+      }
+      
+      // Method 3: Look for elements with onclick handlers
+      if (!found) {
+        const clickableElements = document.querySelectorAll('[onclick]');
+        for (let elem of clickableElements) {
+          if (elem.textContent.toLowerCase().includes(searchText)) {
+            console.log('✅ Clicking clickable element:', data.button_to_click);
+            elem.click();
+            found = true;
+            break;
+          }
+        }
+      }
+      
+      // Method 4: Look for nav items or sidebar items
+      if (!found) {
+        const navItems = document.querySelectorAll('.nav-menu a, .sidebar a, .navbar a, li a, [role="menuitem"]');
+        for (let item of navItems) {
+          if (item.textContent.toLowerCase().includes(searchText)) {
+            console.log('✅ Clicking navigation item:', data.button_to_click);
+            item.click();
+            found = true;
+            break;
+          }
+        }
+      }
+      
+      if (!found) {
+        console.log('❌ Could not find clickable element for:', data.button_to_click);
       }
     } else if (data.response_type === 'scroll' && data.scroll_direction) {
       console.log('⬇️ Single scroll command:', data.scroll_direction);

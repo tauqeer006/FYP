@@ -24,6 +24,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.MainPage , name="MainPage"),
     
+    # Health Check
+    path('api/health/', views.health_check, name='health_check'),
     # New page routes
     path("about/", views.about_page, name="about_page"),
     path("services/", views.services_page, name="services_page"),
@@ -86,6 +88,12 @@ urlpatterns = [
     
     # Admin Password Change
     path('change_admin_password/', views.change_admin_password, name='change_admin_password'),
+    
+    # Exercise Session API
+    path('api/save-exercise-session/', views.save_exercise_session, name='save_exercise_session'),
+    path('api/exercise-history/', views.get_exercise_history, name='get_exercise_history'),
+    path('api/current-user-type/', views.get_current_user_type, name='get_current_user_type'),
+    path('api/doctor-patients/', views.get_doctor_patients, name='get_doctor_patients'),
     
 ]
 if settings.DEBUG:  # Only serve media files in development

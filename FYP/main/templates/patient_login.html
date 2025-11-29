@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +10,7 @@
   <style>
     body {
       background: linear-gradient(135deg, #007BFF, #09c6db), 
-                  url('./img/author3.jpg') no-repeat center center fixed;
+                  url('{% static 'patient-images/20251129_1522_Patient Waiting Room Illustration_remix_01kb7j2q2hegnt7nx6a9mhxpyt.png' %}') no-repeat center center fixed;
       background-size: cover;
       height: 100vh;
       display: flex;
@@ -40,6 +41,8 @@
   </style>
 </head>
 <body>
+
+  <div style="position: fixed; top: 15px; right: 15px; z-index: 1000;">{% include 'components/back_button.html' %}</div>
 
   <div class="container">
     <div class="row justify-content-center">

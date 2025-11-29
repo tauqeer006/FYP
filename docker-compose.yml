@@ -1,25 +1,56 @@
 version: '3.8'
 
 services:
+  # PostgreSQL Database
+  postgres-db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=fyp_db
+      - POSTGRES_USER=fyp_user
+      - POSTGRES_PASSWORD=fyp_password_local
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - fyp-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fyp_user -d fyp_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+
   # Django Web Application - Main Interface
   django-app:
     build:
       context: .
       dockerfile: Dockerfile.django
+    entrypoint: sh -c 'python manage.py migrate --noinput 2>/dev/null || true && python manage.py runserver 0.0.0.0:8888'
     ports:
-      - "8000:8000"
+      - "8888:8888"
     volumes:
       - ./FYP:/app
       - ./media:/app/media
+    env_file:
+      - .env
     environment:
-      - DEBUG=True
       - DJANGO_SETTINGS_MODULE=FYP.settings
     depends_on:
-      - cnn-api
-      - xray-api
-     
+      postgres-db:
+        condition: service_healthy
+      cnn-api:
+        condition: service_started
+      xray-api:
+        condition: service_started
     networks:
       - fyp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/admin/login/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   # CNN API - Left/Right Fracture Detection
   cnn-api:
@@ -28,11 +59,16 @@ services:
       dockerfile: Dockerfile.cnn-api
     ports:
       - "5001:5001"
-    # Avoid mounting code to prevent overwriting built image and inflating context
     environment:
       - FLASK_ENV=production
+      - CORS_ORIGINS=http://localhost:8000,http://localhost
     networks:
       - fyp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   # X-ray Model API - Fracture Detection
   xray-api:
@@ -41,11 +77,31 @@ services:
       dockerfile: Dockerfile.xray-api
     ports:
       - "5002:5002"
-    # No bind mount; image includes model weights
     environment:
       - FLASK_ENV=production
+      - CORS_ORIGINS=http://localhost:8000,http://localhost
     networks:
       - fyp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5002/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis Cache
+  redis-cache:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - fyp-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - redis_data:/data
 
   pose-api:
     build:
@@ -58,6 +114,7 @@ services:
     environment:
       - API_ENV=production
       - PYTHONUNBUFFERED=1
+      - CORS_ORIGINS=http://localhost:8000,http://localhost
     depends_on:
       - django-app
     networks:
@@ -76,6 +133,8 @@ networks:
     driver: bridge
 
 volumes:
+  postgres_data:
+  redis_data:
   media-volume:
 
 

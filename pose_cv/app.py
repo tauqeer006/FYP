@@ -81,26 +81,42 @@ def load_exercises():
 # ==================== FastAPI App ====================
 app = FastAPI(title="Shoulder Rehabilitation API", version="1.0.0")
 
-# Add CORS middleware
+# Add CORS middleware with configurable origins
+cors_origins = os.getenv('CORS_ORIGINS', '*').split(',')
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=cors_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=['GET', 'POST', 'OPTIONS'],
+    allow_headers=['*'],
 )
 
 # Global variables
 detector = poseDetector()
 exercises = load_exercises()
-TOLERANCE = 7  # Tolerance for angle matching
+TOLERANCE = 50  # EXTREMELY LENIENT: ±50° tolerance - barely any effort counts as correct
 tts_engine = pyttsx3.init()
+
+# Session tracking for rep counting
+exercise_sessions = {}  # {session_id: {"consecutive_correct": int, "total_reps": int}}
+
+
+# ==================== Health Check ====================
+@app.get('/api/health')
+async def health_check():
+    """Health check endpoint for monitoring"""
+    return {
+        'status': 'ok',
+        'service': 'pose-api',
+        'version': '1.0.0'
+    }
 
 
 # ==================== Pydantic Models ====================
 class PoseCheckRequest(BaseModel):
     exercise_name: str
-    image: str  
+    image: str
+    session_id: str = "default"  # Session ID for tracking reps across frames
 
 
 class ExerciseInfo(BaseModel):
@@ -113,6 +129,17 @@ class PoseCheckResponse(BaseModel):
     message: str
     feedback: str = ""
     angles: dict = {}
+    angle_details: list = []  # New: Specific angle feedback
+    rep_count: int = 0  # New: Number of completed reps
+    frames_in_rep: int = 0  # New: Current frame count towards next rep (0-30)
+
+
+class ExerciseSession(BaseModel):
+    """Track exercise session state"""
+    exercise_name: str
+    consecutive_correct: int = 0  # Track consecutive correct frames
+    total_reps: int = 0  # Total completed reps
+    frames_per_rep: int = 30  # Frames needed to complete one rep (adjustable)
 
 
 # ==================== Helper Functions ====================
@@ -195,53 +222,184 @@ def find_exercise(exercise_name: str):
     return None
 
 
-def check_posture(img, exercise):
-    """Check if user's posture matches exercise requirements"""
+def check_posture(img, exercise, session_id="default"):
+    """Check if user's posture matches exercise requirements with lenient 50% correctness"""
     if img is None or img.size == 0:
-        return False, "Could not process image", "", {}
+        logger.warning("❌ Invalid image received")
+        return False, "❌ Could not process image", "", {}, [], 0
 
     detector.findPose(img, draw=False)
     lmList = detector.findPosition(img)
+    
+    logger.info(f"🔍 Detected {len(lmList)} landmarks for exercise: {exercise.get('name', 'Unknown')}")
 
-    posture_correct = True
     feedback_msgs = []
     angles_detected = {}
+    specific_feedback = []  # New: More specific feedback
+    correct_count = 0  # Count how many arms are correct
+    total_arms = 0  # Total arms being checked
 
-    if lmList:
+    if lmList and len(lmList) > 0:
         lmDict = {pt[0]: pt for pt in lmList}
+        left_correct = False
+        right_correct = False
 
-        # Check Left Arm
+        # ALWAYS Calculate LEFT Arm angle - regardless of target value
         left = exercise.get("left_arm", {})
         left_tips = exercise.get("feedback_tips", {}).get("left", [])
         
-        if left.get("shoulder_angle", 0) > 0 and all(k in lmDict for k in [11, 13, 15]):
+        # Try to detect left arm - always attempt to get the angle
+        if all(k in lmDict for k in [11, 13, 15]):
+            total_arms += 1
             angle = detector.findAngle(lmDict[11], lmDict[13], lmDict[15])
             angles_detected["left_shoulder"] = angle
-            target = left.get("shoulder_angle", 0)
+            target = left.get("shoulder_angle", 0) if left.get("shoulder_angle", 0) > 0 else 90  # Default target if not set
+            difference = abs(angle - target)
             
-            if abs(angle - target) > TOLERANCE:
-                posture_correct = False
-                feedback_msgs.extend(left_tips)
+            logger.info(f"👈 Left Arm: Current {angle}° vs Target {target}° (diff: {difference}°, tolerance: {TOLERANCE}°)")
+            
+            specific_feedback.append({
+                "arm": "Left",
+                "current_angle": int(angle),
+                "target_angle": int(target),
+                "difference": int(difference)
+            })
+            
+            if difference <= TOLERANCE:
+                left_correct = True
+                correct_count += 1
+                specific_feedback[-1]["status"] = "✅ Correct"
+                logger.info(f"✅ LEFT ARM CORRECT!")
+            else:
+                if left_tips:
+                    feedback_msgs.extend(left_tips)
+                # More specific guidance
+                if angle < target:
+                    specific_feedback[-1]["status"] = "📈 Raise arm UP"
+                else:
+                    specific_feedback[-1]["status"] = "📉 Lower arm DOWN"
+        else:
+            logger.warning(f"⚠️ Left arm landmarks not found. Available: {list(lmDict.keys())}")
+            angles_detected["left_shoulder"] = 0  # Send 0 to indicate not visible
 
-        # Check Right Arm
+        # ALWAYS Calculate RIGHT Arm angle - regardless of target value
         right = exercise.get("right_arm", {})
         right_tips = exercise.get("feedback_tips", {}).get("right", [])
         
-        if right.get("shoulder_angle", 0) > 0 and all(k in lmDict for k in [12, 14, 16]):
+        # Try to detect right arm even if no specific target is set
+        if all(k in lmDict for k in [12, 14, 16]):
+            total_arms += 1
             angle = detector.findAngle(lmDict[12], lmDict[14], lmDict[16])
             angles_detected["right_shoulder"] = angle
-            target = right.get("shoulder_angle", 0)
+            target = right.get("shoulder_angle", 0) if right.get("shoulder_angle", 0) > 0 else 90  # Default target
+            difference = abs(angle - target)
             
-            if abs(angle - target) > TOLERANCE:
-                posture_correct = False
-                feedback_msgs.extend(right_tips)
+            logger.info(f"👉 Right Arm: Current {angle}° vs Target {target}° (diff: {difference}°, tolerance: {TOLERANCE}°)")
+            
+            specific_feedback.append({
+                "arm": "Right",
+                "current_angle": int(angle),
+                "target_angle": int(target),
+                "difference": int(difference)
+            })
+            
+            if difference <= TOLERANCE:
+                right_correct = True
+                correct_count += 1
+                specific_feedback[-1]["status"] = "✅ Correct"
+                logger.info(f"✅ RIGHT ARM CORRECT!")
+            else:
+                if right_tips:
+                    feedback_msgs.extend(right_tips)
+                # More specific guidance
+                if angle < target:
+                    specific_feedback[-1]["status"] = "📈 Raise arm UP"
+                else:
+                    specific_feedback[-1]["status"] = "📉 Lower arm DOWN"
+        else:
+            # If right shoulder landmarks not found, still send 0 so frontend knows we tried
+            logger.warning(f"⚠️ Right arm landmarks not found. Available landmarks: {list(lmDict.keys())}")
+            angles_detected["right_shoulder"] = 0  # Send 0 to indicate not visible
+            
+            specific_feedback.append({
+                "arm": "Right",
+                "current_angle": 0,
+                "target_angle": right.get("shoulder_angle", 90),
+                "difference": 999,
+                "status": "⚠️ Adjust position - arm not visible"
+            })
     else:
-        return False, "No pose detected", "Please adjust your position to be visible in the camera", {}
+        logger.warning(f"❌ No pose detected! Landmarks found: {len(lmList) if lmList else 0}")
+        return False, "❌ No pose detected", "📸 Please move into camera view and stand clearly", {}, [], 0, 0
 
-    feedback = " | ".join(feedback_msgs) if feedback_msgs else "Keep up the good work!"
-    message = "Posture Correct! ✓" if posture_correct else "Adjust your position"
+    logger.info(f"📊 Results: Total arms checked: {total_arms}, Correct count: {correct_count}")
 
-    return posture_correct, message, feedback, angles_detected
+    # EXTREMELY LENIENT: Accept if even 1 arm is close OR 10% threshold
+    posture_correct = False
+    if total_arms > 0:
+        correctness_percentage = (correct_count / total_arms) * 100
+        # If at least 1 arm is correct OR 10% threshold is met, mark as correct
+        posture_correct = (correct_count > 0) or (correctness_percentage >= 10)
+        logger.info(f"✔️ Frame Analysis:")
+        logger.info(f"   - Total arms checked: {total_arms}")
+        logger.info(f"   - Correct arms: {correct_count}")
+        logger.info(f"   - Correctness %: {correctness_percentage:.1f}%")
+        logger.info(f"   - Decision: {'✅ CORRECT - Frame Counts!' if posture_correct else '❌ INCORRECT - Reset counter'}")
+    
+    # Track rep count in session
+    if session_id not in exercise_sessions:
+        exercise_sessions[session_id] = {"consecutive_correct": 0, "total_reps": 0}
+        logger.info(f"📝 NEW SESSION CREATED: {session_id}")
+    
+    session = exercise_sessions[session_id]
+    rep_count = session["total_reps"]
+    
+    if posture_correct:
+        session["consecutive_correct"] += 1
+        logger.info(f"✅ CORRECT FRAME! Session {session_id[-8:]}: {session['consecutive_correct']}/30 frames")
+        # Every 30 consecutive correct frames = 1 rep
+        if session["consecutive_correct"] >= 30:
+            session["total_reps"] += 1
+            session["consecutive_correct"] = 0  # Reset counter for next rep
+            rep_count = session["total_reps"]
+            logger.info(f"🎉 REP #{rep_count} COMPLETED!")
+    else:
+        # Reset consecutive counter on incorrect frame
+        if session["consecutive_correct"] > 0:
+            logger.info(f"❌ WRONG FRAME! Reset counter from {session['consecutive_correct']} to 0. Session: {session_id[-8:]}")
+        session["consecutive_correct"] = 0
+    
+    # Enhanced feedback messages
+    if posture_correct:
+        feedback_parts = []
+        for sf in specific_feedback:
+            feedback_parts.append(
+                f"{sf['arm']}: {sf['current_angle']}° (target {sf['target_angle']}°) - {sf.get('status', '')}"
+            )
+        feedback = " | ".join(feedback_parts) if feedback_parts else "Good effort!"
+        
+        # Show progress towards next rep
+        frames_in_rep = session["consecutive_correct"]
+        if frames_in_rep == 30:
+            message = f"🎉 Rep {rep_count} Complete! Starting rep {rep_count + 1}..."
+        else:
+            message = f"✅ Perfect! Keep it up! (Frame {frames_in_rep}/30 for rep {rep_count + 1})"
+    else:
+        feedback_parts = []
+        for sf in specific_feedback:
+            feedback_parts.append(
+                f"{sf['arm']}: {sf['current_angle']}° (need {sf['target_angle']}°) - {sf.get('status', '')}"
+            )
+        feedback = " | ".join(feedback_parts) if feedback_parts else "Keep practicing!"
+        frames_in_rep = 0
+        message = "📍 Not quite there yet - adjust and try again!"
+
+    # DEBUG: Log what we're returning
+    logger.info(f"📤 RETURNING ANGLES TO FRONTEND: {angles_detected}")
+    logger.info(f"   - Left Shoulder: {angles_detected.get('left_shoulder', 'NOT SENT')}")
+    logger.info(f"   - Right Shoulder: {angles_detected.get('right_shoulder', 'NOT SENT')}")
+    
+    return posture_correct, message, feedback, angles_detected, specific_feedback, rep_count, frames_in_rep
 
 
 # ==================== API Endpoints ====================
@@ -308,14 +466,17 @@ async def check_pose(request: PoseCheckRequest):
     if img is None:
         raise HTTPException(status_code=400, detail="Invalid image data")
     
-    # Check posture (fast)
-    is_correct, message, feedback, angles = check_posture(img, exercise)
+    # Check posture (fast) - now returns 7 values including frames_in_rep
+    is_correct, message, feedback, angles, angle_details, rep_count, frames_in_rep = check_posture(img, exercise, request.session_id)
     
     response = PoseCheckResponse(
         correct=is_correct,
         message=message,
         feedback=feedback,
-        angles=angles
+        angles=angles,
+        angle_details=angle_details,
+        rep_count=rep_count,
+        frames_in_rep=frames_in_rep
     )
     
     return response
@@ -355,6 +516,40 @@ async def start_exercise(request: ExerciseInfo):
         "exercise_name": exercise.get("name"),
         "instructions": exercise.get("description"),
         "feedback_tips": exercise.get("feedback_tips", {})
+    }
+
+
+@app.post("/api/reset-session/{session_id}")
+async def reset_session(session_id: str):
+    """Reset/clear exercise session for rep counting"""
+    if session_id in exercise_sessions:
+        exercise_sessions[session_id] = {"consecutive_correct": 0, "total_reps": 0}
+    
+    return {
+        "status": "session_reset",
+        "session_id": session_id,
+        "reps": 0,
+        "consecutive_correct": 0
+    }
+
+
+@app.get("/api/session/{session_id}")
+async def get_session_info(session_id: str):
+    """Get session information including rep count"""
+    if session_id not in exercise_sessions:
+        return {
+            "session_id": session_id,
+            "total_reps": 0,
+            "consecutive_correct": 0,
+            "status": "no_session"
+        }
+    
+    session = exercise_sessions[session_id]
+    return {
+        "session_id": session_id,
+        "total_reps": session["total_reps"],
+        "consecutive_correct": session["consecutive_correct"],
+        "status": "active"
     }
 
 

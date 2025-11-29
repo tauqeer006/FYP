@@ -3,6 +3,13 @@
 
 {% block content %}
 <style>
+  .back-button-container {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1000;
+  }
+  
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #262b31;
@@ -113,6 +120,8 @@
     background-color: #ffffff;
   }
 </style>
+
+<div class="back-button-container">{% include 'components/back_button.html' %}</div>
 
 <div class="content-section form-section">
   <h2>New Diagnosis</h2>

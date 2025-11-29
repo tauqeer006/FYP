@@ -1,5 +1,9 @@
 {% extends 'base_doctor.html' %}
 {% block content %}
+
+<!-- Back Button -->
+{% include 'components/back_button.html' %}
+
 <div class="content-section form-section">
   <h2>Treatment Recommendation</h2>
   <form method="POST" action="{% url 'save_recommendation' %}">

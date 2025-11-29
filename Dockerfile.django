@@ -14,18 +14,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxext6 \
     libxrender1 \
     libgomp1 \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Install only the minimal dependencies actually used
 COPY requirements-minimal.txt .
-RUN pip install --no-cache-dir --timeout 1000 -r requirements-minimal.txt
+RUN pip install --no-cache-dir --timeout 1000 --require-hashes=false -r requirements-minimal.txt || pip install --no-cache-dir --timeout 1000 -r requirements-minimal.txt
 
 # Copy only the Django app
 COPY FYP/ ./
 
 # Ensure media dir exists (mounted at runtime in compose)
-RUN mkdir -p media/reports
+RUN mkdir -p media/reports logs
 
 EXPOSE 8000
 
+# Just start the server - migrations are handled at startup via docker-compose
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

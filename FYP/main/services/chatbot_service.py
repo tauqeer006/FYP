@@ -134,6 +134,13 @@ CRITICAL INSTRUCTIONS FOR FORM FILLING:
 - Look at the route's form_schema to understand available fields
 - Return TYPE: FORM_FILL with FIELDS as JSON
 
+CRITICAL INSTRUCTIONS FOR GOING BACK:
+- User says "go back", "back", "previous page", "back page", "go to previous", "go to back", "back button"
+- Examples: "go back", "back", "take me back", "previous page", "back to home"
+- Detect keywords: "back", "previous", "return", "go back"
+- Return TYPE: BACK (no other parameters needed)
+- The frontend will use browser history to go back to previous page
+
 CRITICAL INSTRUCTIONS FOR BUTTON CLICKING:
 - User says "click [button]", "press [button]", "submit [button]", "click on [button]", "click the [button]"
 - Examples: "click login", "press submit", "click next button", "click on the login button", "click the login button"
@@ -177,23 +184,29 @@ CRITICAL INSTRUCTIONS FOR NAVIGATION:
 USER REQUEST: "{user_query}"
 
 DETECTION LOGIC:
-Step 1: Check if user wants to CLOSE BROWSER (keywords: "close browser", "close complete", "close whole", "close all", "quit browser", "exit browser")
+Step 1: Check if user wants to GO BACK (keywords: "go back", "back", "previous", "back page", "return")
+  - If yes → TYPE: BACK
+Step 2: Check if user wants to CLOSE BROWSER (keywords: "close browser", "close complete", "close whole", "close all", "quit browser", "exit browser")
   - If yes → TYPE: CLOSE_BROWSER
-Step 2: Check if user wants to CLOSE TAB (keywords: "close tab", "close current tab", "close this tab")
+Step 3: Check if user wants to CLOSE TAB (keywords: "close tab", "close current tab", "close this tab")
   - If yes → TYPE: CLOSE_TAB
-Step 3: Check if user wants to OPEN in new tab (keywords: "open", "new tab", "open [something] in new tab")
+Step 4: Check if user wants to OPEN in new tab (keywords: "open", "new tab", "open [something] in new tab")
   - If yes → TYPE: OPEN_TAB
-Step 4: Check if user is trying to FILL a form (keywords: "enter", "fill", "type", "put", "input")
+Step 5: Check if user is trying to FILL a form (keywords: "enter", "fill", "type", "put", "input")
   - If yes → TYPE: FORM_FILL
-Step 5: Check if user is trying to CLICK a button (keywords: "click", "press", "submit", "hit")
+Step 6: Check if user is trying to CLICK a button (keywords: "click", "press", "submit", "hit")
   - If yes → TYPE: BUTTON_CLICK
-Step 6: Check if user is trying to SCROLL (keywords: "scroll", "page", "down", "up", "top", "bottom")
+Step 7: Check if user is trying to SCROLL (keywords: "scroll", "page", "down", "up", "top", "bottom")
   - If yes → TYPE: SCROLL
-Step 7: Check if user is trying to NAVIGATE (keywords: "go", "navigate", "open", "show", "take me")
+Step 8: Check if user is trying to NAVIGATE (keywords: "go", "navigate", "open", "show", "take me")
   - If yes → TYPE: NAVIGATION
-Step 8: Otherwise → TYPE: CONVERSATION
+Step 9: Otherwise → TYPE: CONVERSATION
 
 RESPONSE FORMAT (choose ONE):
+
+FOR GOING BACK TO PREVIOUS PAGE:
+TYPE: BACK
+REASON: User wants to go back to previous page
 
 FOR CLOSING COMPLETE BROWSER:
 TYPE: CLOSE_BROWSER
@@ -236,21 +249,30 @@ TYPE: CONVERSATION
 ANSWER: helpful response about the question
 
 EXAMPLES:
-1. User: "enter username john password 123" → TYPE: FORM_FILL, FIELDS: {{"username": "john", "password": "123"}}
-2. User: "fill email test@test.com" → TYPE: FORM_FILL, FIELDS: {{"email": "test@test.com"}}
-3. User: "click login button" → TYPE: BUTTON_CLICK, BUTTON_TO_CLICK: "Login"
-4. User: "press submit" → TYPE: BUTTON_CLICK, BUTTON_TO_CLICK: "Submit"
-5. User: "open patient dashboard in new tab" → TYPE: OPEN_TAB, ROUTE_ID: patient_dashboard, PATH: /Patient_dashboard/
-6. User: "open recommendation page in new tab" → TYPE: OPEN_TAB, ROUTE_ID: recommendation, PATH: /recommendation/
-7. User: "close tab" → TYPE: CLOSE_TAB
-8. User: "close current tab" → TYPE: CLOSE_TAB
-9. User: "close browser" → TYPE: CLOSE_BROWSER
-10. User: "close complete browser" → TYPE: CLOSE_BROWSER
-11. User: "close whole browser" → TYPE: CLOSE_BROWSER
-12. User: "scroll down" → TYPE: SCROLL, SCROLL_DIRECTION: down
-13. User: "scroll up" → TYPE: SCROLL, SCROLL_DIRECTION: up
-14. User: "go to patient dashboard" → TYPE: NAVIGATION, ROUTE_ID: patient_dashboard, PATH: /Patient_dashboard/
-15. User: "what is diabetes?" → TYPE: CONVERSATION, ANSWER: explanation
+1. User: "go back" → TYPE: BACK
+2. User: "back" → TYPE: BACK
+3. User: "previous page" → TYPE: BACK
+4. User: "take me back" → TYPE: BACK
+5. User: "enter username john password 123" → TYPE: FORM_FILL, FIELDS: {{"username": "john", "password": "123"}}
+6. User: "fill email test@test.com" → TYPE: FORM_FILL, FIELDS: {{"email": "test@test.com"}}
+7. User: "click login button" → TYPE: BUTTON_CLICK, BUTTON_TO_CLICK: "Login"
+8. User: "press submit" → TYPE: BUTTON_CLICK, BUTTON_TO_CLICK: "Submit"
+9. User: "click add patient" → TYPE: BUTTON_CLICK, BUTTON_TO_CLICK: "Add Patient"
+10. User: "click my patients" → TYPE: BUTTON_CLICK, BUTTON_TO_CLICK: "My Patients"
+11. User: "click x-ray diagnosis" → TYPE: BUTTON_CLICK, BUTTON_TO_CLICK: "X-ray Diagnosis"
+12. User: "click exercise video" → TYPE: BUTTON_CLICK, BUTTON_TO_CLICK: "Exercise Video"
+13. User: "click profile" → TYPE: BUTTON_CLICK, BUTTON_TO_CLICK: "Profile"
+14. User: "open patient dashboard in new tab" → TYPE: OPEN_TAB, ROUTE_ID: patient_dashboard, PATH: /Patient_dashboard/
+15. User: "open recommendation page in new tab" → TYPE: OPEN_TAB, ROUTE_ID: recommendation, PATH: /recommendation/
+16. User: "close tab" → TYPE: CLOSE_TAB
+17. User: "close current tab" → TYPE: CLOSE_TAB
+18. User: "close browser" → TYPE: CLOSE_BROWSER
+19. User: "close complete browser" → TYPE: CLOSE_BROWSER
+20. User: "close whole browser" → TYPE: CLOSE_BROWSER
+21. User: "scroll down" → TYPE: SCROLL, SCROLL_DIRECTION: down
+22. User: "scroll up" → TYPE: SCROLL, SCROLL_DIRECTION: up
+23. User: "go to patient dashboard" → TYPE: NAVIGATION, ROUTE_ID: patient_dashboard, PATH: /Patient_dashboard/
+24. User: "what is diabetes?" → TYPE: CONVERSATION, ANSWER: explanation
 
 IMPORTANT: 
 - For FORM_FILL: Return the extracted field names and values as JSON
@@ -383,6 +405,19 @@ IMPORTANT:
                 if scroll_direction:
                     logger.info(f"Parsed scroll: {scroll_direction}")
                     return response_type, None, None, None, None, None, None, scroll_direction
+            elif response_type == 'back':
+                logger.info(f"Parsed back command")
+                return response_type, None, None, None, None, None, None, None
+            elif response_type == 'close_tab':
+                logger.info(f"Parsed close tab command")
+                return response_type, None, None, None, None, None, None, None
+            elif response_type == 'close_browser':
+                logger.info(f"Parsed close browser command")
+                return response_type, None, None, None, None, None, None, None
+            elif response_type == 'open_tab':
+                if route_id and path:
+                    logger.info(f"Parsed open tab route: {route_id} -> {path}")
+                    return response_type, route_id, path, reason, None, None, None, None
             
             logger.warning(f"Could not parse Gemini response properly. Type: {response_type}")
             return None, None, None, None, None, None, None, None

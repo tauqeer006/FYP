@@ -48,6 +48,13 @@ INSTALLED_APPS = [
 ]
 # Email configuration from environment
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() in ['true', '1', 'yes']
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_FROM', 'noreply@example.com')
+SERVER_EMAIL = os.getenv('EMAIL_FROM', 'noreply@example.com')
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
@@ -109,12 +116,34 @@ WSGI_APPLICATION = "FYP.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+# Use PostgreSQL in production/docker, SQLite in development
+DB_ENGINE = os.getenv('DB_ENGINE', 'django.db.backends.sqlite3')
+
+if DB_ENGINE == 'django.db.backends.postgresql':
+    DATABASES = {
+        'default': {
+            'ENGINE': DB_ENGINE,
+            'NAME': os.getenv('DB_NAME', 'fyp_db'),
+            'USER': os.getenv('DB_USER', 'fyp_user'),
+            'PASSWORD': os.getenv('DB_PASSWORD', ''),
+            'HOST': os.getenv('DB_HOST', 'postgres-db'),
+            'PORT': os.getenv('DB_PORT', '5432'),
+            'CONN_MAX_AGE': 600,
+            'ATOMIC_REQUESTS': True,
+            'OPTIONS': {
+                'connect_timeout': 10,
+                'options': '-c statement_timeout=30000'
+            }
+        }
     }
-}
+else:
+    # SQLite for local development
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 
 # Password validation
@@ -171,18 +200,24 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # ==================== CACHING CONFIGURATION ====================
-if not DEBUG:
+CACHE_BACKEND = os.getenv('CACHE_BACKEND', 'local')
+
+if CACHE_BACKEND == 'redis' and not DEBUG:
     # Use Redis for caching in production
     CACHES = {
         'default': {
             'BACKEND': 'django_redis.cache.RedisCache',
-            'LOCATION': os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/1'),
+            'LOCATION': os.getenv('REDIS_URL', 'redis://redis-cache:6379/1'),
             'OPTIONS': {
                 'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-                'CONNECTION_POOL_KWARGS': {'max_connections': 50},
+                'CONNECTION_POOL_KWARGS': {
+                    'max_connections': 50,
+                    'retry_on_timeout': True,
+                },
                 'SOCKET_CONNECT_TIMEOUT': 5,
                 'SOCKET_TIMEOUT': 5,
                 'COMPRESSOR': 'django_redis.compressors.zlib.ZlibCompressor',
+                'IGNORE_EXCEPTIONS': True,
             }
         }
     }
@@ -221,7 +256,8 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
 
 # ==================== SECURITY CONFIGURATION ====================
 # HTTPS and SSL settings (only enable in production)
-if not DEBUG:
+# NEVER enable SECURE_SSL_REDIRECT in development - causes localhost issues
+if not DEBUG and not os.getenv('DEVELOPMENT_MODE', False):
     # HTTPS Redirect
     SECURE_SSL_REDIRECT = True
     

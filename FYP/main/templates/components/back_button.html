@@ -1,0 +1,82 @@
+<!-- Back Button Component -->
+<style>
+  .back-button-fixed {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 1000;
+  }
+
+  .back-button-container {
+    padding: 10px 0;
+    margin-bottom: 15px;
+  }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #1A76D1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    gap: 8px;
+  }
+
+  .back-btn:hover {
+    background-color: #1565C0;
+    transform: translateX(3px);
+    box-shadow: 0 2px 8px rgba(26, 118, 209, 0.3);
+  }
+
+  .back-btn:active {
+    transform: translateX(1px);
+  }
+
+  .back-btn i,
+  .back-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .back-button-container {
+      padding: 8px 0;
+      margin-bottom: 10px;
+    }
+
+    .back-btn {
+      padding: 8px 16px;
+      font-size: 13px;
+    }
+  }
+</style>
+
+<!-- Back Button - Goes to Previous Page or Dashboard -->
+<div class="back-button-container">
+  <script>
+    function goBack() {
+      const previousPage = localStorage.getItem('previousPage');
+      if (previousPage) {
+        window.location.href = previousPage;
+      } else {
+        window.history.back();
+      }
+    }
+  </script>
+  <button class="back-btn" onclick="goBack()" title="Go back to previous page">
+    <i class="fas fa-arrow-left"></i>
+    <span>Back</span>
+  </button>
+</div>
+
+<script>
+  // Store current page in localStorage for back button
+  localStorage.setItem('previousPage', window.location.href);
+</script>
