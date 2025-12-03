@@ -58,25 +58,177 @@
   }
 </style>
 
-<!-- Back Button - Goes to Previous Page or Dashboard -->
-<div class="back-button-container">
+<!-- Script to prevent browser back button from going to login pages -->
+<script>
+  // Prevent user from going back to login page after authentication
+  function preventBackToLogin() {
+    const currentUrl = window.location.pathname.toLowerCase();
+    
+    // Check if user is logged in (on a protected page)
+    const isLoggedIn = currentUrl.includes('patient') || 
+                       currentUrl.includes('Patient') ||
+                       currentUrl.includes('doctor') ||
+                       currentUrl.includes('admin') ||
+                       currentUrl.includes('index_admin') ||
+                       currentUrl.includes('video') ||
+                       currentUrl.includes('report') ||
+                       currentUrl.includes('recommend') ||
+                       currentUrl.includes('predict') ||
+                       currentUrl.includes('diagnosis') ||
+                       currentUrl.includes('manage_user') ||
+                       currentUrl.includes('add_user') ||
+                       currentUrl.includes('user_profile') ||
+                       currentUrl.includes('graphs') ||
+                       currentUrl.includes('montoring');
+    
+    if (isLoggedIn) {
+      // Replace current history state to prevent going back to login
+      window.history.replaceState(null, null, window.location.href);
+      
+      // Intercept browser back button (popstate event)
+      window.addEventListener('popstate', function(event) {
+        // When user tries to go back, push forward to stay on current page
+        window.history.pushState(null, null, window.location.href);
+        console.log('🔒 Back button blocked - User must logout to exit');
+      });
+      
+      console.log('🔒 Protected page: Browser back button disabled - Login prevention active');
+    }
+  }
+  
+  // Run immediately on all protected pages
+  preventBackToLogin();
+  
+  // Also run on page load
+  document.addEventListener('DOMContentLoaded', preventBackToLogin);
+</script>
+
+<!-- Back Button - Intelligent routing based on current page -->
+<div class="back-button-container" id="backButtonContainer" style="display: none;">
   <script>
     function goBack() {
-      const previousPage = localStorage.getItem('previousPage');
-      if (previousPage) {
-        window.location.href = previousPage;
-      } else {
+      const currentUrl = window.location.pathname;
+      
+      // Login pages - go back to home
+      if (currentUrl === '/admin_login1/' || currentUrl === '/patient_login/' || currentUrl === '/login/') {
+        window.location.href = '/';
+        return;
+      }
+      
+      // Patient pages - go to patient dashboard
+      if (currentUrl.includes('/Patient_dashboard/')) {
+        // Already at dashboard
         window.history.back();
+        return;
+      }
+      
+      if (currentUrl.includes('patient') && currentUrl !== '/patient_login/') {
+        window.location.href = '/Patient_dashboard/';
+        return;
+      }
+      
+      // Doctor pages - go to index_admin (doctor dashboard)
+      if (currentUrl.includes('doctor') || currentUrl === '/login/') {
+        window.location.href = '/index_admin/';
+        return;
+      }
+      
+      // Admin pages - go to index_admin (admin dashboard)
+      if (currentUrl.includes('index_admin')) {
+        // Already at dashboard
+        window.history.back();
+        return;
+      }
+      
+      if (currentUrl.includes('admin') && currentUrl !== '/admin_login1/') {
+        window.location.href = '/index_admin/';
+        return;
+      }
+      
+      // Default - go back in history
+      window.history.back();
+    }
+    
+    // Determine if back button should be shown
+    function shouldShowBackButton() {
+      const currentUrl = window.location.pathname.toLowerCase();
+      
+      // Hide on main pages (main navigation pages) - check with and without trailing slash
+      const mainPages = ['/', '/about/', '/services/', '/doctors/', '/contact/', '/faq/',
+                         '/about', '/services', '/doctors', '/contact', '/faq'];
+      
+      // Check exact match
+      if (mainPages.includes(currentUrl)) {
+        console.log('🔍 Hiding back button on main page:', currentUrl);
+        return false;
+      }
+      
+      // Also check if URL starts with these paths
+      if (currentUrl === '/' || 
+          currentUrl.startsWith('/about') ||
+          currentUrl.startsWith('/services') ||
+          currentUrl.startsWith('/doctors') ||
+          currentUrl.startsWith('/contact') ||
+          currentUrl.startsWith('/faq')) {
+        console.log('🔍 Hiding back button on main page:', currentUrl);
+        return false;
+      }
+      
+      // Show on login pages
+      if (currentUrl === '/admin_login1/' || currentUrl === '/patient_login/' || currentUrl === '/login/') {
+        return true;
+      }
+      
+      // Show on patient pages (except login)
+      if (currentUrl.includes('patient') || currentUrl.includes('Patient')) {
+        return true;
+      }
+      
+      // Show on doctor pages
+      if (currentUrl.includes('doctor') || currentUrl === '/login/') {
+        return true;
+      }
+      
+      // Show on admin pages
+      if (currentUrl.includes('admin') || currentUrl.includes('index_admin')) {
+        return true;
+      }
+      
+      // Show on other utility pages
+      if (currentUrl.includes('video') || currentUrl.includes('report') || currentUrl.includes('recommend') || 
+          currentUrl.includes('predict') || currentUrl.includes('diagnosis') || currentUrl.includes('manage_user') ||
+          currentUrl.includes('add_user') || currentUrl.includes('user_profile') || currentUrl.includes('graphs')) {
+        return true;
+      }
+      
+      // Default: hide
+      return false;
+    }
+    
+    // Initialize back button visibility
+    function initBackButton() {
+      const backButtonContainer = document.getElementById('backButtonContainer');
+      if (backButtonContainer) {
+        if (shouldShowBackButton()) {
+          backButtonContainer.style.display = 'block';
+          console.log('✅ Back button shown');
+        } else {
+          backButtonContainer.style.display = 'none';
+          console.log('❌ Back button hidden');
+        }
       }
     }
+    
+    // Run immediately
+    initBackButton();
+    
+    // Also run on DOMContentLoaded to be safe
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initBackButton);
+    }
   </script>
-  <button class="back-btn" onclick="goBack()" title="Go back to previous page">
+  <button class="back-btn" onclick="goBack()" title="Go back">
     <i class="fas fa-arrow-left"></i>
     <span>Back</span>
   </button>
 </div>
-
-<script>
-  // Store current page in localStorage for back button
-  localStorage.setItem('previousPage', window.location.href);
-</script>

@@ -504,7 +504,7 @@ def patient_dashboard(request):
             logger.debug(f"Report - Patient Name: {report.patient_name}, ID: {report.patient_idx}") 
 
         doctor = patients.doctor
-        xray_info = patients.xray_records.first()  # Use related_name with ForeignKey
+        xray_info = patients.xray_records.order_by('-created_at').first()  # Get most recent X-ray with images
         total_reports = reports.count()
         reports = reports.order_by('-created_at')
 
@@ -514,6 +514,18 @@ def patient_dashboard(request):
             age_years = today.year - patients.dob.year - (
                 (today.month, today.day) < (patients.dob.month, patients.dob.day)
             )
+
+        # Debug logging for xray_info
+        logger.info(f"Patient dashboard - xray_info: {xray_info}")
+        if xray_info:
+            logger.info(f"xray_info.original_image: {xray_info.original_image}")
+            logger.info(f"xray_info.saliency_map_image: {xray_info.saliency_map_image}")
+            if xray_info.original_image:
+                logger.info(f"Original image URL: {xray_info.original_image.url}")
+            if xray_info.saliency_map_image:
+                logger.info(f"Saliency image URL: {xray_info.saliency_map_image.url}")
+            else:
+                logger.warning("Saliency map image is None/empty for this xray_info")
 
         context = {
             "patients": patients,
@@ -1106,6 +1118,54 @@ def predict_diagnosis(request):
                 'findings': "AI-based fracture and side analysis completed."
             }
             logger.info(f"Creating X-ray data for patient {patient.id}")
+            logger.info(f"Full fracture_data response: {fracture_data}")
+            logger.info(f"Fracture data keys: {fracture_data.keys()}")
+            
+            # Reset image pointer to start for saving
+            image.seek(0)
+            
+            # Get saliency map from fracture detection response if available
+            saliency_data = fracture_data.get('saliency_map', None)
+            saliency_url = fracture_data.get('saliency_map_url', None)
+            
+            logger.info(f"Saliency data extracted: {saliency_data is not None}")
+            logger.info(f"Saliency URL extracted: {saliency_url is not None}")
+            logger.info(f"Saliency data type: {type(saliency_data)}")
+            if saliency_data:
+                logger.info(f"Saliency data length: {len(saliency_data) if isinstance(saliency_data, str) else 'N/A'}")
+            
+            saliency_image = None
+            
+            # Try saliency_map first, then saliency_map_url
+            saliency_data = saliency_data or saliency_url
+            
+            if saliency_data:
+                # If saliency map is a data URI (data:image/jpeg;base64,...)
+                if isinstance(saliency_data, str) and saliency_data.startswith('data:'):
+                    import base64
+                    try:
+                        logger.info("Extracting base64 from data URI...")
+                        # Extract base64 part after comma
+                        base64_str = saliency_data.split(',')[1]
+                        saliency_bytes = base64.b64decode(base64_str)
+                        saliency_image = ContentFile(saliency_bytes, name=f"saliency_{prediction_result['xray_id']}.jpg")
+                        logger.info(f"Saliency map from data URI decoded successfully: {len(saliency_bytes)} bytes")
+                    except Exception as e:
+                        logger.error(f"Error decoding saliency map from data URI: {e}")
+                # If saliency map is base64 encoded directly
+                elif isinstance(saliency_data, str):
+                    import base64
+                    try:
+                        logger.info("Attempting to decode base64 saliency map...")
+                        saliency_bytes = base64.b64decode(saliency_data)
+                        saliency_image = ContentFile(saliency_bytes, name=f"saliency_{prediction_result['xray_id']}.jpg")
+                        logger.info(f"Saliency map decoded successfully: {len(saliency_bytes)} bytes")
+                    except Exception as e:
+                        logger.error(f"Error decoding saliency map: {e}")
+                else:
+                    logger.warning(f"Saliency data is not a string, it's a {type(saliency_data)}")
+            
+            # Create X-ray info with images
             xray_info, created = PatientXRayInfo.objects.update_or_create(
                 patient=patient,  
                 defaults={
@@ -1115,14 +1175,22 @@ def predict_diagnosis(request):
                     'finding': prediction_result['findings'],
                     'fracture_type': prediction_result['fracture_types'][0],  
                     'affected_hand': prediction_result['left_right'],
+                    'original_image': image,
+                    'saliency_map_image': saliency_image,
+                    'date_of_birth': patient.dob,
                 }
             )
             logger.info(f"X-ray data saved: {xray_info.id}, created={created}")
-            
+            # Verify images were saved
+            if xray_info.original_image:
+                logger.info(f"Original image saved: {xray_info.original_image.name}")
+            if xray_info.saliency_map_image:
+                logger.info(f"Saliency map saved: {xray_info.saliency_map_image.name}")
 
             return render(request, 'Doctor/prediction_result.html', {
                 'patients': patients,
-                'prediction_result': prediction_result
+                'prediction_result': prediction_result,
+                'xray_info': xray_info
             })
 
         except Exception as e:
@@ -2605,5 +2673,6 @@ def get_doctor_patients(request):
             'success': False,
             'error': 'Error fetching patients'
         }, status=500)
+
 
 

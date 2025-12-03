@@ -608,6 +608,316 @@ function addMessage(text, type = 'bot') {
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
+// Render Menu Options as Clickable Buttons
+function renderMenu(menuData) {
+  const messagesDiv = document.getElementById('chatbot-messages-unified');
+  
+  // Create menu container
+  const menuContainer = document.createElement('div');
+  menuContainer.className = 'menu-container';
+  menuContainer.style.cssText = `
+    margin: 15px 0;
+    padding: 15px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    border: 2px solid #667eea;
+  `;
+  
+  // Add menu title
+  if (menuData.menu_title) {
+    const title = document.createElement('h4');
+    title.style.cssText = 'margin: 0 0 10px 0; color: #667eea; font-size: 16px; font-weight: 600;';
+    title.textContent = menuData.menu_title;
+    menuContainer.appendChild(title);
+  }
+  
+  // Add menu subtitle
+  if (menuData.menu_subtitle) {
+    const subtitle = document.createElement('p');
+    subtitle.style.cssText = 'margin: 0 0 15px 0; color: #666; font-size: 13px;';
+    subtitle.textContent = menuData.menu_subtitle;
+    menuContainer.appendChild(subtitle);
+  }
+  
+  // Handle different menu types
+  if (menuData.menu_type === 'main') {
+    renderMainMenu(menuContainer, menuData);
+  } else if (menuData.menu_type === 'urls') {
+    renderUrlsMenu(menuContainer, menuData);
+  } else if (menuData.menu_type === 'features') {
+    renderFeaturesMenu(menuContainer, menuData);
+  } else if (menuData.menu_type === 'help') {
+    renderHelpMenu(menuContainer, menuData);
+  } else if (menuData.menu_type === 'feature_details') {
+    renderFeatureDetails(menuContainer, menuData);
+  }
+  
+  messagesDiv.appendChild(menuContainer);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+// Render Main Menu
+function renderMainMenu(container, menuData) {
+  const optionsDiv = document.createElement('div');
+  optionsDiv.style.cssText = 'display: flex; flex-direction: column; gap: 10px;';
+  
+  menuData.options.forEach(option => {
+    const btn = document.createElement('button');
+    btn.className = 'menu-button';
+    btn.style.cssText = `
+      padding: 12px 15px;
+      background: white;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      text-align: left;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    `;
+    
+    btn.onmouseover = () => {
+      btn.style.borderColor = '#667eea';
+      btn.style.backgroundColor = '#f0f4ff';
+      btn.style.transform = 'translateX(5px)';
+    };
+    
+    btn.onmouseout = () => {
+      btn.style.borderColor = '#ddd';
+      btn.style.backgroundColor = 'white';
+      btn.style.transform = 'translateX(0)';
+    };
+    
+    btn.onclick = () => sendChatMessage(`menu:${option.action}`);
+    
+    btn.innerHTML = `<span>${option.label}</span><span style="flex: 1;"></span><span style="font-size: 12px; color: #999;">${option.description}</span>`;
+    optionsDiv.appendChild(btn);
+  });
+  
+  container.appendChild(optionsDiv);
+}
+
+// Render URLs Menu (All Pages)
+function renderUrlsMenu(container, menuData) {
+  if (!menuData.categories) return;
+  
+  const categoriesDiv = document.createElement('div');
+  categoriesDiv.style.cssText = 'max-height: 400px; overflow-y: auto;';
+  
+  Object.entries(menuData.categories).forEach(([category, routes]) => {
+    const categoryTitle = document.createElement('h5');
+    categoryTitle.style.cssText = 'margin: 10px 0 8px 0; color: #667eea; font-size: 13px; font-weight: 600;';
+    categoryTitle.textContent = category;
+    categoriesDiv.appendChild(categoryTitle);
+    
+    routes.forEach(route => {
+      const link = document.createElement('button');
+      link.className = 'menu-link';
+      link.style.cssText = `
+        display: block;
+        width: 100%;
+        padding: 8px 10px;
+        margin-bottom: 5px;
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        cursor: pointer;
+        text-align: left;
+        font-size: 13px;
+        color: #333;
+        transition: all 0.2s;
+      `;
+      
+      link.onmouseover = () => {
+        link.style.backgroundColor = '#f0f4ff';
+        link.style.borderColor = '#667eea';
+        link.style.paddingLeft = '15px';
+      };
+      
+      link.onmouseout = () => {
+        link.style.backgroundColor = 'white';
+        link.style.borderColor = '#e0e0e0';
+        link.style.paddingLeft = '10px';
+      };
+      
+      link.onclick = () => {
+        window.location.href = route.path;
+      };
+      
+      link.textContent = `🔗 ${route.label}`;
+      categoriesDiv.appendChild(link);
+    });
+  });
+  
+  const backBtn = document.createElement('button');
+  backBtn.style.cssText = `
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #666;
+  `;
+  backBtn.textContent = '⬅️ Back to Menu';
+  backBtn.onclick = () => sendChatMessage('menu:menu_main');
+  categoriesDiv.appendChild(backBtn);
+  
+  container.appendChild(categoriesDiv);
+}
+
+// Render Features Menu
+function renderFeaturesMenu(container, menuData) {
+  const featuresDiv = document.createElement('div');
+  featuresDiv.style.cssText = 'display: flex; flex-direction: column; gap: 10px;';
+  
+  menuData.features.forEach(feature => {
+    const featureBtn = document.createElement('button');
+    featureBtn.className = 'feature-button';
+    featureBtn.style.cssText = `
+      padding: 12px;
+      background: white;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.3s;
+    `;
+    
+    featureBtn.onmouseover = () => {
+      featureBtn.style.borderColor = '#667eea';
+      featureBtn.style.backgroundColor = '#f0f4ff';
+    };
+    
+    featureBtn.onmouseout = () => {
+      featureBtn.style.borderColor = '#ddd';
+      featureBtn.style.backgroundColor = 'white';
+    };
+    
+    featureBtn.onclick = () => sendChatMessage(`feature:${feature.id}`);
+    
+    featureBtn.innerHTML = `
+      <div style="font-weight: 600; color: #333; margin-bottom: 5px;">${feature.label}</div>
+      <div style="font-size: 12px; color: #666;">${feature.description}</div>
+    `;
+    
+    featuresDiv.appendChild(featureBtn);
+  });
+  
+  const backBtn = document.createElement('button');
+  backBtn.style.cssText = `
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #666;
+  `;
+  backBtn.textContent = '⬅️ Back to Menu';
+  backBtn.onclick = () => sendChatMessage('menu:menu_main');
+  featuresDiv.appendChild(backBtn);
+  
+  container.appendChild(featuresDiv);
+}
+
+// Render Feature Details
+function renderFeatureDetails(container, menuData) {
+  const detailsDiv = document.createElement('div');
+  detailsDiv.style.cssText = 'padding: 10px; background: white; border-radius: 6px;';
+  
+  const instructions = document.createElement('p');
+  instructions.style.cssText = 'margin: 10px 0; font-size: 12px; line-height: 1.6; color: #555; white-space: pre-wrap;';
+  instructions.textContent = menuData.how_to_use;
+  detailsDiv.appendChild(instructions);
+  
+  if (menuData.examples && menuData.examples.length > 0) {
+    const examplesTitle = document.createElement('h5');
+    examplesTitle.style.cssText = 'margin: 10px 0 5px 0; color: #667eea; font-size: 12px;';
+    examplesTitle.textContent = 'Examples:';
+    detailsDiv.appendChild(examplesTitle);
+    
+    const examplesList = document.createElement('ul');
+    examplesList.style.cssText = 'margin: 0; padding-left: 20px; font-size: 12px;';
+    menuData.examples.forEach(ex => {
+      const li = document.createElement('li');
+      li.textContent = ex;
+      li.style.cssText = 'color: #666; margin: 3px 0;';
+      examplesList.appendChild(li);
+    });
+    detailsDiv.appendChild(examplesList);
+  }
+  
+  const backBtn = document.createElement('button');
+  backBtn.style.cssText = `
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #666;
+  `;
+  backBtn.textContent = '⬅️ Back to Features';
+  backBtn.onclick = () => sendChatMessage('menu:menu_check_features');
+  detailsDiv.appendChild(backBtn);
+  
+  container.appendChild(detailsDiv);
+}
+
+// Render Help Menu
+function renderHelpMenu(container, menuData) {
+  const helpDiv = document.createElement('div');
+  helpDiv.style.cssText = 'padding: 10px; background: white; border-radius: 6px; max-height: 350px; overflow-y: auto;';
+  
+  menuData.sections.forEach(section => {
+    const sectionTitle = document.createElement('h5');
+    sectionTitle.style.cssText = 'margin: 10px 0 8px 0; color: #667eea; font-size: 13px; font-weight: 600;';
+    sectionTitle.textContent = section.title;
+    helpDiv.appendChild(sectionTitle);
+    
+    const tipsList = document.createElement('ul');
+    tipsList.style.cssText = 'margin: 0 0 10px 0; padding-left: 20px; font-size: 12px;';
+    
+    section.tips.forEach(tip => {
+      const li = document.createElement('li');
+      li.textContent = tip;
+      li.style.cssText = 'color: #666; margin: 4px 0; line-height: 1.4;';
+      tipsList.appendChild(li);
+    });
+    
+    helpDiv.appendChild(tipsList);
+  });
+  
+  const backBtn = document.createElement('button');
+  backBtn.style.cssText = `
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #666;
+  `;
+  backBtn.textContent = '⬅️ Back to Menu';
+  backBtn.onclick = () => sendChatMessage('menu:menu_main');
+  helpDiv.appendChild(backBtn);
+  
+  container.appendChild(helpDiv);
+}
+
 // Send Message to Backend
 async function sendChatMessage(text) {
   if (!text.trim()) {
@@ -640,6 +950,13 @@ async function sendChatMessage(text) {
 
     const data = await response.json();
     console.log('✅ API Response data:', data);
+
+    // Handle menu responses
+    if (data.response_type === 'menu') {
+      console.log('📋 Menu detected:', data.menu_type);
+      renderMenu(data);
+      return;
+    }
 
     // Handle multi-command
     if (data.response_type === 'multi_command') {
@@ -969,9 +1286,28 @@ document.addEventListener('DOMContentLoaded', function() {
   const input = document.getElementById('chatbot-input-unified');
 
   // Toggle panel
-  floatBtn.addEventListener('click', () => {
+  floatBtn.addEventListener('click', async () => {
     panel.classList.toggle('active');
     floatBtn.classList.toggle('listening');
+    
+    // Load main menu when opening for the first time
+    if (panel.classList.contains('active')) {
+      const messagesDiv = document.getElementById('chatbot-messages-unified');
+      const hasOnlyInitialMessage = messagesDiv.children.length <= 1;
+      
+      if (hasOnlyInitialMessage) {
+        try {
+          console.log('🎯 Loading main menu on chatbot open...');
+          // Automatically request the main menu
+          sendChatMessage('menu');
+          // Clear initial message and load menu
+          messagesDiv.innerHTML = '';
+        } catch (error) {
+          console.error('❌ Error loading menu:', error);
+          addMessage('Error loading menu. Type "menu" to try again.', 'bot');
+        }
+      }
+    }
   });
 
   closeBtn.addEventListener('click', () => {

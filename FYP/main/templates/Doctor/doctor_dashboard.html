@@ -724,19 +724,7 @@
                         <h1>Welcome back, Dr. {{ doctor.username|title }}! 👋</h1>
                         <p>You have {{ total_doctor_patients }} patients in your care. Keep providing excellent medical service.</p>
                     </div>
-                    <div class="quick-stats">
-                        <div class="stat-item">
-                            <span class="stat-number">{{ total_doctor_patients }}</span>
-                            <span class="stat-label">Patients</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">{{ total_xray_records }}</span>
-                            <span class="stat-label">X-rays</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">{{ total_reports }}</span>
-                            <span class="stat-label">Reports</span>
-                        </div>
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.1); display: flex; gap: 15px; flex-wrap: wrap;">
                     </div>
                 </div>
 
@@ -852,7 +840,6 @@
                                     <th>Affected Hand</th>
                                     <th>Finding</th>
                                     <th>Date</th>
-                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>

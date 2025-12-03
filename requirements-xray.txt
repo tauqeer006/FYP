@@ -9,6 +9,8 @@ flask==3.0.0
 # Image processing
 pillow==10.4.0
 
+grad-cam
+pytorch-gradcam
 
 
 

@@ -151,8 +151,7 @@ pateint created by doctor:
 subhan , qureshi
 malik ahmer , 123456789
 
-doctor:
-bilal , 123456789 , tauqeerqureshi112@gmail.com
+
 
 
 

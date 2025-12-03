@@ -232,6 +232,71 @@
             font-weight: 600;
         }
 
+        /* Filter Section */
+        .filter-section {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(30, 144, 255, 0.1);
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: var(--dark-blue);
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        .filter-select, .filter-input {
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.1);
+        }
+
+        .filter-button {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+            color: var(--white);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .filter-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(30, 144, 255, 0.3);
+        }
+
+        .no-results-message {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+            font-size: 14px;
+        }
+
         @media (max-width: 768px) {
             .page-header {
                 flex-direction: column;
@@ -278,6 +343,36 @@
                 <div class="stat-value">{{ patients|length }}</div>
                 <div class="stat-label">Total Patients</div>
             </div>
+        </div>
+        {% endif %}
+
+        <!-- Filter Section -->
+        {% if patients %}
+        <div class="filter-section">
+            <div class="filter-group">
+                <label for="filterName">🔍 Filter by Name:</label>
+                <input type="text" id="filterName" class="filter-input" placeholder="Type patient name...">
+            </div>
+            <div class="filter-group">
+                <label for="filterAge">📅 Filter by Age:</label>
+                <select id="filterAge" class="filter-select">
+                    <option value="">All Ages</option>
+                    <option value="0-18">0-18 years</option>
+                    <option value="19-30">19-30 years</option>
+                    <option value="31-45">31-45 years</option>
+                    <option value="46-60">46-60 years</option>
+                    <option value="60+">60+ years</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="filterAlphabet">🔤 Sort A-Z:</label>
+                <select id="filterAlphabet" class="filter-select">
+                    <option value="">Default</option>
+                    <option value="a-z">A to Z</option>
+                    <option value="z-a">Z to A</option>
+                </select>
+            </div>
+            <button class="filter-button" onclick="resetFilters()">🔄 Reset Filters</button>
         </div>
         {% endif %}
 
@@ -356,6 +451,117 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Patient Filtering Script -->
+    <script>
+        // Get table body and all rows
+        const tableBody = document.querySelector('.table tbody');
+        const allRows = tableBody ? Array.from(tableBody.querySelectorAll('tbody tr')) : [];
+        const filterNameInput = document.getElementById('filterName');
+        const filterAgeSelect = document.getElementById('filterAge');
+        const filterAlphabetSelect = document.getElementById('filterAlphabet');
+
+        // Store original row order
+        let sortedRows = [...allRows];
+
+        // Filter by name
+        if (filterNameInput) {
+            filterNameInput.addEventListener('input', applyFilters);
+        }
+
+        // Filter by age range
+        if (filterAgeSelect) {
+            filterAgeSelect.addEventListener('change', applyFilters);
+        }
+
+        // Sort alphabetically
+        if (filterAlphabetSelect) {
+            filterAlphabetSelect.addEventListener('change', applyFilters);
+        }
+
+        function getPatientAge(ageText) {
+            // Extract just the number from "XX years" format
+            const ageMatch = ageText.match(/\d+/);
+            return ageMatch ? parseInt(ageMatch[0]) : 0;
+        }
+
+        function isInAgeRange(age, rangeString) {
+            if (!rangeString) return true;
+            
+            if (rangeString === '0-18') return age >= 0 && age <= 18;
+            if (rangeString === '19-30') return age >= 19 && age <= 30;
+            if (rangeString === '31-45') return age >= 31 && age <= 45;
+            if (rangeString === '46-60') return age >= 46 && age <= 60;
+            if (rangeString === '60+') return age > 60;
+            
+            return true;
+        }
+
+        function getPatientName(row) {
+            const nameCell = row.querySelector('.patient-name');
+            return nameCell ? nameCell.textContent.toLowerCase().trim() : '';
+        }
+
+        function applyFilters() {
+            const nameFilter = filterNameInput ? filterNameInput.value.toLowerCase().trim() : '';
+            const ageFilter = filterAgeSelect ? filterAgeSelect.value : '';
+            const sortFilter = filterAlphabetSelect ? filterAlphabetSelect.value : '';
+
+            // Filter rows
+            let filteredRows = allRows.filter(row => {
+                const patientName = getPatientName(row);
+                const ageCell = row.querySelectorAll('td')[2]; // Age column is 3rd
+                const age = ageCell ? getPatientAge(ageCell.textContent) : 0;
+
+                // Check name filter
+                if (nameFilter && !patientName.includes(nameFilter)) {
+                    return false;
+                }
+
+                // Check age filter
+                if (ageFilter && !isInAgeRange(age, ageFilter)) {
+                    return false;
+                }
+
+                return true;
+            });
+
+            // Sort alphabetically
+            if (sortFilter === 'a-z') {
+                filteredRows.sort((a, b) => {
+                    return getPatientName(a).localeCompare(getPatientName(b));
+                });
+            } else if (sortFilter === 'z-a') {
+                filteredRows.sort((a, b) => {
+                    return getPatientName(b).localeCompare(getPatientName(a));
+                });
+            }
+
+            // Clear and re-render table
+            if (filteredRows.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="no-results-message">No patients match your filters</td></tr>';
+            } else {
+                tableBody.innerHTML = '';
+                filteredRows.forEach(row => {
+                    tableBody.appendChild(row.cloneNode(true));
+                });
+            }
+        }
+
+        function resetFilters() {
+            if (filterNameInput) filterNameInput.value = '';
+            if (filterAgeSelect) filterAgeSelect.value = '';
+            if (filterAlphabetSelect) filterAlphabetSelect.value = '';
+            
+            // Restore original table
+            if (tableBody && allRows.length > 0) {
+                tableBody.innerHTML = '';
+                allRows.forEach(row => {
+                    tableBody.appendChild(row.cloneNode(true));
+                });
+            }
+        }
+    </script>
 
     <!-- Chatbot Widget -->
     {% include 'components/chatbot_widget_unified.html' %}

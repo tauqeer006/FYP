@@ -181,6 +181,15 @@
             border-radius: 10px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .search-box .input-group {
+            flex: 1;
+            min-width: 200px;
         }
         
         .search-box input {
@@ -256,6 +265,26 @@
                 <input type="text" class="form-control" id="searchInput" placeholder="Search by name, ID, or email..." 
                        style="border: 2px solid #e0e0e0;">
             </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <label style="font-weight: 600; color: var(--dark-blue); white-space: nowrap; margin: 0;">📅 Age:</label>
+                <select id="filterAge" style="border: 2px solid #e0e0e0; border-radius: 8px; padding: 10px 12px; font-size: 14px;">
+                    <option value="">All Ages</option>
+                    <option value="0-18">0-18 years</option>
+                    <option value="19-30">19-30 years</option>
+                    <option value="31-45">31-45 years</option>
+                    <option value="46-60">46-60 years</option>
+                    <option value="60+">60+ years</option>
+                </select>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <label style="font-weight: 600; color: var(--dark-blue); white-space: nowrap; margin: 0;">🔤 Sort:</label>
+                <select id="sortAlphabet" style="border: 2px solid #e0e0e0; border-radius: 8px; padding: 10px 12px; font-size: 14px;">
+                    <option value="">Default</option>
+                    <option value="a-z">A to Z</option>
+                    <option value="z-a">Z to A</option>
+                </select>
+            </div>
+            <button onclick="resetFilters()" style="background: linear-gradient(90deg, var(--primary-blue) 0%, var(--dark-blue) 100%); color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; white-space: nowrap;">🔄 Reset</button>
         </div>
 
         <!-- Patients Table -->
@@ -314,20 +343,95 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('keyup', function() {
-            const searchTerm = this.value.toLowerCase();
-            const rows = document.querySelectorAll('.patient-row');
-            
-            rows.forEach(row => {
-                const patientName = row.getAttribute('data-patient-name');
-                if (patientName.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
+        // Store all original rows
+        const allRows = Array.from(document.querySelectorAll('.patient-row'));
+        const tableBody = document.getElementById('patientTableBody');
+
+        function getPatientAge(ageText) {
+            const ageMatch = ageText.match(/\d+/);
+            return ageMatch ? parseInt(ageMatch[0]) : 0;
+        }
+
+        function isInAgeRange(age, rangeString) {
+            if (!rangeString) return true;
+            if (rangeString === '0-18') return age >= 0 && age <= 18;
+            if (rangeString === '19-30') return age >= 19 && age <= 30;
+            if (rangeString === '31-45') return age >= 31 && age <= 45;
+            if (rangeString === '46-60') return age >= 46 && age <= 60;
+            if (rangeString === '60+') return age > 60;
+            return true;
+        }
+
+        function getPatientName(row) {
+            const nameCell = row.querySelector('.patient-id');
+            return nameCell ? nameCell.textContent.toLowerCase().trim() : '';
+        }
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const ageFilter = document.getElementById('filterAge').value;
+            const sortFilter = document.getElementById('sortAlphabet').value;
+
+            // Filter rows
+            let filteredRows = allRows.filter(row => {
+                const patientName = getPatientName(row);
+                const ageBadge = row.querySelector('.badge-age');
+                const age = ageBadge ? getPatientAge(ageBadge.textContent) : 0;
+                const rowAttribute = row.getAttribute('data-patient-name');
+
+                // Check name filter (search both in data attribute and display name)
+                if (searchTerm && !rowAttribute.includes(searchTerm) && !patientName.includes(searchTerm)) {
+                    return false;
                 }
+
+                // Check age filter
+                if (ageFilter && !isInAgeRange(age, ageFilter)) {
+                    return false;
+                }
+
+                return true;
             });
-        });
+
+            // Sort alphabetically
+            if (sortFilter === 'a-z') {
+                filteredRows.sort((a, b) => {
+                    return getPatientName(a).localeCompare(getPatientName(b));
+                });
+            } else if (sortFilter === 'z-a') {
+                filteredRows.sort((a, b) => {
+                    return getPatientName(b).localeCompare(getPatientName(a));
+                });
+            }
+
+            // Clear and re-render table
+            if (filteredRows.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: #999;">No patients match your filters</td></tr>';
+            } else {
+                tableBody.innerHTML = '';
+                filteredRows.forEach(row => {
+                    tableBody.appendChild(row.cloneNode(true));
+                });
+            }
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterAge').value = '';
+            document.getElementById('sortAlphabet').value = '';
+            
+            // Restore original table
+            if (tableBody && allRows.length > 0) {
+                tableBody.innerHTML = '';
+                allRows.forEach(row => {
+                    tableBody.appendChild(row.cloneNode(true));
+                });
+            }
+        }
+
+        // Add event listeners
+        document.getElementById('searchInput').addEventListener('keyup', applyFilters);
+        document.getElementById('filterAge').addEventListener('change', applyFilters);
+        document.getElementById('sortAlphabet').addEventListener('change', applyFilters);
         
         function viewPatient(patientId) {
             // Navigate to patient detail page or diagnosis page

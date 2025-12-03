@@ -94,7 +94,7 @@ app.add_middleware(
 # Global variables
 detector = poseDetector()
 exercises = load_exercises()
-TOLERANCE = 50  # EXTREMELY LENIENT: ±50° tolerance - barely any effort counts as correct
+TOLERANCE = 1
 tts_engine = pyttsx3.init()
 
 # Session tracking for rep counting
@@ -132,6 +132,7 @@ class PoseCheckResponse(BaseModel):
     angle_details: list = []  # New: Specific angle feedback
     rep_count: int = 0  # New: Number of completed reps
     frames_in_rep: int = 0  # New: Current frame count towards next rep (0-30)
+    shoulder_positions: dict = {}  # NEW: Shoulder coordinates for overlay guide
 
 
 class ExerciseSession(BaseModel):
@@ -226,7 +227,7 @@ def check_posture(img, exercise, session_id="default"):
     """Check if user's posture matches exercise requirements with lenient 50% correctness"""
     if img is None or img.size == 0:
         logger.warning("❌ Invalid image received")
-        return False, "❌ Could not process image", "", {}, [], 0
+        return False, "❌ Could not process image", "", {}, [], 0, {}, {}
 
     detector.findPose(img, draw=False)
     lmList = detector.findPosition(img)
@@ -235,6 +236,7 @@ def check_posture(img, exercise, session_id="default"):
 
     feedback_msgs = []
     angles_detected = {}
+    shoulder_positions = {}  # NEW: Store shoulder coordinates
     specific_feedback = []  # New: More specific feedback
     correct_count = 0  # Count how many arms are correct
     total_arms = 0  # Total arms being checked
@@ -243,6 +245,23 @@ def check_posture(img, exercise, session_id="default"):
         lmDict = {pt[0]: pt for pt in lmList}
         left_correct = False
         right_correct = False
+        
+        # Extract shoulder positions for overlay guide (NEW)
+        if 11 in lmDict:  # Left shoulder
+            left_shoulder = lmDict[11]
+            shoulder_positions["left_shoulder"] = {
+                "x": left_shoulder[1],
+                "y": left_shoulder[2]
+            }
+            logger.info(f"📍 LEFT SHOULDER detected at ({left_shoulder[1]}, {left_shoulder[2]})")
+        
+        if 12 in lmDict:  # Right shoulder
+            right_shoulder = lmDict[12]
+            shoulder_positions["right_shoulder"] = {
+                "x": right_shoulder[1],
+                "y": right_shoulder[2]
+            }
+            logger.info(f"📍 RIGHT SHOULDER detected at ({right_shoulder[1]}, {right_shoulder[2]})")
 
         # ALWAYS Calculate LEFT Arm angle - regardless of target value
         left = exercise.get("left_arm", {})
@@ -330,7 +349,7 @@ def check_posture(img, exercise, session_id="default"):
             })
     else:
         logger.warning(f"❌ No pose detected! Landmarks found: {len(lmList) if lmList else 0}")
-        return False, "❌ No pose detected", "📸 Please move into camera view and stand clearly", {}, [], 0, 0
+        return False, "❌ No pose detected", "📸 Please move into camera view and stand clearly", {}, [], 0, 0, {}
 
     logger.info(f"📊 Results: Total arms checked: {total_arms}, Correct count: {correct_count}")
 
@@ -398,8 +417,9 @@ def check_posture(img, exercise, session_id="default"):
     logger.info(f"📤 RETURNING ANGLES TO FRONTEND: {angles_detected}")
     logger.info(f"   - Left Shoulder: {angles_detected.get('left_shoulder', 'NOT SENT')}")
     logger.info(f"   - Right Shoulder: {angles_detected.get('right_shoulder', 'NOT SENT')}")
+    logger.info(f"📍 RETURNING SHOULDER POSITIONS: {shoulder_positions}")
     
-    return posture_correct, message, feedback, angles_detected, specific_feedback, rep_count, frames_in_rep
+    return posture_correct, message, feedback, angles_detected, specific_feedback, rep_count, frames_in_rep, shoulder_positions
 
 
 # ==================== API Endpoints ====================
@@ -466,8 +486,8 @@ async def check_pose(request: PoseCheckRequest):
     if img is None:
         raise HTTPException(status_code=400, detail="Invalid image data")
     
-    # Check posture (fast) - now returns 7 values including frames_in_rep
-    is_correct, message, feedback, angles, angle_details, rep_count, frames_in_rep = check_posture(img, exercise, request.session_id)
+    # Check posture (fast) - now returns 8 values including shoulder_positions
+    is_correct, message, feedback, angles, angle_details, rep_count, frames_in_rep, shoulder_positions = check_posture(img, exercise, request.session_id)
     
     response = PoseCheckResponse(
         correct=is_correct,
@@ -476,7 +496,8 @@ async def check_pose(request: PoseCheckRequest):
         angles=angles,
         angle_details=angle_details,
         rep_count=rep_count,
-        frames_in_rep=frames_in_rep
+        frames_in_rep=frames_in_rep,
+        shoulder_positions=shoulder_positions
     )
     
     return response

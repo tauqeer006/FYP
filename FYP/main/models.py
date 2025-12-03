@@ -172,6 +172,11 @@ class PatientXRayInfo(BaseModel):
     finding = models.TextField()
     fracture_type = models.CharField(max_length=100)
     affected_hand = models.CharField(max_length=10, choices=[('left', 'Left'), ('right', 'Right')])
+    
+    # Image fields for X-ray storage
+    original_image = models.ImageField(upload_to='xray_images/original/', null=True, blank=True)
+    saliency_map_image = models.ImageField(upload_to='xray_images/saliency/', null=True, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
 
     class Meta:
         ordering = ['-created_at']
@@ -272,6 +277,157 @@ class ExerciseSession(BaseModel):
     def __str__(self):
         patient_name = f"{self.patient.fname} {self.patient.lname}" if self.patient else "Unknown"
         return f"{patient_name} - {self.exercise_name} ({self.exercise_date.strftime('%Y-%m-%d %H:%M')})"
+
+
+class ExerciseMetrics(BaseModel):
+    """Detailed frame-by-frame metrics for exercise sessions"""
+    session = models.ForeignKey(
+        ExerciseSession,
+        on_delete=models.CASCADE,
+        related_name='frame_metrics',
+        db_index=True
+    )
+    
+    frame_number = models.IntegerField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    
+    # Joint angles
+    left_shoulder_angle = models.FloatField(null=True, blank=True)
+    right_shoulder_angle = models.FloatField(null=True, blank=True)
+    left_elbow_angle = models.FloatField(null=True, blank=True)
+    right_elbow_angle = models.FloatField(null=True, blank=True)
+    left_wrist_angle = models.FloatField(null=True, blank=True)
+    right_wrist_angle = models.FloatField(null=True, blank=True)
+    
+    # Assessment
+    is_correct = models.BooleanField(default=False)
+    feedback_message = models.CharField(max_length=500, blank=True)
+    confidence_score = models.FloatField(default=0.0)  # 0-1
+    
+    class Meta:
+        ordering = ['frame_number']
+        indexes = [
+            models.Index(fields=['session', 'frame_number']),
+        ]
+    
+    def __str__(self):
+        return f"Frame {self.frame_number} - Session {self.session.id}"
+
+
+class PatientProgressPlan(BaseModel):
+    """AI-generated personalized exercise plan"""
+    patient = models.ForeignKey(
+        'PatientCreatedByDoctor',
+        on_delete=models.CASCADE,
+        related_name='progress_plans',
+        db_index=True
+    )
+    
+    doctor = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        limit_choices_to={'user_type': 'doctor'}
+    )
+    
+    # Plan details
+    injury_type = models.CharField(max_length=100)  # e.g., "Left Shoulder Fracture"
+    current_week = models.IntegerField(default=1)
+    total_weeks = models.IntegerField(default=6)
+    
+    # Plan content (stored as JSON)
+    plan_json = models.JSONField(default=dict)  # {week: [exercises]}
+    
+    # Predictions
+    predicted_recovery_date = models.DateField(null=True, blank=True)
+    predicted_recovery_score = models.IntegerField(default=0)  # 0-100
+    
+    # Tracking
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('active', 'Active'),
+            ('completed', 'Completed'),
+            ('paused', 'Paused'),
+            ('archived', 'Archived'),
+        ],
+        default='active'
+    )
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"Plan for {self.patient.fname} - Week {self.current_week}"
+
+
+class ExerciseDifficulty(BaseModel):
+    """Track difficulty settings per patient per exercise"""
+    patient = models.ForeignKey(
+        'PatientCreatedByDoctor',
+        on_delete=models.CASCADE,
+        related_name='difficulty_settings',
+        db_index=True
+    )
+    
+    exercise_name = models.CharField(max_length=200, db_index=True)
+    
+    # Difficulty parameters
+    current_level = models.IntegerField(default=1)  # 1-5
+    reps_target = models.IntegerField(default=10)
+    speed_modifier = models.FloatField(default=1.0)  # 0.5 = slow, 2.0 = fast
+    rom_percentage = models.IntegerField(default=100)  # Range of motion 50-100%
+    
+    # Tracking
+    last_session_accuracy = models.FloatField(default=0.0)
+    consecutive_good_sessions = models.IntegerField(default=0)  # For auto-level-up
+    
+    class Meta:
+        unique_together = ['patient', 'exercise_name']
+        indexes = [
+            models.Index(fields=['patient', 'exercise_name']),
+        ]
+    
+    def __str__(self):
+        return f"{self.patient.fname} - {self.exercise_name} (Level {self.current_level})"
+
+
+class RecoveryPrediction(BaseModel):
+    """Store recovery timeline predictions"""
+    patient = models.ForeignKey(
+        'PatientCreatedByDoctor',
+        on_delete=models.CASCADE,
+        related_name='recovery_predictions',
+        db_index=True
+    )
+    
+    # Prediction details
+    predicted_days_to_recovery = models.IntegerField()
+    predicted_recovery_date = models.DateField()
+    confidence_percentage = models.FloatField(default=0.0)  # 0-100
+    
+    # Model inputs
+    accuracy_at_prediction = models.FloatField()
+    sessions_completed = models.IntegerField()
+    days_since_injury = models.IntegerField()
+    
+    # Feedback
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('on_track', 'On Track'),
+            ('ahead', 'Ahead of Schedule'),
+            ('behind', 'Behind Schedule'),
+        ],
+        default='on_track'
+    )
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.patient.fname} - Recovery in {self.predicted_days_to_recovery} days"
 
 
 # Keep this for backward compatibility during migration

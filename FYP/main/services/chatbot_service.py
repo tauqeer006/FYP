@@ -19,6 +19,52 @@ logger = logging.getLogger(__name__)
 class ChatbotService:
     """Service to process user queries and match them to routes using Gemini AI"""
     
+    # Define available chatbot features
+    FEATURES = {
+        'form_filling': {
+            'name': 'Form Filling',
+            'description': 'Fill form fields by voice without typing',
+            'icon': 'pencil-square',
+            'examples': ['Fill patient data', 'Enter exercise information', 'Complete diagnosis form']
+        },
+        'button_clicking': {
+            'name': 'Button Clicking',
+            'description': 'Click buttons and links on the current page by voice',
+            'icon': 'hand-index',
+            'examples': ['Click login', 'Press submit', 'Click next']
+        },
+        'page_navigation': {
+            'name': 'Page Navigation',
+            'description': 'Navigate to any page in the system without typing URLs',
+            'icon': 'signpost-2',
+            'examples': ['Go to dashboard', 'Open patient records', 'Show diagnosis page']
+        },
+        'page_scrolling': {
+            'name': 'Page Scrolling',
+            'description': 'Scroll through page content using voice commands',
+            'icon': 'arrow-up-down',
+            'examples': ['Scroll down', 'Scroll up', 'Go to top']
+        },
+        'exercise_guidance': {
+            'name': 'Exercise Guidance',
+            'description': 'Get personalized exercise recommendations and instructions',
+            'icon': 'person-walking',
+            'examples': ['Show exercises', 'Start exercise video', 'View exercise history']
+        },
+        'report_generation': {
+            'name': 'Report Generation',
+            'description': 'Generate and view medical reports and analysis',
+            'icon': 'file-earmark-pdf',
+            'examples': ['Generate report', 'View X-ray results', 'Create diagnosis report']
+        },
+        'data_visualization': {
+            'name': 'Data Visualization',
+            'description': 'View charts, graphs, and medical data visualizations',
+            'icon': 'graph-up',
+            'examples': ['Show charts', 'View analytics', 'Display statistics']
+        }
+    }
+    
     def __init__(self):
         """Initialize the chatbot service with routes data"""
         self.routes_file = Path(__file__).parent.parent / "config" / "routes.yml"
@@ -516,6 +562,291 @@ IMPORTANT:
             logger.error(f"Error getting route info: {str(e)}")
             return None
     
+    def get_main_menu(self) -> Dict:
+        """
+        Get the main menu with three primary options
+        
+        Returns:
+            Dictionary with menu structure for main menu
+        """
+        return {
+            'response_type': 'menu',
+            'menu_type': 'main',
+            'menu_title': '🏥 Medical AI Assistant',
+            'menu_subtitle': 'What would you like to do?',
+            'options': [
+                {
+                    'id': 'view_urls',
+                    'label': '🔗 View All Pages',
+                    'description': 'Browse and navigate to any page in the system',
+                    'icon': 'link-45deg',
+                    'action': 'menu_view_urls'
+                },
+                {
+                    'id': 'check_features',
+                    'label': '⚙️ Explore Features',
+                    'description': 'Learn about chatbot capabilities and features',
+                    'icon': 'gear',
+                    'action': 'menu_check_features'
+                },
+                {
+                    'id': 'help',
+                    'label': '❓ Get Help',
+                    'description': 'Get tips and guidance on using the system',
+                    'icon': 'question-circle',
+                    'action': 'menu_help'
+                }
+            ]
+        }
+    
+    def get_all_urls_menu(self, user_roles: List[str] = None) -> Dict:
+        """
+        Get all available URLs formatted as a clickable menu
+        
+        Args:
+            user_roles: List of user roles for filtering routes
+        
+        Returns:
+            Dictionary with all routes organized by category
+        """
+        try:
+            if not self.routes_data or 'routes' not in self.routes_data:
+                return {
+                    'success': False,
+                    'response_type': 'menu',
+                    'menu_type': 'urls',
+                    'message': 'No routes available'
+                }
+            
+            routes = self.routes_data['routes']
+            
+            # Organize routes by category
+            categorized_routes = {}
+            
+            for route_id, route_info in routes.items():
+                # Filter by user roles if provided
+                if user_roles and 'user_roles' in route_info:
+                    if not any(role in route_info['user_roles'] for role in user_roles):
+                        continue
+                
+                category = route_info.get('category', 'Other')
+                if category not in categorized_routes:
+                    categorized_routes[category] = []
+                
+                categorized_routes[category].append({
+                    'id': route_id,
+                    'label': route_info.get('description', route_id),
+                    'path': route_info.get('path', '#'),
+                    'icon': route_info.get('icon', 'file'),
+                    'keywords': route_info.get('keywords', [])
+                })
+            
+            return {
+                'success': True,
+                'response_type': 'menu',
+                'menu_type': 'urls',
+                'menu_title': '📄 All Available Pages',
+                'menu_subtitle': 'Click to navigate',
+                'categories': categorized_routes,
+                'total_routes': len(routes)
+            }
+        
+        except Exception as e:
+            logger.error(f"Error building URLs menu: {str(e)}")
+            return {
+                'success': False,
+                'response_type': 'menu',
+                'message': 'Error loading pages menu'
+            }
+    
+    def get_features_menu(self) -> Dict:
+        """
+        Get the features menu showing available chatbot capabilities
+        
+        Returns:
+            Dictionary with feature list
+        """
+        features_list = []
+        for feature_id, feature_info in self.FEATURES.items():
+            features_list.append({
+                'id': feature_id,
+                'label': feature_info['name'],
+                'description': feature_info['description'],
+                'icon': feature_info['icon'],
+                'examples': feature_info['examples']
+            })
+        
+        return {
+            'success': True,
+            'response_type': 'menu',
+            'menu_type': 'features',
+            'menu_title': '⚡ Chatbot Features',
+            'menu_subtitle': 'Click to learn more',
+            'features': features_list,
+            'total_features': len(features_list)
+        }
+    
+    def get_feature_details(self, feature_id: str) -> Dict:
+        """
+        Get detailed information about a specific feature
+        
+        Args:
+            feature_id: The ID of the feature to get details for
+        
+        Returns:
+            Dictionary with feature details
+        """
+        if feature_id not in self.FEATURES:
+            return {
+                'success': False,
+                'response_type': 'menu',
+                'message': f'Feature {feature_id} not found'
+            }
+        
+        feature = self.FEATURES[feature_id]
+        
+        return {
+            'success': True,
+            'response_type': 'menu',
+            'menu_type': 'feature_details',
+            'feature_id': feature_id,
+            'title': feature['name'],
+            'description': feature['description'],
+            'icon': feature['icon'],
+            'how_to_use': self._get_feature_usage_instructions(feature_id),
+            'examples': feature['examples'],
+            'back_option': True
+        }
+    
+    def _get_feature_usage_instructions(self, feature_id: str) -> str:
+        """
+        Get usage instructions for a feature
+        
+        Args:
+            feature_id: The feature ID
+        
+        Returns:
+            String with usage instructions
+        """
+        instructions = {
+            'form_filling': """
+            1. Say: "Fill [field name] with [value]"
+            2. Example: "Fill email with john@example.com"
+            3. The chatbot will find and fill the field automatically
+            4. Multiple fields: "Fill username with john and password with 123"
+            """,
+            'button_clicking': """
+            1. Say: "Click [button name]"
+            2. Example: "Click login button" or "Press submit"
+            3. The chatbot will find and click the button
+            4. Works with any visible button on the page
+            """,
+            'page_navigation': """
+            1. Say: "Go to [page name]" or "Navigate to [page name]"
+            2. Example: "Go to patient dashboard" or "Open diagnosis page"
+            3. Or use "View All Pages" to see clickable links
+            4. No typing required - just speak the page name!
+            """,
+            'page_scrolling': """
+            1. Say: "Scroll down" or "Scroll up"
+            2. Example: "Scroll down to see more" or "Go to top"
+            3. Say "Page down" or "Page up" for larger scrolls
+            4. Works on any page with scrollable content
+            """,
+            'exercise_guidance': """
+            1. Navigate to Exercise Video page
+            2. Say: "Start exercise" or "Show exercise guidance"
+            3. The AI will provide real-time feedback
+            4. Say: "View history" to see past exercises
+            """,
+            'report_generation': """
+            1. After X-ray analysis, say: "Generate report"
+            2. Reports are automatically saved to your profile
+            3. Say: "View reports" to see all generated reports
+            4. Reports can be downloaded or printed
+            """,
+            'data_visualization': """
+            1. Navigate to dashboard or analytics pages
+            2. Charts and graphs are displayed automatically
+            3. Hover over elements for detailed information
+            4. Say: "Show chart" or "Display statistics"
+            """
+        }
+        return instructions.get(feature_id, "Feature instructions not available")
+    
+    def get_help_menu(self) -> Dict:
+        """
+        Get the help menu with tips and guidance
+        
+        Returns:
+            Dictionary with help information
+        """
+        return {
+            'success': True,
+            'response_type': 'menu',
+            'menu_type': 'help',
+            'menu_title': '❓ Help & Guidance',
+            'sections': [
+                {
+                    'title': '🎤 Voice Commands',
+                    'tips': [
+                        'Speak clearly and naturally',
+                        'Avoid background noise',
+                        'Say complete sentences',
+                        'Example: "Navigate to patient dashboard"'
+                    ]
+                },
+                {
+                    'title': '🔧 Troubleshooting',
+                    'tips': [
+                        'If command not understood, rephrase it',
+                        'Use "View All Pages" to see available options',
+                        'Ensure your microphone is enabled',
+                        'Check browser permissions for microphone access'
+                    ]
+                },
+                {
+                    'title': '📱 Tips',
+                    'tips': [
+                        'Use the menu for quick navigation without voice',
+                        'Click buttons instead of saying if preferred',
+                        'Combine multiple commands: "Click login then enter username"',
+                        'Say "Back to menu" to return to main menu'
+                    ]
+                }
+            ],
+            'back_option': True
+        }
+    
+    def process_menu_action(self, menu_action: str, user_roles: List[str] = None) -> Dict:
+        """
+        Process a menu action and return the appropriate menu
+        
+        Args:
+            menu_action: The action/menu ID selected by user
+            user_roles: List of user roles for filtering
+        
+        Returns:
+            Dictionary with menu response
+        """
+        action_map = {
+            'menu_view_urls': lambda: self.get_all_urls_menu(user_roles),
+            'menu_check_features': lambda: self.get_features_menu(),
+            'menu_help': lambda: self.get_help_menu(),
+            'menu_main': lambda: self.get_main_menu(),
+        }
+        
+        if menu_action in action_map:
+            logger.info(f"Processing menu action: {menu_action}")
+            return action_map[menu_action]()
+        
+        logger.warning(f"Unknown menu action: {menu_action}")
+        return {
+            'success': False,
+            'response_type': 'menu',
+            'message': f'Unknown menu action: {menu_action}'
+        }
+    
     def process_multi_commands(self, commands: List[str], user_roles: List[str] = None) -> Dict:
         """
         Process multiple commands sequentially and return results for each
@@ -706,39 +1037,26 @@ IMPORTANT:
             user_roles: List of user roles for filtering (e.g., ['admin', 'doctor'])
         
         Returns:
-            Dictionary with:
-            For navigation:
-            {
-                'success': bool,
-                'response_type': 'navigation',
-                'matched_route': {...route info...},
-                'path': '/url/path/',
-                'message': 'Human readable message',
-                'reason': 'Why this route was matched'
-            }
-            
-            For conversation:
-            {
-                'success': bool,
-                'response_type': 'conversation',
-                'answer': 'Bot response text',
-                'message': 'Conversational answer'
-            }
-            
-            For multi_command:
-            {
-                'success': bool,
-                'response_type': 'multi_command',
-                'commands': [
-                    {response for command 1},
-                    {response for command 2},
-                    ...
-                ],
-                'message': 'Processing multiple commands',
-                'total_commands': 3
-            }
+            Dictionary with response based on query type
         """
         try:
+            # Handle menu initialization
+            if user_query.lower() in ['menu', 'show menu', 'main menu', 'open menu', 'menu please']:
+                logger.info("Opening main menu")
+                return self.get_main_menu()
+            
+            # Handle menu actions
+            if user_query.lower().startswith('menu:'):
+                menu_action = user_query[5:].strip()
+                logger.info(f"Processing menu action: {menu_action}")
+                return self.process_menu_action(menu_action, user_roles)
+            
+            # Handle feature details request
+            if user_query.lower().startswith('feature:'):
+                feature_id = user_query[8:].strip()
+                logger.info(f"Getting feature details: {feature_id}")
+                return self.get_feature_details(feature_id)
+            
             # Validate input
             if not user_query or not isinstance(user_query, str):
                 return {

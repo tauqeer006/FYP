@@ -330,7 +330,17 @@
             animation: fadeIn 0.3s ease-out;
         }
 
-        .modal-content {
+        .modal.show {
+            display: block !important;
+        }
+
+        /* Exercise Details Modal (centered dialog) */
+        #exerciseModal {
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        #exerciseModal .modal-content {
             background-color: white;
             margin: 3% auto;
             padding: 0;
@@ -345,6 +355,40 @@
             animation: slideUp 0.3s ease-out;
         }
 
+        /* Webcam Exercise Full Page Modal */
+        #webcamModal {
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: white;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        #webcamModal .modal-content {
+            background-color: white;
+            width: 100%;
+            height: 100vh;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: none;
+            overflow: hidden;
+            animation: none;
+            border-radius: 0;
+        }
+
+        .modal-content {
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+        }
+
         .modal-header {
             padding: 25px;
             background: linear-gradient(135deg, #344dbd 0%, #764ba2 100%);
@@ -352,6 +396,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+
+        #webcamModal .modal-header {
+            padding: 15px 20px;
+            height: 70px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .modal-header h2 {
@@ -384,6 +435,13 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
+        }
+
+        #webcamModal .modal-body {
+            padding: 0;
+            overflow: hidden;
+            flex-direction: row;
+            height: calc(100vh - 70px);
         }
 
         .modal-video {
@@ -616,27 +674,25 @@
 
         /* Webcam Exercise Enhancement Styles */
         .exercise-feedback-container {
-            display: grid;
-            grid-template-columns: 1fr 0.8fr 1.2fr;
-            gap: 15px;
-            height: auto;
-            max-height: 75vh;
+            display: none;  /* No longer used - removed from layout */
         }
 
         .webcam-wrapper {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            max-height: 75vh;
             overflow-y: auto;
         }
 
         .skeleton-demo-wrapper {
+            display: none;  /* Hide skeleton demos to make room */
             min-width: 180px;
         }
 
         .feedback-wrapper {
-            min-width: 240px;
+            min-width: 180px;  /* Right sidebar width */
+            display: flex;
+            flex-direction: column;
         }
 
         #webcam {
@@ -645,7 +701,7 @@
             background: #000;
             border: 3px solid var(--border-color);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            aspect-ratio: 4 / 3;
+            aspect-ratio: 16 / 9;  /* Larger aspect ratio for bigger video */
         }
 
         .webcam-controls {
@@ -670,33 +726,33 @@
             flex-direction: column;
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            max-height: 75vh;
+            flex: 1;  /* Take up all available height */
         }
 
         .conversation-header {
             background: linear-gradient(135deg, #344dbd 0%, #764ba2 100%);
             color: white;
-            padding: 12px 15px;
+            padding: 8px 10px;  /* Smaller padding */
             font-weight: 600;
-            font-size: 0.95em;
+            font-size: 0.8em;  /* Smaller font */
             border-bottom: 2px solid var(--border-color);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .conversation-header::before {
-            content: '💬';
-            font-size: 1.2em;
+            content: '';  /* Remove emoji from header in sidebar */
+            font-size: 1em;  
         }
 
         .conversation-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 12px;
+            padding: 6px;  /* Smaller padding */
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 4px;  /* Smaller gap */
         }
 
         .conversation-messages::-webkit-scrollbar {
@@ -717,10 +773,10 @@
         }
 
         .message {
-            padding: 10px 12px;
-            border-radius: 8px;
-            font-size: 0.85em;
-            line-height: 1.4;
+            padding: 6px 8px;  /* Smaller padding */
+            border-radius: 6px;
+            font-size: 0.75em;  /* Smaller font */
+            line-height: 1.3;
             word-wrap: break-word;
             animation: slideInRight 0.3s ease-out;
         }
@@ -739,41 +795,41 @@
         .message.success {
             background: #d1fae5;
             color: #065f46;
-            border-left: 4px solid var(--success-color);
+            border-left: 3px solid var(--success-color);
         }
 
         .message.error {
             background: #fee2e2;
             color: #991b1b;
-            border-left: 4px solid var(--danger-color);
+            border-left: 3px solid var(--danger-color);
         }
 
         .message.info {
             background: #dbeafe;
             color: #1e3a8a;
-            border-left: 4px solid var(--primary-color);
+            border-left: 3px solid var(--primary-color);
         }
 
         .message.feedback {
             background: #fef3c7;
             color: #92400e;
-            border-left: 4px solid var(--warning-color);
-            font-size: 0.8em;
+            border-left: 3px solid var(--warning-color);
+            font-size: 0.7em;  /* Even smaller for feedback */
         }
 
         .message-timestamp {
-            font-size: 0.7em;
+            font-size: 0.6em;  /* Smaller timestamp */
             opacity: 0.7;
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
         .message-badge {
             display: inline-block;
-            padding: 2px 6px;
+            padding: 1px 4px;  /* Smaller padding */
             background: rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
-            font-size: 0.8em;
-            margin-right: 4px;
+            border-radius: 3px;
+            font-size: 0.65em;  /* Smaller font */
+            margin-right: 3px;
             font-weight: 600;
         }
 
@@ -784,7 +840,7 @@
             color: var(--text-light);
             height: 100%;
             text-align: center;
-            font-size: 0.85em;
+            font-size: 0.75em;  /* Smaller font */
         }
 
         .angle-display {
@@ -854,6 +910,12 @@
             #webcam {
                 max-width: 100%;
             }
+
+            #exerciseModal .modal-content {
+                width: 95%;
+                max-width: 900px;
+                max-height: 90vh;
+            }
         }
 
         @media (max-width: 768px) {
@@ -861,9 +923,44 @@
                 grid-template-columns: 1fr;
             }
 
-            .modal-body {
+            #exerciseModal .modal-content {
+                width: 98%;
+                max-height: 95vh;
+                border-radius: 8px;
+            }
+
+            #exerciseModal .modal-body {
                 padding: 15px;
                 max-height: 95vh;
+            }
+
+            #exerciseModal .modal-video {
+                height: 300px;
+                margin-bottom: 15px;
+            }
+
+            #exerciseModal .detail-section {
+                margin-bottom: 15px;
+            }
+
+            #exerciseModal .detail-section h3 {
+                font-size: 1em;
+            }
+
+            /* Stack form comparison 2-column grid to 1 column on mobile */
+            #exerciseModal .detail-section > div[style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            #exerciseModal .modal-actions {
+                padding: 15px;
+                gap: 10px;
+                flex-direction: column;
+            }
+
+            #exerciseModal .btn-lg {
+                padding: 12px 20px;
+                font-size: 0.9em;
             }
 
             #webcam {
@@ -887,9 +984,9 @@
         /* Audio Controls Styles */
         .audio-controls {
             display: flex;
-            gap: 10px;
+            gap: 6px;  /* Smaller gap */
             align-items: center;
-            padding: 10px 12px;
+            padding: 6px 8px;  /* Smaller padding */
             background: linear-gradient(135deg, #344dbd 0%, #764ba2 100%);
             border-bottom: 2px solid var(--border-color);
             justify-content: space-between;
@@ -897,7 +994,7 @@
 
         .audio-controls-left {
             display: flex;
-            gap: 10px;
+            gap: 6px;  /* Smaller gap */
             align-items: center;
         }
 
@@ -905,15 +1002,16 @@
             background: rgba(255, 255, 255, 0.2);
             color: white;
             border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
+            padding: 4px 8px;  /* Smaller padding */
+            border-radius: 4px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.85em;
+            font-size: 0.7em;  /* Smaller font */
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 3px;
+            white-space: nowrap;
         }
 
         .audio-toggle-btn:hover {
@@ -927,20 +1025,21 @@
         .volume-control {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 4px;  /* Smaller gap */
             color: white;
+            font-size: 0.8em;
         }
 
         .volume-slider {
-            width: 100px;
-            height: 4px;
+            width: 60px;  /* Smaller width */
+            height: 3px;
             cursor: pointer;
             accent-color: white;
         }
 
         .audio-indicator {
-            width: 12px;
-            height: 12px;
+            width: 10px;  /* Smaller size */
+            height: 10px;
             border-radius: 50%;
             background: #10b981;
             animation: pulse 1.5s infinite;
@@ -1176,86 +1275,100 @@
         </div>
     </div>
 
-    <!-- Webcam Exercise Modal -->
-    <div id="webcamModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>🎥 Live Exercise Feedback</h2>
-                <button class="close-btn" onclick="closeWebcamModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="exercise-feedback-container">
-                    <!-- Left Column: Webcam -->
-                    <div class="webcam-wrapper">
-                        <div class="pose-status-badge waiting" id="poseBadge">⏳ Waiting for pose detection...</div>
+    <!-- Webcam Exercise Full Page Layout -->
+    <div id="webcamModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: white; z-index: 10000; overflow: hidden;">
+        
+        <!-- Header -->
+        <div style="background: linear-gradient(135deg, #344dbd 0%, #764ba2 100%); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <h2 style="margin: 0; font-size: 1.5em;">🎥 Live Exercise Feedback</h2>
+            <button onclick="closeWebcamModal()" style="background: none; border: none; color: white; font-size: 28px; cursor: pointer; padding: 0; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">&times;</button>
+        </div>
+
+        <!-- Main Container: 2 Columns (80% content, 20% messages) -->
+        <div style="display: grid; grid-template-columns: 1fr 200px; gap: 0; height: calc(100vh - 70px); width: 100%;">
+            
+            <!-- LEFT COLUMN: Content (80%) - 2 Rows (50% camera, 50% canvases) -->
+            <div style="display: grid; grid-template-rows: 1fr 1fr; gap: 0; overflow: hidden;">
+                
+                <!-- TOP ROW (50%): Webcam with Shoulder Guide -->
+                <div style="display: flex; flex-direction: column; gap: 8px; padding: 12px; background: #f8f9fa; overflow: hidden; border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; min-height: 0;">
+                    <div class="pose-status-badge waiting" id="poseBadge" style="font-size: 0.8em; padding: 6px 12px;">⏳ Waiting for pose detection...</div>
+                    
+                    <div style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0;">
+                        <video id="webcam" autoplay playsinline style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px; background: #000; border: 3px solid var(--border-color); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);"></video>
+                        <canvas id="canvas" style="display:none;"></canvas>
+                        <!-- Shoulder Guide Overlay Canvas -->
+                        <canvas id="shoulderGuideCanvas" style="position: absolute; top: 0; left: 0; cursor: crosshair; z-index: 15; border: 2px dashed #fbbf24; border-radius: 8px;"></canvas>
+                        <div class="angle-display" id="angleDisplay" style="display: none; position: absolute; bottom: 10px; left: 10px; background: rgba(0, 0, 0, 0.6); color: white; padding: 8px 12px; border-radius: 8px; font-size: 0.75em; font-family: 'Courier New', monospace;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                                <div style="border-right: 1px solid #e5e7eb; padding-right: 6px;">
+                                    <div style="font-size: 0.7em; color: #d1d5db; font-weight: 600; margin-bottom: 3px;">Current</div>
+                                    <div style="margin-bottom: 4px; font-size: 0.7em;">Left: <span class="angle-value-item" id="leftShoulderAngle">--</span>°</div>
+                                    <div style="font-size: 0.7em;">Right: <span class="angle-value-item" id="rightShoulderAngle">--</span>°</div>
+                                </div>
+                                <div style="padding-left: 6px;">
+                                    <div style="font-size: 0.7em; color: #d1d5db; font-weight: 600; margin-bottom: 3px;">Target</div>
+                                    <div style="margin-bottom: 4px; font-size: 0.7em;">Left: <span class="angle-value-item" id="leftShoulderTargetAngle">--</span>°</div>
+                                    <div style="font-size: 0.7em;">Right: <span class="angle-value-item" id="rightShoulderTargetAngle">--</span>°</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 6px; justify-content: center; flex-shrink: 0;">
+                        <button class="btn btn-primary" onclick="stopExercising()" style="padding: 6px 12px; font-size: 0.8em;">⏹️ Stop</button>
+                        <button class="btn btn-secondary" onclick="clearConversation()" style="padding: 6px 12px; font-size: 0.8em;">🗑️ Clear</button>
+                    </div>
+                </div>
+
+                <!-- BOTTOM ROW (50%): Form Comparison with Skeleton Canvases -->
+                <div style="display: flex; flex-direction: column; gap: 8px; padding: 12px; background: #f8f9fa; overflow: hidden; border-right: 1px solid #e5e7eb; min-height: 0;">
+                    <!-- Rep Counter -->
+                    <div id="repCounter" style="background: linear-gradient(135deg, #28a745, #20c997); border-radius: 12px; padding: 10px; color: white; text-align: center; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3); flex-shrink: 0;">
+                        <div style="font-size: 16px; font-weight: bold;">
+                            💪 Reps: <span style="font-size: 20px;">0</span>/10
+                        </div>
+                    </div>
+
+                    <!-- Form Comparison Grid -->
+                    <div style="background: #f0f4f8; border-radius: 12px; border: 2px solid var(--border-color); padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); flex: 1; min-height: 0; overflow: hidden;">
+                        <div style="font-weight: 600; color: #1f2937; font-size: 0.8em; text-align: center; grid-column: 1 / -1; margin-bottom: 6px;">📊 Form Comparison</div>
                         
-                        <div style="position: relative;">
-                            <video id="webcam" autoplay playsinline></video>
-                            <canvas id="canvas" style="display:none;"></canvas>
-                            <div class="angle-display" id="angleDisplay" style="display: none;">
-                                <div>Left Shoulder: <span class="angle-value-item" id="leftShoulderAngle">--</span>°</div>
-                                <div>Right Shoulder: <span class="angle-value-item" id="rightShoulderAngle">--</span>°</div>
-                            </div>
+                        <!-- Your Position -->
+                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px; border: 2px solid #e5e7eb; border-radius: 8px; background: white; min-height: 0; overflow: hidden;">
+                            <div style="font-size: 0.7em; color: #6b7280; margin-bottom: 6px; font-weight: 600;">👤 Your Position</div>
+                            <canvas id="liveSkeletonCanvas" width="160" height="220" style="border: 1px solid #e5e7eb; border-radius: 6px; background: white; max-width: 100%; height: auto;"></canvas>
                         </div>
 
-                        <div class="webcam-controls">
-                            <button class="btn btn-primary" onclick="stopExercising()">
-                                ⏹️ Stop
-                            </button>
-                            <button class="btn btn-secondary" onclick="clearConversation()">
-                                🗑️ Clear
-                            </button>
+                        <!-- Target Position -->
+                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px; border: 2px solid #d1d5db; border-radius: 8px; background: #f3f4f6; min-height: 0; overflow: hidden;">
+                            <div style="font-size: 0.7em; color: #6b7280; margin-bottom: 6px; font-weight: 600;">✓ Target</div>
+                            <canvas id="targetSkeletonCanvas" width="160" height="220" style="border: 1px solid #d1d5db; border-radius: 6px; background: #f3f4f6; opacity: 0.9; max-width: 100%; height: auto;"></canvas>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <!-- Middle Column: Skeleton Demonstration -->
-                    <div class="skeleton-demo-wrapper">
-                        <!-- Rep Counter -->
-                        <div id="repCounter" style="background: linear-gradient(135deg, #28a745, #20c997); border-radius: 12px; padding: 15px; color: white; text-align: center; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);">
-                            <div style="font-size: 24px; font-weight: bold;">
-                                💪 Reps Completed: <span style="font-size: 32px; display: block;">0</span>
-                            </div>
-                        </div>
+            <!-- RIGHT COLUMN: Messages Sidebar (20%) -->
+            <div style="display: flex; flex-direction: column; background: #f0f4f8; border-left: 2px solid var(--border-color); overflow: hidden;">
+                <!-- Header -->
+                <div style="background: linear-gradient(135deg, #344dbd 0%, #764ba2 100%); color: white; padding: 8px 10px; font-weight: 600; font-size: 0.8em; border-bottom: 2px solid var(--border-color); display: flex; align-items: center; gap: 6px;">
+                    📋 Feedback
+                </div>
 
-                        <div style="background: #f0f4f8; border-radius: 12px; border: 2px solid var(--border-color); padding: 12px; height: 100%; display: flex; flex-direction: column; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                            <div style="font-weight: 600; color: #1f2937; margin-bottom: 8px; font-size: 0.85em; text-align: center;">📊 Form Comparison</div>
-                            
-                            <!-- Your Position (Live) -->
-                            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 2px dashed var(--border-color); padding-right: 8px;">
-                                <div style="font-size: 0.65em; color: #6b7280; margin-bottom: 4px; font-weight: 600;">Your Position</div>
-                                <canvas id="liveSkeletonCanvas" width="100" height="140" style="border: 1px solid #e5e7eb; border-radius: 6px; background: white;"></canvas>
-                            </div>
-
-                            <!-- Target Position (Reference) -->
-                            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-left: 8px;">
-                                <div style="font-size: 0.65em; color: #6b7280; margin-bottom: 4px; font-weight: 600;">Target Position</div>
-                                <canvas id="targetSkeletonCanvas" width="100" height="140" style="border: 1px solid #d1d5db; border-radius: 6px; background: #f3f4f6; opacity: 0.7;"></canvas>
-                            </div>
-                        </div>
+                <!-- Audio Controls -->
+                <div style="display: flex; gap: 6px; align-items: center; padding: 6px 8px; background: linear-gradient(135deg, #344dbd 0%, #764ba2 100%); border-bottom: 2px solid var(--border-color); justify-content: space-between;">
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        <button class="audio-toggle-btn" id="audioToggleBtn" onclick="toggleAudio()" style="background: rgba(255, 255, 255, 0.2); color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.7em; display: flex; align-items: center; gap: 3px;">
+                            <span id="audioToggleIcon">🔊</span>
+                        </button>
+                        <div class="audio-indicator" id="audioIndicator" style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; animation: pulse 1.5s infinite;"></div>
                     </div>
+                </div>
 
-                    <!-- Right Column: Conversation Panel -->
-                    <div class="feedback-wrapper">
-                        <div class="conversation-panel">
-                            <div class="conversation-header">Feedback & Messages</div>
-                            <div class="audio-controls">
-                                <div class="audio-controls-left">
-                                    <button class="audio-toggle-btn" id="audioToggleBtn" onclick="toggleAudio()">
-                                        <span id="audioToggleIcon">🔊</span>
-                                        <span id="audioToggleText">Audio On</span>
-                                    </button>
-                                    <div class="audio-indicator" id="audioIndicator"></div>
-                                </div>
-                                <div class="volume-control">
-                                    <span style="font-size: 0.75em;">🔊</span>
-                                    <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="80" onchange="setVolume(this.value)">
-                                </div>
-                            </div>
-                            <div class="conversation-messages" id="conversationMessages">
-                                <div class="conversation-empty">Messages will appear here...</div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Messages -->
+                <div class="conversation-messages" id="conversationMessages" style="flex: 1; overflow-y: auto; padding: 6px; display: flex; flex-direction: column; gap: 4px;">
+                    <div class="conversation-empty" style="display: flex; align-items: center; justify-content: center; color: var(--text-light); height: 100%; text-align: center; font-size: 0.75em;">Messages will appear here...</div>
                 </div>
             </div>
         </div>
@@ -1708,21 +1821,9 @@
         function updateRepDisplay(reps, totalFrames = 0, correctFrames = 0, incorrectFrames = 0) {
             const repCounter = document.getElementById('repCounter');
             if (repCounter) {
-                const accuracy = totalFrames > 0 ? Math.round((correctFrames / totalFrames) * 100) : 0;
-                
-                // Get current angle values from display
-                const leftAngle = document.getElementById('leftShoulderAngle')?.textContent || '--';
-                const rightAngle = document.getElementById('rightShoulderAngle')?.textContent || '--';
-                
                 repCounter.innerHTML = `
                     <div style="font-size: 24px; font-weight: bold; color: #28a745; text-align: center;">
-                        <div style="margin-bottom: 10px;">💪 Reps: <span style="font-size: 32px;">${reps}/${MAX_REPS}</span></div>
-                        <div style="font-size: 14px; margin-bottom: 5px;">📊 Frames: ${totalFrames}</div>
-                        <div style="font-size: 14px; color: #17a2b8; margin-bottom: 8px;">✅ Accuracy: ${accuracy}%</div>
-                        <div style="font-size: 12px; color: #6c757d;">✅ Correct: ${correctFrames} | ❌ Incorrect: ${incorrectFrames}</div>
-                        <div style="font-size: 13px; color: #495057; border-top: 1px solid rgba(40, 167, 69, 0.3); padding-top: 8px;">
-                            👈 Left: <span style="font-weight: bold; color: #0066cc;">${leftAngle}°</span> | 👉 Right: <span style="font-weight: bold; color: #0066cc;">${rightAngle}°</span>
-                        </div>
+                        💪 Reps: <span style="font-size: 32px;">${reps}/${MAX_REPS}</span>
                     </div>
                 `;
             }
@@ -2347,6 +2448,174 @@
             animate();
         }
 
+        // Draw shoulder position guide on overlay (NEW FEATURE)
+        function drawShoulderGuide(canvas, video, detectedLeftShoulder, detectedRightShoulder, currentExercise, isCorrect) {
+            if (!canvas || !video || !currentExercise) return;
+            
+            // Set canvas size to match video
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Calculate target shoulder positions (center of screen for frontal exercises)
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2.5;  // Upper-middle area
+            const targetRadius = 40;  // Size of target circle
+            const detectionRadius = 60;  // Tolerance radius
+            
+            // Configuration
+            const ALIGNMENT_TOLERANCE = 80;  // pixels - how close shoulders should be
+            const ARROW_LENGTH = 60;
+            const ARROW_WIDTH = 3;
+            
+            console.log("🎯 Drawing shoulder guides:");
+            console.log("  Detected Left:", detectedLeftShoulder);
+            console.log("  Detected Right:", detectedRightShoulder);
+            console.log("  Target position: (" + centerX + ", " + centerY + ")");
+            
+            // Helper function to draw circular target with arrows
+            function drawShoulderTarget(detectedPos, targetPos, label, color) {
+                if (!detectedPos || !detectedPos.x || !detectedPos.y) {
+                    console.warn(`⚠️ ${label} shoulder not detected`);
+                    return;
+                }
+                
+                const detectedX = detectedPos.x;
+                const detectedY = detectedPos.y;
+                const targetX = targetPos.x;
+                const targetY = targetPos.y;
+                
+                // Calculate distance from target
+                const distance = Math.sqrt(
+                    Math.pow(detectedX - targetX, 2) + 
+                    Math.pow(detectedY - targetY, 2)
+                );
+                
+                console.log(`  ${label} shoulder - Detected: (${detectedX}, ${detectedY}), Distance from target: ${distance.toFixed(1)}px`);
+                
+                // Determine color based on alignment
+                let displayColor = isCorrect ? '#10b981' : '#ef4444';  // Green if correct, red if incorrect
+                let statusText = isCorrect ? '✓ GOOD' : '✗ ADJUST';
+                
+                // Draw TARGET position (reference circle - semi-transparent)
+                ctx.fillStyle = 'rgba(100, 150, 255, 0.2)';
+                ctx.strokeStyle = '#6495ed';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(targetX, targetY, targetRadius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+                
+                // Draw target center dot
+                ctx.fillStyle = '#6495ed';
+                ctx.beginPath();
+                ctx.arc(targetX, targetY, 5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Draw DETECTED position (your shoulder - solid color)
+                ctx.fillStyle = displayColor;
+                ctx.strokeStyle = displayColor;
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(detectedX, detectedY, 15, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+                
+                // Draw detected center dot
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.arc(detectedX, detectedY, 5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Draw direction arrow if not aligned
+                if (distance > ALIGNMENT_TOLERANCE) {
+                    const angle = Math.atan2(targetY - detectedY, targetX - detectedX);
+                    
+                    // Arrow line
+                    ctx.strokeStyle = displayColor;
+                    ctx.lineWidth = ARROW_WIDTH;
+                    ctx.beginPath();
+                    ctx.moveTo(detectedX, detectedY);
+                    ctx.lineTo(
+                        detectedX + Math.cos(angle) * ARROW_LENGTH,
+                        detectedY + Math.sin(angle) * ARROW_LENGTH
+                    );
+                    ctx.stroke();
+                    
+                    // Arrow head
+                    const headlen = 15;
+                    ctx.fillStyle = displayColor;
+                    ctx.beginPath();
+                    ctx.moveTo(
+                        detectedX + Math.cos(angle) * ARROW_LENGTH,
+                        detectedY + Math.sin(angle) * ARROW_LENGTH
+                    );
+                    ctx.lineTo(
+                        detectedX + Math.cos(angle - Math.PI / 6) * (ARROW_LENGTH - headlen),
+                        detectedY + Math.sin(angle - Math.PI / 6) * (ARROW_LENGTH - headlen)
+                    );
+                    ctx.lineTo(
+                        detectedX + Math.cos(angle + Math.PI / 6) * (ARROW_LENGTH - headlen),
+                        detectedY + Math.sin(angle + Math.PI / 6) * (ARROW_LENGTH - headlen)
+                    );
+                    ctx.fill();
+                    
+                    // Distance text
+                    ctx.fillStyle = displayColor;
+                    ctx.font = 'bold 14px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(`${distance.toFixed(0)}px away`, detectedX, detectedY - 40);
+                }
+                
+                // Draw label and status
+                ctx.fillStyle = displayColor;
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(`${label}: ${statusText}`, detectedX, detectedY + 45);
+                
+                // Draw distance to target
+                ctx.font = '12px Arial';
+                ctx.fillStyle = '#666';
+                ctx.fillText(`Distance: ${distance.toFixed(0)}px`, detectedX, detectedY + 65);
+            }
+            
+            // Draw both shoulders
+            drawShoulderTarget(
+                detectedLeftShoulder,
+                { x: centerX - 80, y: centerY },
+                '👈 Left',
+                '#60a5fa'
+            );
+            
+            drawShoulderTarget(
+                detectedRightShoulder,
+                { x: centerX + 80, y: centerY },
+                '👉 Right',
+                '#f87171'
+            );
+            
+            // Draw overall status banner at bottom
+            const bannerHeight = 60;
+            const bannerY = canvas.height - bannerHeight;
+            
+            ctx.fillStyle = isCorrect ? 'rgba(16, 185, 129, 0.8)' : 'rgba(239, 68, 68, 0.8)';
+            ctx.fillRect(0, bannerY, canvas.width, bannerHeight);
+            
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 20px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(
+                isCorrect ? '✓ SHOULDER POSITION CORRECT!' : '✗ ADJUST SHOULDERS TO TARGET POSITION',
+                canvas.width / 2,
+                bannerY + 40
+            );
+        }
+
         // Draw skeleton on canvas (wrapper function that uses enhanced version)
         function drawSkeleton(canvasId, leftShoulderAngle, leftElbowAngle, rightShoulderAngle, rightElbowAngle, status = 'neutral', accuracy = 0) {
             drawEnhancedSkeleton(canvasId, leftShoulderAngle, leftElbowAngle, rightShoulderAngle, rightElbowAngle, status, true, accuracy);
@@ -2548,6 +2817,14 @@
 
             addExerciseMessage(`Exercise: "${currentExercise.name}" started`, 'info', 'Initializing pose detection...');
 
+            // Initialize target angles display
+            if (currentExercise.leftArm && currentExercise.leftArm.shoulderAngle !== undefined) {
+                document.getElementById('leftShoulderTargetAngle').textContent = Math.round(currentExercise.leftArm.shoulderAngle);
+            }
+            if (currentExercise.rightArm && currentExercise.rightArm.shoulderAngle !== undefined) {
+                document.getElementById('rightShoulderTargetAngle').textContent = Math.round(currentExercise.rightArm.shoulderAngle);
+            }
+
             const processFrame = async () => {
                 if (!isExercising) return;
 
@@ -2654,31 +2931,55 @@
                             // Update LEFT shoulder
                             if (data.angles.left_shoulder !== undefined && data.angles.left_shoulder !== null) {
                                 const leftEl = document.getElementById('leftShoulderAngle');
+                                const leftTargetEl = document.getElementById('leftShoulderTargetAngle');
                                 const targetLeft = currentExercise.leftArm.shoulderAngle;
                                 const diff = Math.abs(data.angles.left_shoulder - targetLeft);
                                 leftEl.textContent = Math.round(data.angles.left_shoulder);
+                                leftTargetEl.textContent = Math.round(targetLeft);
                                 leftEl.className = diff <= 50 ? 'angle-value-item success' : 'angle-value-item warning';
                                 feedbackAccumulator.lastAngles.left_shoulder = data.angles.left_shoulder;
                                 console.log(`✅ LEFT angle updated: ${data.angles.left_shoulder}° (target: ${targetLeft}°, diff: ${diff}°)`);
                             } else {
                                 document.getElementById('leftShoulderAngle').textContent = '--';
                                 document.getElementById('leftShoulderAngle').className = 'angle-value-item';
+                                if (currentExercise.leftArm) {
+                                    document.getElementById('leftShoulderTargetAngle').textContent = Math.round(currentExercise.leftArm.shoulderAngle);
+                                }
                                 console.warn("⚠️ LEFT angle not received from backend");
                             }
                             
                             // Update RIGHT shoulder
                             if (data.angles.right_shoulder !== undefined && data.angles.right_shoulder !== null) {
                                 const rightEl = document.getElementById('rightShoulderAngle');
+                                const rightTargetEl = document.getElementById('rightShoulderTargetAngle');
                                 const targetRight = currentExercise.rightArm.shoulderAngle;
                                 const diff = Math.abs(data.angles.right_shoulder - targetRight);
                                 rightEl.textContent = Math.round(data.angles.right_shoulder);
+                                rightTargetEl.textContent = Math.round(targetRight);
                                 rightEl.className = diff <= 50 ? 'angle-value-item success' : 'angle-value-item warning';
                                 feedbackAccumulator.lastAngles.right_shoulder = data.angles.right_shoulder;
                                 console.log(`✅ RIGHT angle updated: ${data.angles.right_shoulder}° (target: ${targetRight}°, diff: ${diff}°)`);
                             } else {
                                 document.getElementById('rightShoulderAngle').textContent = '--';
                                 document.getElementById('rightShoulderAngle').className = 'angle-value-item';
+                                if (currentExercise.rightArm) {
+                                    document.getElementById('rightShoulderTargetAngle').textContent = Math.round(currentExercise.rightArm.shoulderAngle);
+                                }
                                 console.warn("⚠️ RIGHT angle not received from backend");
+                            }
+                            
+                            // Draw shoulder position guide on overlay (NEW FEATURE)
+                            const shoulderGuideCanvas = document.getElementById('shoulderGuideCanvas');
+                            if (shoulderGuideCanvas && data.shoulder_positions) {
+                                console.log("🎯 Drawing shoulder guide overlay");
+                                drawShoulderGuide(
+                                    shoulderGuideCanvas,
+                                    video,
+                                    data.shoulder_positions.left_shoulder || null,
+                                    data.shoulder_positions.right_shoulder || null,
+                                    currentExercise,
+                                    data.correct
+                                );
                             }
                         }
 
@@ -2813,10 +3114,33 @@
                         
                         animateSkeleton('liveSkeletonCanvas', fromAngles, toAngles);
                     }
+                    
+                    // Always draw the target skeleton statically for comparison
+                    drawSkeleton('targetSkeletonCanvas',
+                        currentExercise.leftArm.shoulderAngle,
+                        currentExercise.leftArm.elbowAngle,
+                        currentExercise.rightArm.shoulderAngle,
+                        currentExercise.rightArm.elbowAngle,
+                        'correct',
+                        100
+                    );
                 }
             }
 
             addExerciseMessage('Webcam initialized. Position yourself in frame.', 'info');
+            
+            // Initial draw of target skeleton
+            if (currentExercise && currentExercise.leftArm && currentExercise.rightArm) {
+                drawSkeleton('targetSkeletonCanvas',
+                    currentExercise.leftArm.shoulderAngle,
+                    currentExercise.leftArm.elbowAngle,
+                    currentExercise.rightArm.shoulderAngle,
+                    currentExercise.rightArm.elbowAngle,
+                    'correct',
+                    100
+                );
+            }
+            
             processFrame();
         }
 

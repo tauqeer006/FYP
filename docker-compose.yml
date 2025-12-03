@@ -72,16 +72,19 @@ services:
 
   # X-ray Model API - Fracture Detection
   xray-api:
-    build:
-      context: .
-      dockerfile: Dockerfile.xray-api
+    image: fyp-xray-api-dev        # use your committed image
+    volumes:
+      - ./Models_Apis:/app         # mount your code folder
     ports:
-      - "5002:5002"
+      - "5002:5002"                # map port 5002
     environment:
       - FLASK_ENV=production
       - CORS_ORIGINS=http://localhost:8000,http://localhost
     networks:
       - fyp-network
+    command: sh -c "python /app/X-ray_model.py"   # start Flask server
+
+
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5002/api/health"]
       interval: 30s
