@@ -12339,3 +12339,29 @@ INFO 2025-12-03 16:13:17 basehttp 1395 129456233510592 "POST /api/chatbot/query/
 INFO 2025-12-03 16:13:19 basehttp 1395 129456233510592 "GET /patient_logouts HTTP/1.1" 302 0
 INFO 2025-12-03 16:13:19 basehttp 1395 129456233510592 "GET /patient_login/ HTTP/1.1" 200 78419
 INFO 2025-12-03 16:13:21 basehttp 1395 129456152770240 "GET /admin/login/ HTTP/1.1" 200 4160
+INFO 2025-12-04 18:16:50 autoreload 44 138515792194432 Watching for file changes with StatReloader
+INFO 2025-12-04 18:16:57 basehttp 44 138513408566976 "GET /admin/login/ HTTP/1.1" 200 4160
+INFO 2025-12-04 18:17:09 basehttp 44 138513408566976 "GET / HTTP/1.1" 200 109949
+INFO 2025-12-04 18:17:09 basehttp 44 138513408566976 "GET /static/main_page/main-page-styles.css HTTP/1.1" 304 0
+INFO 2025-12-04 18:17:09 basehttp 44 138513397028544 "GET /static/main_page/ai%20based%20tech.jpg HTTP/1.1" 304 0
+INFO 2025-12-04 18:17:09 basehttp 44 138513408566976 "GET /static/main_page/hospital.jpg HTTP/1.1" 304 0
+INFO 2025-12-04 18:17:09 basehttp 44 138513388635840 "GET /static/main_page/ai%20based%20system.jpg HTTP/1.1" 304 0
+INFO 2025-12-04 18:17:09 basehttp 44 138513397028544 "GET /static/main_page/fracture%20detections.jpg HTTP/1.1" 304 0
+INFO 2025-12-04 18:17:09 basehttp 44 138513380243136 "GET /static/main_page/fracture%20operation%20threader.jpg HTTP/1.1" 304 0
+INFO 2025-12-04 18:17:09 basehttp 44 138513156662976 "GET /static/main_page/doc%202.jpg HTTP/1.1" 304 0
+INFO 2025-12-04 18:17:09 basehttp 44 138513165055680 "GET /static/main_page/doc%201.jpg HTTP/1.1" 304 0
+WARNING 2025-12-04 18:17:09 basehttp 44 138513156662976 "GET /static/img/call-bg.png HTTP/1.1" 404 1859
+INFO 2025-12-04 18:17:09 basehttp 44 138513165055680 "GET /static/main_page/main_image.png HTTP/1.1" 304 0
+INFO 2025-12-04 18:17:12 basehttp 44 138513165055680 "GET /admin_login1/ HTTP/1.1" 200 65700
+INFO 2025-12-04 18:17:12 basehttp 44 138513165055680 "GET /static/Admin/login.css HTTP/1.1" 304 0
+WARNING 2025-12-04 18:17:12 log 44 138513165055680 Not Found: /favicon.ico
+WARNING 2025-12-04 18:17:12 basehttp 44 138513165055680 "GET /favicon.ico HTTP/1.1" 404 11436
+INFO 2025-12-04 18:17:21 auth_service 44 138513165055680 User tauqeer authenticated successfully
+INFO 2025-12-04 18:17:21 views 44 138513165055680 Admin tauqeer logged in successfully
+INFO 2025-12-04 18:17:21 basehttp 44 138513165055680 "POST /admin_login1/ HTTP/1.1" 302 0
+INFO 2025-12-04 18:17:21 views 44 138513165055680 Admin dashboard accessed by: tauqeer (admin) (user_type: admin)
+INFO 2025-12-04 18:17:21 basehttp 44 138513165055680 "GET /index_admin/ HTTP/1.1" 200 149243
+INFO 2025-12-04 18:17:26 basehttp 44 138513165055680 "GET /manage_user/ HTTP/1.1" 200 146263
+INFO 2025-12-04 18:17:27 basehttp 44 138513156662976 "GET /admin/login/ HTTP/1.1" 200 4160
+INFO 2025-12-04 18:17:58 basehttp 44 138513156662976 "GET /admin/login/ HTTP/1.1" 200 4160
+INFO 2025-12-04 18:18:31 basehttp 44 138513156662976 "GET /admin/login/ HTTP/1.1" 200 4160

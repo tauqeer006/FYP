@@ -652,13 +652,14 @@
                     </div>
 
                     <!-- Users Table -->
-                    <div class="card">
+                    <!-- PATIENTS TABLE -->
+                    <div class="card mb-4">
                         <div class="card-header">
-                            <i class="bi bi-table"></i> All Users
+                            <i class="bi bi-heart"></i> Patients List
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-hover" id="usersTable">
+                                <table class="table table-hover" id="patientsTable">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -668,46 +669,67 @@
                                             <th>Age</th>
                                             <th>Gender</th>
                                             <th>Phone</th>
+                                            <th>DOB</th>
+                                            <th>Doctor</th>
                                             <th>Status</th>
-                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% if users %}
                                             {% for user in users %}
-                                                {% if user.user_type != 'admin' %}
+                                                {% if user.user_type == 'patient' %}
                                                 <tr>
                                                     <td><strong>{{ forloop.counter }}</strong></td>
                                                     <td>{{ user.username }}</td>
-                                                    <td>{{ user.email }}</td>
                                                     <td>
-                                                        {% if user.user_type == 'doctor' %}
-                                                            <span class="badge badge-primary">Doctor</span>
-                                                        {% elif user.user_type == 'patient' %}
-                                                            <span class="badge badge-primary">Patient</span>
+                                                        {% if user.patientcreatedbydoctor %}
+                                                            {{ user.patientcreatedbydoctor.email }}
                                                         {% else %}
-                                                            <span class="badge badge-warning">{{ user.user_type|title }}</span>
+                                                            {{ user.email|default:"N/A" }}
                                                         {% endif %}
                                                     </td>
+                                                    <td><span class="badge badge-info">Patient</span></td>
                                                     <td>
-                                                        {% if user.profile %}
-                                                            {{ user.profile.ages|default:"N/A" }}
-                                                        {% else %}
-                                                            N/A
-                                                        {% endif %}
-                                                    </td>
-                                                    <td>
-                                                        {% if user.profile %}
-                                                            {% if user.profile.genders == 'M' %}Male
-                                                            {% elif user.profile.genders == 'F' %}Female
-                                                            {% else %}{{ user.profile.genders|default:"N/A" }}{% endif %}
+                                                        {% if user.patientcreatedbydoctor and user.patientcreatedbydoctor.dob %}
+                                                            {% widthratio now|date:"Y" user.patientcreatedbydoctor.dob|date:"Y" 1 %} years
+                                                        {% elif user.patient %}
+                                                            {{ user.patient.age }} years
                                                         {% else %}
                                                             N/A
                                                         {% endif %}
                                                     </td>
                                                     <td>
-                                                        {% if user.profile %}
-                                                            {{ user.profile.phno|default:"N/A" }}
+                                                        {% if user.patientcreatedbydoctor %}
+                                                            {% if user.patientcreatedbydoctor.gender == 'M' %}
+                                                                Male
+                                                            {% elif user.patientcreatedbydoctor.gender == 'F' %}
+                                                                Female
+                                                            {% elif user.patientcreatedbydoctor.gender == 'O' %}
+                                                                Other
+                                                            {% else %}
+                                                                N/A
+                                                            {% endif %}
+                                                        {% else %}
+                                                            N/A
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if user.patientcreatedbydoctor %}
+                                                            {{ user.patientcreatedbydoctor.contact_number|default:"N/A" }}
+                                                        {% else %}
+                                                            N/A
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if user.patientcreatedbydoctor and user.patientcreatedbydoctor.dob %}
+                                                            {{ user.patientcreatedbydoctor.dob|date:"Y-m-d" }}
+                                                        {% else %}
+                                                            N/A
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if user.patientcreatedbydoctor and user.patientcreatedbydoctor.doctor %}
+                                                            {{ user.patientcreatedbydoctor.doctor.username }}
                                                         {% else %}
                                                             N/A
                                                         {% endif %}
@@ -719,16 +741,70 @@
                                                             <span class="badge badge-danger">Inactive</span>
                                                         {% endif %}
                                                     </td>
+                                                </tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="10" class="text-center">
+                                                    <strong>No patients found</strong>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DOCTORS TABLE -->
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="bi bi-person-badge"></i> Doctors List
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="doctorsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Username</th>
+                                            <th>Email</th>
+                                            <th>Role</th>
+                                            <th>Specialization</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if users %}
+                                            {% for user in users %}
+                                                {% if user.user_type == 'doctor' %}
+                                                <tr>
+                                                    <td><strong>{{ forloop.counter }}</strong></td>
+                                                    <td>{{ user.username }}</td>
+                                                    <td>{{ user.email|default:"N/A" }}</td>
+                                                    <td><span class="badge badge-primary">Doctor</span></td>
                                                     <td>
-                                                        <span class="text-muted">No actions available</span>
+                                                        {% if user.doctor %}
+                                                            {{ user.doctor.specialization|default:"N/A" }}
+                                                        {% else %}
+                                                            N/A
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if user.is_active %}
+                                                            <span class="badge badge-success">Active</span>
+                                                        {% else %}
+                                                            <span class="badge badge-danger">Inactive</span>
+                                                        {% endif %}
                                                     </td>
                                                 </tr>
                                                 {% endif %}
                                             {% endfor %}
                                         {% else %}
                                             <tr>
-                                                <td colspan="9" class="text-center">
-                                                    <strong>No users found</strong>
+                                                <td colspan="6" class="text-center">
+                                                    <strong>No doctors found</strong>
                                                 </td>
                                             </tr>
                                         {% endif %}
