@@ -773,6 +773,7 @@
                                             <th>Role</th>
                                             <th>Specialization</th>
                                             <th>Status</th>
+                                            <th>Created Date</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -798,12 +799,19 @@
                                                             <span class="badge badge-danger">Inactive</span>
                                                         {% endif %}
                                                     </td>
+                                                    <td>
+                                                        {% if user.created_at %}
+                                                            {{ user.created_at|date:"Y-m-d" }}
+                                                        {% else %}
+                                                            N/A
+                                                        {% endif %}
+                                                    </td>
                                                 </tr>
                                                 {% endif %}
                                             {% endfor %}
                                         {% else %}
                                             <tr>
-                                                <td colspan="6" class="text-center">
+                                                <td colspan="7" class="text-center">
                                                     <strong>No doctors found</strong>
                                                 </td>
                                             </tr>
