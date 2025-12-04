@@ -55,9 +55,24 @@ class AdminAdmin(admin.ModelAdmin):
 
 @admin.register(Doctor)
 class DoctorAdmin(admin.ModelAdmin):
-    list_display = ('user', 'specialization', 'created_at')
-    search_fields = ('user__username', 'specialization')
+    list_display = ('fname', 'lname', 'email', 'specialization', 'gender', 'is_active', 'created_at')
+    list_filter = ('is_active', 'gender', 'created_at')
+    search_fields = ('fname', 'lname', 'email', 'contact_number', 'user__username')
     readonly_fields = ('created_at', 'updated_at')
+    fieldsets = (
+        ('User Link', {
+            'fields': ('user',)
+        }),
+        ('Personal Information', {
+            'fields': ('fname', 'lname', 'dob', 'gender', 'email', 'contact_number')
+        }),
+        ('Professional Information', {
+            'fields': ('specialization', 'address', 'medical_history')
+        }),
+        ('Status', {
+            'fields': ('is_active', 'created_at', 'updated_at')
+        }),
+    )
 
 
 @admin.register(Patient)

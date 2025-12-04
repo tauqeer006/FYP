@@ -679,16 +679,37 @@ def add_user(request):
         gender = request.POST.get("genders")
         phone = request.POST.get("phno")
         roles = request.POST.get('roles')
+        
+        # Doctor-specific fields
+        specialization = request.POST.get('specialization')
+        doctor_dob = request.POST.get('doctor_dob')
+        doctor_address = request.POST.get('doctor_address')
+        
         print("the gender i am getting is:" , gender , "roles is:" , roles)
         if password != password2:
             messages.error(request, "Passwords do not match.")
-            return render(request, 'add_user.html')
+            return render(request, 'index_admin.html')
+        
         if roles and roles.lower() == 'doctor':
-
-            user = User.objects.create_user(username=username, password=password, user_type='doctor')
+            user = User.objects.create_user(username=username, password=password, user_type='doctor', email=email)
             user.user_type = 'doctor'  
             user.save()
             print("Doctor account has been created with username:", username , "password:" , password)
+            
+            # Create Doctor record with all fields matching PatientCreatedByDoctor
+            Doctor.objects.create(
+                user=user,
+                fname=username,  # Use username as first name
+                lname=username,  # Use username as last name (can be updated later)
+                specialization=specialization or "Not specified",
+                dob=doctor_dob,
+                gender=gender,
+                contact_number=phone,
+                address=doctor_address,
+                email=email,
+                medical_history=""  # Can be updated later
+            )
+            
             subject = "Your Account Details"
             message = f"""
             Hello {username},
@@ -703,11 +724,10 @@ def add_user(request):
             recipient_list = [email]
 
             send_mail(subject, message, from_email, recipient_list)
+            messages.success(request, "Doctor account created successfully.")
 
-            
         
-## new data changes doing:
-        if roles and roles.lower() == 'patient':
+        elif roles and roles.lower() == 'patient':
             auth_user = User.objects.create_user(
                     username=username,
                     password=password,  

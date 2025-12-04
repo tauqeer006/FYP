@@ -97,12 +97,33 @@ class Admin(models.Model):
 
 class Doctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    specialization = models.CharField(max_length=100)
+    fname = models.CharField(max_length=100, db_index=True, blank=True, null=True)
+    lname = models.CharField(max_length=100, blank=True, null=True)
+    dob = models.DateField(blank=True, null=True)
+    specialization = models.CharField(max_length=100, blank=True, null=True)
+    
+    GENDER_CHOICES = [
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('O', 'Other'),
+    ]
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
+    contact_number = models.CharField(max_length=15, blank=True, null=True)
+    email = models.CharField(max_length=200, blank=True, null=True)
+    medical_history = models.TextField(blank=True, null=True)
+    
+    is_active = models.BooleanField(default=True, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Doctors"
+    
+    def __str__(self):
+        full_name = f"{self.fname} {self.lname}".strip() if self.fname or self.lname else self.user.username
+        spec = f"({self.specialization})" if self.specialization else ""
+        return f"Dr. {full_name} {spec}"
 
 
 class Patient(models.Model):

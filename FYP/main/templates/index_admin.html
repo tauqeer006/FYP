@@ -753,17 +753,45 @@
                                             <input type="text" class="form-control" placeholder="Enter username" name="username" required>
                                         </div>
 
+                                        <div class="form-group">
+                                            <label><i class="bi bi-badge"></i> User Role</label>
+                                            <select class="form-control" name="roles" id="userRole" required onchange="toggleDoctorFields()">
+                                                <option value="" disabled selected>Select role</option>
+                                                <option value="patient">Patient</option>
+                                                <option value="doctor">Doctor</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Doctor-Only Fields -->
+                                        <div id="doctorFields" style="display: none;">
+                                            <div class="form-group">
+                                                <label><i class="bi bi-stethoscope"></i> Specialization</label>
+                                                <input type="text" class="form-control" placeholder="e.g., Orthopedics, Cardiology" name="specialization">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label><i class="bi bi-calendar3"></i> Date of Birth</label>
+                                                <input type="date" class="form-control" name="doctor_dob">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label><i class="bi bi-geo-alt"></i> Address</label>
+                                                <textarea class="form-control" placeholder="Enter address" name="doctor_address" rows="3"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <!-- Common Fields -->
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label><i class="bi bi-calendar"></i> Age</label>
-                                                    <input type="number" class="form-control" placeholder="Enter age" name="ages" min="18" max="100" required>
+                                                    <input type="number" class="form-control" placeholder="Enter age" name="ages" min="18" max="100">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label><i class="bi bi-person-fill"></i> Gender</label>
-                                                    <select class="form-control" name="genders" required>
+                                                    <select class="form-control" name="genders">
                                                         <option value="" disabled selected>Select gender</option>
                                                         <option value="M">Male</option>
                                                         <option value="F">Female</option>
@@ -775,7 +803,7 @@
 
                                         <div class="form-group">
                                             <label><i class="bi bi-telephone"></i> Mobile Number</label>
-                                            <input type="text" class="form-control" placeholder="Enter mobile number" name="phno" required>
+                                            <input type="text" class="form-control" placeholder="Enter mobile number" name="phno">
                                         </div>
 
                                         <div class="form-group">
@@ -798,19 +826,22 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group">
-                                            <label><i class="bi bi-badge"></i> User Role</label>
-                                            <select class="form-control" name="roles" required>
-                                                <option value="" disabled selected>Select role</option>
-                                                <option value="patient">Patient</option>
-                                                <option value="doctor">Doctor</option>
-                                            </select>
-                                        </div>
-
                                         <button type="submit" class="btn btn-primary btn-fill w-100">
                                             <i class="bi bi-check-circle"></i> Add User
                                         </button>
                                     </form>
+
+                                    <script>
+                                        function toggleDoctorFields() {
+                                            const role = document.getElementById('userRole').value;
+                                            const doctorFields = document.getElementById('doctorFields');
+                                            if (role === 'doctor') {
+                                                doctorFields.style.display = 'block';
+                                            } else {
+                                                doctorFields.style.display = 'none';
+                                            }
+                                        }
+                                    </script>
                                 </div>
                             </div>
                         </div>
