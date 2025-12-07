@@ -83,7 +83,6 @@ ROUTES_CONFIG_PATH = os.path.join(BASE_DIR, 'main', 'config', 'routes.yml')
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # For serving static files
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",

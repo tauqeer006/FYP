@@ -28,13 +28,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.django
-    entrypoint: sh -c 'python manage.py migrate --noinput 2>/dev/null || true && python manage.py collectstatic --noinput 2>/dev/null || true && python manage.py runserver 0.0.0.0:8888'
+    entrypoint: sh -c 'python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8888'
     ports:
       - "8888:8888"
     volumes:
       - ./FYP:/app
       - ./media:/app/media
-      - ./staticfiles:/app/staticfiles
     env_file:
       - .env
     environment:

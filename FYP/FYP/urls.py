@@ -96,5 +96,6 @@ urlpatterns = [
     path('api/doctor-patients/', views.get_doctor_patients, name='get_doctor_patients'),
     
 ]
-if settings.DEBUG:  # Only serve media files in development
+if settings.DEBUG:  # Serve static and media files in development
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

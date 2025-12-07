@@ -29,5 +29,5 @@ RUN mkdir -p media/reports logs staticfiles
 
 EXPOSE 8000
 
-# Run migrations and collect static files at startup
-CMD ["sh", "-c", "python manage.py migrate --noinput 2>/dev/null || true && python manage.py collectstatic --noinput 2>/dev/null || true && python manage.py runserver 0.0.0.0:8000"]
+# Run migrations at startup
+CMD ["sh", "-c", "python manage.py migrate --noinput 2>/dev/null || true && python manage.py runserver 0.0.0.0:8888"]
