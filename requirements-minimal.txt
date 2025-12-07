@@ -2,6 +2,7 @@
 Django>=5.0
 python-decouple
 django-cors-headers>=4.0.0
+whitenoise>=6.0.0  # For serving static files
 
 # Utilities
 requests>=2.31.0

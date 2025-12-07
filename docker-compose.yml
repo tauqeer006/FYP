@@ -1,27 +1,6 @@
 version: '3.8'
 
 services:
-  # Nginx Reverse Proxy - serves static files and routes requests
-  nginx:
-    build:
-      context: .
-      dockerfile: Dockerfile.nginx
-    ports:
-      - "8888:80"
-    volumes:
-      - ./FYP:/app:ro
-      - ./staticfiles:/app/staticfiles:ro
-      - ./media:/app/media:ro
-    depends_on:
-      - django-app
-    networks:
-      - fyp-network
-    healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
   # PostgreSQL Database
   postgres-db:
     image: postgres:15-alpine
@@ -50,7 +29,8 @@ services:
       context: .
       dockerfile: Dockerfile.django
     entrypoint: sh -c 'python manage.py migrate --noinput 2>/dev/null || true && python manage.py collectstatic --noinput 2>/dev/null || true && python manage.py runserver 0.0.0.0:8888'
-    # No external port - only accessible via Nginx
+    ports:
+      - "8888:8888"
     volumes:
       - ./FYP:/app
       - ./media:/app/media
