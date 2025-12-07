@@ -30,7 +30,16 @@ SECRET_KEY = os.getenv('SECRET_KEY', "django-insecure-1ngo+oo&!ib*f4f&xlw5_+^%jl
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True').lower() in ['true', '1', 'yes']
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
+
+ALLOWED_HOSTS = [
+    'medxai.duckdns.org',
+    'localhost',       # optional, if you want local access
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://medxai.duckdns.org',
+    'http://localhost:8888',  # optional for testing
+]
 
 
 # Application definition
@@ -202,9 +211,8 @@ LOGIN_REDIRECT_URL= '/diagnosis/'
 LOGOUT_REDIRECT_URL = '/login/'
 
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # if BASE_DIR points to /app
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 # ==================== CACHING CONFIGURATION ====================
 CACHE_BACKEND = os.getenv('CACHE_BACKEND', 'local')
 

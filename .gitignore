@@ -9,3 +9,7 @@ venv/
 .env/
 env/
 .venv/
+certbot/
+certbot/conf/
+certbot/conf/archive/
+certbot/conf/live/

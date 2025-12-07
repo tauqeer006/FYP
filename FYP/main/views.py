@@ -1298,7 +1298,7 @@ CLINICAL DATA:
 ---------------------------------------------------------
 OUTPUT FORMAT (MANDATORY):
 
-### 🩺 Medical Diagnosis
+### ?? Medical Diagnosis
 (Write 3–4 lines about how this type of fracture occurs + healing duration)
 
 ### Recommended Exercises
@@ -1759,9 +1759,9 @@ def check_exercise_quality(sequence):
     pred = model.predict(seq_padded, verbose=0)
     error = np.mean((seq_padded - pred) ** 2)
     confidence = max(0.0, 1.0 - (error / THRESHOLD_ALMOST))
-    if error < THRESHOLD_GOOD: feedback = "Good ✅"
-    elif error < THRESHOLD_ALMOST: feedback = "Almost 👍"
-    else: feedback = "Not Correct ❌"
+    if error < THRESHOLD_GOOD: feedback = "Good ?"
+    elif error < THRESHOLD_ALMOST: feedback = "Almost ??"
+    else: feedback = "Not Correct ?"
     return feedback, confidence, error
 
 def monitor_view(request):
@@ -2322,7 +2322,7 @@ def faq_page(request):
 @login_required
 def translate_text(request):
     """
-    Translate text between languages (Urdu ↔ English)
+    Translate text between languages (Urdu ? English)
     Used for bilingual chatbot support
     """
     try:
@@ -2394,7 +2394,7 @@ def translate_via_google(text, source_lang='ur', target_lang='en'):
             result = response.json()
             if result['responseStatus'] == 200:
                 translated = result['responseData']['translatedText']
-                logging.info(f"✅ Translation successful: {text[:50]}... → {translated[:50]}...")
+                logging.info(f"? Translation successful: {text[:50]}... ? {translated[:50]}...")
                 return translated
         
         # Fallback

@@ -181,7 +181,7 @@
         }
 
         .play-btn::after {
-            content: '▶';
+            content: '?';
             color: white;
             font-size: 28px;
             margin-left: 3px;
@@ -266,7 +266,7 @@
         }
 
         .feedback-tips li:before {
-            content: '✓';
+            content: '?';
             position: absolute;
             left: 0;
             color: var(--success-color);
@@ -1064,7 +1064,7 @@
         }
 
         .message.with-audio::after {
-            content: '🔊';
+            content: '??';
             position: absolute;
             right: 8px;
             top: 8px;
@@ -1214,7 +1214,7 @@
     <div style="position: fixed; top: 15px; right: 15px; z-index: 1000;">{% include 'components/back_button.html' %}</div>
     <div class="container">
         <header>
-            <h1>💪 Shoulder Rehabilitation Exercises</h1>
+            <h1>?? Shoulder Rehabilitation Exercises</h1>
             <p>Interactive guide with real-time pose detection and feedback</p>
         </header>
 
@@ -1248,7 +1248,7 @@
                     </div>
 
                     <div class="detail-section">
-                        <h3>🎯 Target Form - How to Perform</h3>
+                        <h3>?? Target Form - How to Perform</h3>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center;">
                             <div>
                                 <canvas id="modalSkeletonCanvas" width="280" height="380" style="border: 2px solid #e5e7eb; border-radius: 8px; background: #f9fafb;"></canvas>
@@ -1265,10 +1265,10 @@
 
                 <div class="modal-actions">
                     <button class="btn btn-primary btn-lg" onclick="handleStartExercise()">
-                        🎥 Start Exercising (Webcam)
+                        ?? Start Exercising (Webcam)
                     </button>
                     <a id="openYoutubeLink" class="btn btn-secondary btn-lg" target="_blank">
-                        ▶ Open YouTube
+                        ? Open YouTube
                     </a>
                 </div>
             </div>
@@ -1280,7 +1280,7 @@
         
         <!-- Header -->
         <div style="background: linear-gradient(135deg, #344dbd 0%, #764ba2 100%); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-            <h2 style="margin: 0; font-size: 1.5em;">🎥 Live Exercise Feedback</h2>
+            <h2 style="margin: 0; font-size: 1.5em;">?? Live Exercise Feedback</h2>
             <button onclick="closeWebcamModal()" style="background: none; border: none; color: white; font-size: 28px; cursor: pointer; padding: 0; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">&times;</button>
         </div>
 
@@ -1292,7 +1292,7 @@
                 
                 <!-- TOP ROW (50%): Webcam with Shoulder Guide -->
                 <div style="display: flex; flex-direction: column; gap: 8px; padding: 12px; background: #f8f9fa; overflow: hidden; border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; min-height: 0;">
-                    <div class="pose-status-badge waiting" id="poseBadge" style="font-size: 0.8em; padding: 6px 12px;">⏳ Waiting for pose detection...</div>
+                    <div class="pose-status-badge waiting" id="poseBadge" style="font-size: 0.8em; padding: 6px 12px;">? Waiting for pose detection...</div>
                     
                     <div style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0;">
                         <video id="webcam" autoplay playsinline style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px; background: #000; border: 3px solid var(--border-color); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);"></video>
@@ -1316,8 +1316,8 @@
                     </div>
 
                     <div style="display: flex; gap: 6px; justify-content: center; flex-shrink: 0;">
-                        <button class="btn btn-primary" onclick="stopExercising()" style="padding: 6px 12px; font-size: 0.8em;">⏹️ Stop</button>
-                        <button class="btn btn-secondary" onclick="clearConversation()" style="padding: 6px 12px; font-size: 0.8em;">🗑️ Clear</button>
+                        <button class="btn btn-primary" onclick="stopExercising()" style="padding: 6px 12px; font-size: 0.8em;">?? Stop</button>
+                        <button class="btn btn-secondary" onclick="clearConversation()" style="padding: 6px 12px; font-size: 0.8em;">??? Clear</button>
                     </div>
                 </div>
 
@@ -1326,23 +1326,23 @@
                     <!-- Rep Counter -->
                     <div id="repCounter" style="background: linear-gradient(135deg, #28a745, #20c997); border-radius: 12px; padding: 10px; color: white; text-align: center; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3); flex-shrink: 0;">
                         <div style="font-size: 16px; font-weight: bold;">
-                            💪 Reps: <span style="font-size: 20px;">0</span>/10
+                            ?? Reps: <span style="font-size: 20px;">0</span>/10
                         </div>
                     </div>
 
                     <!-- Form Comparison Grid -->
                     <div style="background: #f0f4f8; border-radius: 12px; border: 2px solid var(--border-color); padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); flex: 1; min-height: 0; overflow: hidden;">
-                        <div style="font-weight: 600; color: #1f2937; font-size: 0.8em; text-align: center; grid-column: 1 / -1; margin-bottom: 6px;">📊 Form Comparison</div>
+                        <div style="font-weight: 600; color: #1f2937; font-size: 0.8em; text-align: center; grid-column: 1 / -1; margin-bottom: 6px;">?? Form Comparison</div>
                         
                         <!-- Your Position -->
                         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px; border: 2px solid #e5e7eb; border-radius: 8px; background: white; min-height: 0; overflow: hidden;">
-                            <div style="font-size: 0.7em; color: #6b7280; margin-bottom: 6px; font-weight: 600;">👤 Your Position</div>
+                            <div style="font-size: 0.7em; color: #6b7280; margin-bottom: 6px; font-weight: 600;">?? Your Position</div>
                             <canvas id="liveSkeletonCanvas" width="160" height="220" style="border: 1px solid #e5e7eb; border-radius: 6px; background: white; max-width: 100%; height: auto;"></canvas>
                         </div>
 
                         <!-- Target Position -->
                         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px; border: 2px solid #d1d5db; border-radius: 8px; background: #f3f4f6; min-height: 0; overflow: hidden;">
-                            <div style="font-size: 0.7em; color: #6b7280; margin-bottom: 6px; font-weight: 600;">✓ Target</div>
+                            <div style="font-size: 0.7em; color: #6b7280; margin-bottom: 6px; font-weight: 600;">? Target</div>
                             <canvas id="targetSkeletonCanvas" width="160" height="220" style="border: 1px solid #d1d5db; border-radius: 6px; background: #f3f4f6; opacity: 0.9; max-width: 100%; height: auto;"></canvas>
                         </div>
                     </div>
@@ -1353,14 +1353,14 @@
             <div style="display: flex; flex-direction: column; background: #f0f4f8; border-left: 2px solid var(--border-color); overflow: hidden;">
                 <!-- Header -->
                 <div style="background: linear-gradient(135deg, #344dbd 0%, #764ba2 100%); color: white; padding: 8px 10px; font-weight: 600; font-size: 0.8em; border-bottom: 2px solid var(--border-color); display: flex; align-items: center; gap: 6px;">
-                    📋 Feedback
+                    ?? Feedback
                 </div>
 
                 <!-- Audio Controls -->
                 <div style="display: flex; gap: 6px; align-items: center; padding: 6px 8px; background: linear-gradient(135deg, #344dbd 0%, #764ba2 100%); border-bottom: 2px solid var(--border-color); justify-content: space-between;">
                     <div style="display: flex; gap: 6px; align-items: center;">
                         <button class="audio-toggle-btn" id="audioToggleBtn" onclick="toggleAudio()" style="background: rgba(255, 255, 255, 0.2); color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.7em; display: flex; align-items: center; gap: 3px;">
-                            <span id="audioToggleIcon">🔊</span>
+                            <span id="audioToggleIcon">??</span>
                         </button>
                         <div class="audio-indicator" id="audioIndicator" style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; animation: pulse 1.5s infinite;"></div>
                     </div>
@@ -1409,7 +1409,7 @@
             },
             {
                 name: "External Rotation with Band (Elbow at Side)",
-                description: "With elbow tucked and forearm rotating outwards using a light band to activate rotator‑cuff safely.",
+                description: "With elbow tucked and forearm rotating outwards using a light band to activate rotator-cuff safely.",
                 video: "https://www.youtube.com/embed/IzTFCZv0--E",
                 youtubeLink: "https://www.youtube.com/watch?v=IzTFCZv0--E",
                 leftArm: { shoulderAngle: 20, elbowAngle: 90 },
@@ -1449,7 +1449,7 @@
             },
             {
                 name: "Wall Angel (with scapular control)",
-                description: "Standing back against wall, slide arms up and down in \"snow‑angel\" motion while keeping back and shoulders flat to wall.",
+                description: "Standing back against wall, slide arms up and down in \"snow-angel\" motion while keeping back and shoulders flat to wall.",
                 video: "https://www.youtube.com/embed/S4H_rZA2kSM",
                 youtubeLink: "https://www.youtube.com/watch?v=S4H_rZA2kSM",
                 leftArm: { shoulderAngle: 135, elbowAngle: 150 },
@@ -1468,7 +1468,7 @@
                 feedbackRight: ["Raise right arm forward to shoulder height", "Keep right elbow straight and controlled"]
             },
             {
-                name: "Side‑lying External Rotation (Low Load)",
+                name: "Side-lying External Rotation (Low Load)",
                 description: "Lie on side, elbow bent 90°, keep upper arm supported and rotate forearm upward slowly to work rotator cuff.",
                 video: "https://www.youtube.com/embed/AMqT-3l0I6k",
                 youtubeLink: "https://www.youtube.com/watch?v=AMqT-3l0I6k",
@@ -1488,7 +1488,7 @@
                 feedbackRight: ["Press right forearm into wall and hold", "Do not raise right arm yet"]
             },
             {
-                name: "Scaption (Scapular‑Plane Elevation)",
+                name: "Scaption (Scapular-Plane Elevation)",
                 description: "Raise arms in front at about 30° from the body (in scapular plane) to shoulder height with thumbs up.",
                 video: "https://www.youtube.com/embed/PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
                 youtubeLink: "https://www.youtube.com/playlist?list=PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
@@ -1528,8 +1528,8 @@
                 feedbackRight: ["Move right arm backward gently", "Keep right elbow straight"]
             },
             {
-                name: "Chair Push‑Up for Shoulder (Mini)",
-                description: "Place hands on chair or table, do mini push‑ups that activate scapular stability without full load.",
+                name: "Chair Push-Up for Shoulder (Mini)",
+                description: "Place hands on chair or table, do mini push-ups that activate scapular stability without full load.",
                 video: "https://www.youtube.com/embed/AMqT-3l0I6k",
                 youtubeLink: "https://www.youtube.com/watch?v=AMqT-3l0I6k",
                 leftArm: { shoulderAngle: 60, elbowAngle: 140 },
@@ -1538,7 +1538,7 @@
                 feedbackRight: ["Keep right shoulder stable", "Lower right body slowly"]
             },
             {
-                name: "I‑Y‑T Raise (Scapular Activation)",
+                name: "I-Y-T Raise (Scapular Activation)",
                 description: "Lie prone or stand bent forward and move arms in I, Y, and T shapes to activate scapular stabilizers and correct posture.",
                 video: "https://www.youtube.com/embed/AMqT-3l0I6k",
                 youtubeLink: "https://www.youtube.com/watch?v=AMqT-3l0I6k",
@@ -1558,7 +1558,7 @@
                 feedbackRight: ["Extend right arm forward and upward", "Keep right scapula sliding smoothly"]
             },
             {
-                name: "Shoulder Flexion in Side‑lying (Low Load)",
+                name: "Shoulder Flexion in Side-lying (Low Load)",
                 description: "Lie on side with unaffected arm down, lift affected arm in front to about 90° flexion using minimal load.",
                 video: "https://www.youtube.com/embed/PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
                 youtubeLink: "https://www.youtube.com/playlist?list=PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
@@ -1568,8 +1568,8 @@
                 feedbackRight: ["Keep right arm relaxed at side"]
             },
             {
-                name: "Arm Across Chest Stretch (Post‑Mobility)",
-                description: "Bring one arm across the chest and use other to support it, stretch posterior‑deltoid and scapular region.",
+                name: "Arm Across Chest Stretch (Post-Mobility)",
+                description: "Bring one arm across the chest and use other to support it, stretch posterior-deltoid and scapular region.",
                 video: "https://www.youtube.com/embed/S4H_rZA2kSM",
                 youtubeLink: "https://www.youtube.com/watch?v=S4H_rZA2kSM",
                 leftArm: { shoulderAngle: 45, elbowAngle: 135 },
@@ -1588,8 +1588,8 @@
                 feedbackRight: ["Assist right arm overhead to target height", "Keep right elbow straight"]
             },
             {
-                name: "Gentle Shoulder Abduction from Side‑lying",
-                description: "Lie on opposite side and lift arm out to side to about 70‑90°, using minimal load and controlled motion.",
+                name: "Gentle Shoulder Abduction from Side-lying",
+                description: "Lie on opposite side and lift arm out to side to about 70-90°, using minimal load and controlled motion.",
                 video: "https://www.youtube.com/embed/AMqT-3l0I6k",
                 youtubeLink: "https://www.youtube.com/watch?v=AMqT-3l0I6k",
                 leftArm: { shoulderAngle: 80, elbowAngle: 160 },
@@ -1598,7 +1598,7 @@
                 feedbackRight: ["Relax right arm at side"]
             },
             {
-                name: "Wall Walks – Finger Walks Up Wall",
+                name: "Wall Walks  Finger Walks Up Wall",
                 description: "Face wall and \"walk\" fingers up the wall as high as comfortable to improve flexion/abduction safely.",
                 video: "https://www.youtube.com/embed/PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
                 youtubeLink: "https://www.youtube.com/playlist?list=PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
@@ -1610,7 +1610,7 @@
         ];
         
         // Verify exercises loaded
-        console.log('✅ Exercises array loaded with', exercises.length, 'exercises');
+        console.log('? Exercises array loaded with', exercises.length, 'exercises');
         if (exercises.length > 0) {
             console.log('First exercise:', exercises[0].name);
         }
@@ -1632,6 +1632,29 @@
         let feedbackPending = false;  // Is there pending feedback to show?
         const FEEDBACK_DELAY = 5000;  // 5 seconds in ms
         const MAX_REPS = 10;  // Stop at 10 reps
+        
+        // Helper function to get the correct Pose API URL based on environment
+        function getPoseApiUrl(endpoint) {
+            // In production: use /api/pose/ through Nginx proxy
+            // In development with localhost: use direct connection
+            const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            
+            if (isDevelopment) {
+                // Local development: direct connection to port 5003
+                return `http://localhost:5003${endpoint}`;
+            } else {
+                // Production: use Nginx proxy
+                const protocol = window.location.protocol; // https: or http:
+                const host = window.location.host;         // domain.com or IP:port
+                return `${protocol}//${host}/api/pose${endpoint}`;
+            }
+        }
+        
+        console.log('?? Environment detection:');
+        console.log('  Hostname:', window.location.hostname);
+        console.log('  Protocol:', window.location.protocol);
+        console.log('  Host:', window.location.host);
+        console.log('  Pose API URL:', getPoseApiUrl('/api/check-pose'));
         
         // Patient selection (for doctor-supervised exercises)
         let currentUserType = null;  // 'doctor' or 'patient'
@@ -1662,21 +1685,21 @@
             // Only add messages to the exercise modal, NOT to the chatbot widget
             // Ensure we're in exercise mode
             if (!isExercising) {
-                console.warn('⚠️ addExerciseMessage called outside exercise mode, ignoring');
+                console.warn('?? addExerciseMessage called outside exercise mode, ignoring');
                 return;
             }
             
             // Get the conversation messages div from the MODAL ONLY
             const webcamModal = document.getElementById('webcamModal');
             if (!webcamModal || webcamModal.style.display === 'none') {
-                console.warn('⚠️ Webcam modal not open, cannot add message');
+                console.warn('?? Webcam modal not open, cannot add message');
                 return;
             }
             
             // Find conversationMessages inside the modal specifically
             const messagesDiv = webcamModal.querySelector('#conversationMessages');
             if (!messagesDiv) {
-                console.error('❌ conversationMessages element not found in webcam modal');
+                console.error('? conversationMessages element not found in webcam modal');
                 return;
             }
             
@@ -1690,7 +1713,7 @@
             messageEl.className = `message ${type}`;
             
             const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            const badgeText = type === 'success' ? '✓' : type === 'error' ? '✗' : type === 'feedback' ? '💡' : 'ℹ️';
+            const badgeText = type === 'success' ? '?' : type === 'error' ? '?' : type === 'feedback' ? '??' : '??';
             
             let content = `<span class="message-badge">${badgeText}</span>${text}`;
             if (details) {
@@ -1716,12 +1739,12 @@
             
             if (audioEnabled) {
                 btn.classList.remove('muted');
-                icon.textContent = '🔊';
+                icon.textContent = '??';
                 text.textContent = 'Audio On';
                 indicator.classList.remove('inactive');
             } else {
                 btn.classList.add('muted');
-                icon.textContent = '🔇';
+                icon.textContent = '??';
                 text.textContent = 'Audio Off';
                 indicator.classList.add('inactive');
                 // Stop current audio and clear queue
@@ -1794,7 +1817,7 @@
             // Only clear messages from the exercise modal, not the chatbot widget
             const webcamModal = document.getElementById('webcamModal');
             if (!webcamModal) {
-                console.warn('⚠️ Webcam modal not found');
+                console.warn('?? Webcam modal not found');
                 return;
             }
             
@@ -1810,10 +1833,10 @@
             const badge = document.getElementById('poseBadge');
             if (isCorrect) {
                 badge.className = 'pose-status-badge correct';
-                badge.textContent = '✓ ' + message;
+                badge.textContent = '? ' + message;
             } else {
                 badge.className = 'pose-status-badge incorrect';
-                badge.textContent = '✗ ' + message;
+                badge.textContent = '? ' + message;
             }
         }
 
@@ -1823,7 +1846,7 @@
             if (repCounter) {
                 repCounter.innerHTML = `
                     <div style="font-size: 24px; font-weight: bold; color: #28a745; text-align: center;">
-                        💪 Reps: <span style="font-size: 32px;">${reps}/${MAX_REPS}</span>
+                        ?? Reps: <span style="font-size: 32px;">${reps}/${MAX_REPS}</span>
                     </div>
                 `;
             }
@@ -1831,9 +1854,9 @@
 
         // Initialize exercises grid
         function initializeExercises() {
-            console.log('✅ Initializing exercises, total:', exercises.length);
+            console.log('? Initializing exercises, total:', exercises.length);
             if (exercises.length === 0) {
-                console.error('❌ No exercises found in array!');
+                console.error('? No exercises found in array!');
                 const grid = document.getElementById('exercisesGrid');
                 grid.innerHTML = `
                     <div class="no-results">
@@ -1844,7 +1867,7 @@
                 return;
             }
             renderExercises(exercises);
-            console.log('✅ Exercises rendered successfully');
+            console.log('? Exercises rendered successfully');
         }
 
         // Render exercises in grid
@@ -1877,14 +1900,14 @@
                         
                         <div class="angles-section">
                             <div style="margin-bottom: 12px;">
-                                <strong style="color: var(--primary-color); font-size: 0.95em;">💪 Left Arm Position</strong>
+                                <strong style="color: var(--primary-color); font-size: 0.95em;">?? Left Arm Position</strong>
                                 <div style="margin-top: 8px; font-size: 0.85em; line-height: 1.6; color: var(--text-light);">
                                     Shoulder: ${getArmPositionLabel(exercise.leftArm.shoulderAngle)}<br>
                                     Elbow: ${getElbowPositionLabel(exercise.leftArm.elbowAngle)}
                                 </div>
                             </div>
                             <div style="border-top: 1px solid rgba(0,0,0,0.1); padding-top: 12px;">
-                                <strong style="color: var(--primary-color); font-size: 0.95em;">💪 Right Arm Position</strong>
+                                <strong style="color: var(--primary-color); font-size: 0.95em;">?? Right Arm Position</strong>
                                 <div style="margin-top: 8px; font-size: 0.85em; line-height: 1.6; color: var(--text-light);">
                                     Shoulder: ${getArmPositionLabel(exercise.rightArm.shoulderAngle)}<br>
                                     Elbow: ${getElbowPositionLabel(exercise.rightArm.elbowAngle)}
@@ -1893,7 +1916,7 @@
                         </div>
 
                         <div class="feedback-section">
-                            <div class="feedback-label">📌 Key Tips</div>
+                            <div class="feedback-label">?? Key Tips</div>
                             <ul class="feedback-tips">
                                 ${[...exercise.feedbackLeft, ...exercise.feedbackRight]
                                     .slice(0, 2)
@@ -1913,19 +1936,19 @@
 
         // Helper function to convert shoulder angle to descriptive label
         function getArmPositionLabel(angle) {
-            if (angle <= 20) return `↓ Arm at side (${angle}°)`;
-            if (angle <= 45) return `↙ Arm slightly up (${angle}°)`;
-            if (angle <= 70) return `← Arm forward-down (${angle}°)`;
-            if (angle <= 110) return `← Arm forward/out (${angle}°)`;
-            if (angle <= 150) return `↑ Arm elevated (${angle}°)`;
-            return `⬆ Arm overhead (${angle}°)`;
+            if (angle <= 20) return `? Arm at side (${angle}°)`;
+            if (angle <= 45) return `? Arm slightly up (${angle}°)`;
+            if (angle <= 70) return `? Arm forward-down (${angle}°)`;
+            if (angle <= 110) return `? Arm forward/out (${angle}°)`;
+            if (angle <= 150) return `? Arm elevated (${angle}°)`;
+            return `? Arm overhead (${angle}°)`;
         }
 
         // Helper function to convert elbow angle to descriptive label
         function getElbowPositionLabel(angle) {
-            if (angle <= 90) return `⌐ Elbow bent (${angle}°)`;
-            if (angle <= 150) return `─ Elbow semi-extended (${angle}°)`;
-            return `→ Elbow fully extended (${angle}°)`;
+            if (angle <= 90) return `? Elbow bent (${angle}°)`;
+            if (angle <= 150) return `? Elbow semi-extended (${angle}°)`;
+            return `? Elbow fully extended (${angle}°)`;
         }
 
         // Draw complete human skeleton with animation support
@@ -2177,7 +2200,7 @@
                 ctx.font = 'bold 10px Arial';
                 ctx.fillStyle = status === 'correct' ? '#10b981' : status === 'error' ? '#ef4444' : '#f59e0b';
                 ctx.textAlign = 'center';
-                const statusText = status === 'correct' ? `✓ ${accuracy}%` : status === 'error' ? `✗ Adjust` : `≈ ${accuracy}%`;
+                const statusText = status === 'correct' ? `? ${accuracy}%` : status === 'error' ? `? Adjust` : `? ${accuracy}%`;
                 ctx.fillText(statusText, centerX, h - 4);
             }
         }
@@ -2420,7 +2443,7 @@
                         (animationState.targetAngles.rightElbow - animationState.startAngles.rightElbow) * easeProgress
                 };
                 
-                // Determine color based on progress (red → green)
+                // Determine color based on progress (red ? green)
                 let status = 'error';
                 if (progress > 0.5) {
                     status = 'warning';
@@ -2473,7 +2496,7 @@
             const ARROW_LENGTH = 60;
             const ARROW_WIDTH = 3;
             
-            console.log("🎯 Drawing shoulder guides:");
+            console.log("?? Drawing shoulder guides:");
             console.log("  Detected Left:", detectedLeftShoulder);
             console.log("  Detected Right:", detectedRightShoulder);
             console.log("  Target position: (" + centerX + ", " + centerY + ")");
@@ -2481,7 +2504,7 @@
             // Helper function to draw circular target with arrows
             function drawShoulderTarget(detectedPos, targetPos, label, color) {
                 if (!detectedPos || !detectedPos.x || !detectedPos.y) {
-                    console.warn(`⚠️ ${label} shoulder not detected`);
+                    console.warn(`?? ${label} shoulder not detected`);
                     return;
                 }
                 
@@ -2500,7 +2523,7 @@
                 
                 // Determine color based on alignment
                 let displayColor = isCorrect ? '#10b981' : '#ef4444';  // Green if correct, red if incorrect
-                let statusText = isCorrect ? '✓ GOOD' : '✗ ADJUST';
+                let statusText = isCorrect ? '? GOOD' : '? ADJUST';
                 
                 // Draw TARGET position (reference circle - semi-transparent)
                 ctx.fillStyle = 'rgba(100, 150, 255, 0.2)';
@@ -2588,14 +2611,14 @@
             drawShoulderTarget(
                 detectedLeftShoulder,
                 { x: centerX - 80, y: centerY },
-                '👈 Left',
+                '?? Left',
                 '#60a5fa'
             );
             
             drawShoulderTarget(
                 detectedRightShoulder,
                 { x: centerX + 80, y: centerY },
-                '👉 Right',
+                '?? Right',
                 '#f87171'
             );
             
@@ -2610,7 +2633,7 @@
             ctx.font = 'bold 20px Arial';
             ctx.textAlign = 'center';
             ctx.fillText(
-                isCorrect ? '✓ SHOULDER POSITION CORRECT!' : '✗ ADJUST SHOULDERS TO TARGET POSITION',
+                isCorrect ? '? SHOULDER POSITION CORRECT!' : '? ADJUST SHOULDERS TO TARGET POSITION',
                 canvas.width / 2,
                 bannerY + 40
             );
@@ -2648,19 +2671,19 @@
 
         // Open exercise details modal
         function openModal(index) {
-            console.log('✅ Opening modal for exercise index:', index);
+            console.log('? Opening modal for exercise index:', index);
             currentExercise = exercises[index];
-            console.log('✅ Current exercise:', currentExercise.name);
+            console.log('? Current exercise:', currentExercise.name);
             document.getElementById('modalExerciseName').textContent = currentExercise.name;
             document.getElementById('modalDescription').textContent = currentExercise.description;
             document.getElementById('modalVideo').src = currentExercise.video;
             document.getElementById('openYoutubeLink').href = currentExercise.youtubeLink;
-            console.log('✅ Modal elements populated');
+            console.log('? Modal elements populated');
 
             const anglesHtml = `
                 <div style="display: grid; gap: 15px;">
                     <div style="background: var(--light-bg); padding: 15px; border-radius: 8px;">
-                        <strong>💪 Left Arm</strong>
+                        <strong>?? Left Arm</strong>
                         <div style="margin-top: 10px; font-size: 0.9em;">
                             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                                 <span>Shoulder:</span>
@@ -2673,7 +2696,7 @@
                         </div>
                     </div>
                     <div style="background: var(--light-bg); padding: 15px; border-radius: 8px;">
-                        <strong>💪 Right Arm</strong>
+                        <strong>?? Right Arm</strong>
                         <div style="margin-top: 10px; font-size: 0.9em;">
                             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                                 <span>Shoulder:</span>
@@ -2702,13 +2725,13 @@
             const feedbackHtml = `
                 <div style="display: grid; gap: 15px;">
                     <div>
-                        <strong style="color: var(--primary-color);">💡 Left Arm Tips</strong>
+                        <strong style="color: var(--primary-color);">?? Left Arm Tips</strong>
                         <ul class="feedback-tips" style="margin-top: 10px;">
                             ${currentExercise.feedbackLeft.map(tip => `<li>${tip}</li>`).join('')}
                         </ul>
                     </div>
                     <div>
-                        <strong style="color: var(--primary-color);">💡 Right Arm Tips</strong>
+                        <strong style="color: var(--primary-color);">?? Right Arm Tips</strong>
                         <ul class="feedback-tips" style="margin-top: 10px;">
                             ${currentExercise.feedbackRight.map(tip => `<li>${tip}</li>`).join('')}
                         </ul>
@@ -2726,8 +2749,8 @@
                 chatbotWidget.style.display = 'none';
             }
             
-            console.log('✅ Modal displayed - Start Exercising button should be visible');
-            console.log('✅ Modal display value:', modal.style.display);
+            console.log('? Modal displayed - Start Exercising button should be visible');
+            console.log('? Modal display value:', modal.style.display);
         }
 
         // Close modal
@@ -2780,7 +2803,7 @@
 
                 // Wait for video to be ready
                 video.onloadedmetadata = () => {
-                    addExerciseMessage('✅ Webcam connected successfully', 'success');
+                    addExerciseMessage('? Webcam connected successfully', 'success');
                     startPoseFeedback(video);
                 };
             } catch (error) {
@@ -2841,7 +2864,10 @@
 
                         const imageData = canvas.toDataURL('image/jpeg', 0.7);
 
-                        const response = await fetch('http://localhost:5003/api/check-pose', {
+                        const poseApiUrl = getPoseApiUrl('/api/check-pose');
+                        console.log('?? Sending frame to Pose API:', poseApiUrl);
+                        
+                        const response = await fetch(poseApiUrl, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
@@ -2859,8 +2885,8 @@
                         const currentTime = Date.now();
 
                         // DEBUG: Log what we received from backend
-                        console.log("📡 API Response received:", data);
-                        console.log("📐 Angles from backend:", data.angles);
+                        console.log("?? API Response received:", data);
+                        console.log("?? Angles from backend:", data.angles);
 
                         // Track total frames
                         totalFrames++;
@@ -2870,10 +2896,10 @@
                             correctFrames++;
                             repCount++;  // Each correct frame = 1 rep
                             
-                            console.log(`✅ CORRECT! Rep count: ${repCount}/${MAX_REPS}`);
+                            console.log(`? CORRECT! Rep count: ${repCount}/${MAX_REPS}`);
                             
                             // Show positive feedback immediately
-                            updatePoseBadge(true, "✅ Good! Performing well! Keep going!");
+                            updatePoseBadge(true, "? Good! Performing well! Keep going!");
                             
                             // Reset feedback timer since posture is now correct
                             feedbackPending = false;
@@ -2881,8 +2907,8 @@
                             
                             // Check if 10 reps completed
                             if (repCount >= MAX_REPS) {
-                                console.log("🎉 EXERCISE COMPLETE! 10 reps reached!");
-                                addExerciseMessage(`🎉🎉 Excellent! 10 Reps Complete!`, 'success');
+                                console.log("?? EXERCISE COMPLETE! 10 reps reached!");
+                                addExerciseMessage(`???? Excellent! 10 Reps Complete!`, 'success');
                                 speakMessageFallback(`Exercise complete! 10 reps done! Great job!`);
                                 
                                 // Stop exercise and show final report
@@ -2897,18 +2923,18 @@
                             if (!feedbackPending) {
                                 feedbackPending = true;
                                 lastFeedbackTime = currentTime;
-                                console.log("⏱️ Posture incorrect - waiting 5 sec before showing feedback");
+                                console.log("?? Posture incorrect - waiting 5 sec before showing feedback");
                             }
                             
                             // Check if 5 seconds have passed since posture became incorrect
                             if (feedbackPending && (currentTime - lastFeedbackTime) >= FEEDBACK_DELAY) {
                                 // Only show feedback if still incorrect after 5 sec
-                                console.log("📍 Showing feedback after 5 sec delay");
+                                console.log("?? Showing feedback after 5 sec delay");
                                 updatePoseBadge(false, data.message);
                                 feedbackPending = false;  // Reset flag
                             } else if (!feedbackPending) {
                                 // First frame of incorrect posture
-                                updatePoseBadge(false, "📍 Adjusting...");
+                                updatePoseBadge(false, "?? Adjusting...");
                             }
                         }
 
@@ -2918,7 +2944,7 @@
                         // Display real-time statistics in feedback panel (every 10 frames)
                         if (totalFrames % 10 === 0) {
                             const accuracy = totalFrames > 0 ? Math.round((correctFrames / totalFrames) * 100) : 0;
-                            const statsMsg = `📊 Frames: ${totalFrames} | Correct: ${correctFrames} (${accuracy}%) | Reps: ${repCount}/10`;
+                            const statsMsg = `?? Frames: ${totalFrames} | Correct: ${correctFrames} (${accuracy}%) | Reps: ${repCount}/10`;
                             // Silently update (don't spam the message panel)
                             console.log(statsMsg);
                         }
@@ -2938,14 +2964,14 @@
                                 leftTargetEl.textContent = Math.round(targetLeft);
                                 leftEl.className = diff <= 50 ? 'angle-value-item success' : 'angle-value-item warning';
                                 feedbackAccumulator.lastAngles.left_shoulder = data.angles.left_shoulder;
-                                console.log(`✅ LEFT angle updated: ${data.angles.left_shoulder}° (target: ${targetLeft}°, diff: ${diff}°)`);
+                                console.log(`? LEFT angle updated: ${data.angles.left_shoulder}° (target: ${targetLeft}°, diff: ${diff}°)`);
                             } else {
                                 document.getElementById('leftShoulderAngle').textContent = '--';
                                 document.getElementById('leftShoulderAngle').className = 'angle-value-item';
                                 if (currentExercise.leftArm) {
                                     document.getElementById('leftShoulderTargetAngle').textContent = Math.round(currentExercise.leftArm.shoulderAngle);
                                 }
-                                console.warn("⚠️ LEFT angle not received from backend");
+                                console.warn("?? LEFT angle not received from backend");
                             }
                             
                             // Update RIGHT shoulder
@@ -2958,20 +2984,20 @@
                                 rightTargetEl.textContent = Math.round(targetRight);
                                 rightEl.className = diff <= 50 ? 'angle-value-item success' : 'angle-value-item warning';
                                 feedbackAccumulator.lastAngles.right_shoulder = data.angles.right_shoulder;
-                                console.log(`✅ RIGHT angle updated: ${data.angles.right_shoulder}° (target: ${targetRight}°, diff: ${diff}°)`);
+                                console.log(`? RIGHT angle updated: ${data.angles.right_shoulder}° (target: ${targetRight}°, diff: ${diff}°)`);
                             } else {
                                 document.getElementById('rightShoulderAngle').textContent = '--';
                                 document.getElementById('rightShoulderAngle').className = 'angle-value-item';
                                 if (currentExercise.rightArm) {
                                     document.getElementById('rightShoulderTargetAngle').textContent = Math.round(currentExercise.rightArm.shoulderAngle);
                                 }
-                                console.warn("⚠️ RIGHT angle not received from backend");
+                                console.warn("?? RIGHT angle not received from backend");
                             }
                             
                             // Draw shoulder position guide on overlay (NEW FEATURE)
                             const shoulderGuideCanvas = document.getElementById('shoulderGuideCanvas');
                             if (shoulderGuideCanvas && data.shoulder_positions) {
-                                console.log("🎯 Drawing shoulder guide overlay");
+                                console.log("?? Drawing shoulder guide overlay");
                                 drawShoulderGuide(
                                     shoulderGuideCanvas,
                                     video,
@@ -3008,7 +3034,7 @@
                             lastFeedbackTime = currentTime;
                         }
                     } catch (error) {
-                        console.error('❌ Pose API Error:', error);
+                        console.error('? Pose API Error:', error);
                         console.error('Error details:', error.message);
                         
                         // Only show error message ONCE per exercise session
@@ -3016,12 +3042,13 @@
                             apiErrorShown = true;
                             
                             // Show helpful error messages
+                            const poseApiUrl = getPoseApiUrl('/api/check-pose');
                             if (error.message.includes('Failed to fetch')) {
-                                addExerciseMessage('❌ Cannot connect to Pose API at localhost:5003', 'error', 'Make sure the pose detection service is running');
+                                addExerciseMessage(`? Cannot connect to Pose API at ${poseApiUrl}`, 'error', 'Make sure the Pose API service is running and the URL is correct');
                             } else if (error.message.includes('timeout')) {
-                                addExerciseMessage('⏱️ Pose API timeout - request took too long', 'error', 'The API may be overloaded or slow');
+                                addExerciseMessage('?? Pose API timeout - request took too long', 'error', 'The API may be overloaded or slow');
                             } else {
-                                addExerciseMessage(`❌ Pose API Error: ${error.message}`, 'error', 'Check browser console for details');
+                                addExerciseMessage(`? Pose API Error: ${error.message}`, 'error', 'Check browser console for details');
                             }
                         }
                     }
@@ -3041,15 +3068,15 @@
 
                 if (isCorrect) {
                     // Show success message from API
-                    addExerciseMessage(`✅ ${accumulator.lastMessage}`, 'success');
+                    addExerciseMessage(`? ${accumulator.lastMessage}`, 'success');
                     speakMessageFallback(accumulator.lastMessage);
                     
                     // Show positive encouragement feedback
-                    addExerciseMessage('💡 Great form! Keep going!', 'success');
+                    addExerciseMessage('?? Great form! Keep going!', 'success');
                     speakMessageFallback('Great form! Keep going!');
                 } else {
                     // Show the feedback message from API (not angles)
-                    const mainMsg = `❌ ${accumulator.lastMessage}`;
+                    const mainMsg = `? ${accumulator.lastMessage}`;
                     addExerciseMessage(mainMsg, 'error');
                     speakMessageFallback(accumulator.lastMessage);
                     
@@ -3066,10 +3093,10 @@
                             let tipsText = '';
                             feedbackTips.forEach((tip, index) => {
                                 if (index > 0) tipsText += '\n';
-                                tipsText += `• ${tip}`;
+                                tipsText += ` ${tip}`;
                             });
                             
-                            addExerciseMessage('📋 Feedback from AI:', 'feedback', tipsText);
+                            addExerciseMessage('?? Feedback from AI:', 'feedback', tipsText);
                             
                             // Speak each feedback tip
                             feedbackTips.forEach((tip) => {
@@ -3092,7 +3119,7 @@
                         }
                         
                         if (angleInfo) {
-                            addExerciseMessage('📐 Current Position:', 'feedback', angleInfo);
+                            addExerciseMessage('?? Current Position:', 'feedback', angleInfo);
                         }
                     }
                     
@@ -3181,7 +3208,7 @@
                 <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
                             background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); 
                             z-index: 10000; max-width: 600px; text-align: center;">
-                    <h2 style="color: #28a745; margin-bottom: 20px;">🎉 Exercise Complete!</h2>
+                    <h2 style="color: #28a745; margin-bottom: 20px;">?? Exercise Complete!</h2>
                     
                     <div style="background: linear-gradient(135deg, #28a745, #20c997); color: white; padding: 20px; 
                                 border-radius: 10px; margin-bottom: 20px;">
@@ -3191,33 +3218,33 @@
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
                         <div style="background: #e8f5e9; padding: 15px; border-radius: 8px;">
-                            <div style="font-size: 12px; color: #666;">✅ Correct Frames</div>
+                            <div style="font-size: 12px; color: #666;">? Correct Frames</div>
                             <div style="font-size: 24px; font-weight: bold; color: #28a745;">${reportData.correctFrames}</div>
                         </div>
                         <div style="background: #ffebee; padding: 15px; border-radius: 8px;">
-                            <div style="font-size: 12px; color: #666;">❌ Incorrect Frames</div>
+                            <div style="font-size: 12px; color: #666;">? Incorrect Frames</div>
                             <div style="font-size: 24px; font-weight: bold; color: #d32f2f;">${reportData.incorrectFrames}</div>
                         </div>
                         <div style="background: #e3f2fd; padding: 15px; border-radius: 8px;">
-                            <div style="font-size: 12px; color: #666;">📊 Total Frames</div>
+                            <div style="font-size: 12px; color: #666;">?? Total Frames</div>
                             <div style="font-size: 24px; font-weight: bold; color: #1976d2;">${reportData.totalFrames}</div>
                         </div>
                         <div style="background: #fff3e0; padding: 15px; border-radius: 8px;">
-                            <div style="font-size: 12px; color: #666;">📈 Accuracy</div>
+                            <div style="font-size: 12px; color: #666;">?? Accuracy</div>
                             <div style="font-size: 24px; font-weight: bold; color: #f57c00;">${reportData.accuracy}%</div>
                         </div>
                     </div>
                     
                     <div style="text-align: left; background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;">
-                        <p><strong>📋 Summary:</strong></p>
-                        <p>• You completed ${reportData.totalReps} out of ${MAX_REPS} reps</p>
-                        <p>• Accuracy: ${reportData.accuracy}% (${reportData.correctFrames}/${reportData.totalFrames} frames correct)</p>
-                        <p>• Session saved to your dashboard</p>
+                        <p><strong>?? Summary:</strong></p>
+                        <p> You completed ${reportData.totalReps} out of ${MAX_REPS} reps</p>
+                        <p> Accuracy: ${reportData.accuracy}% (${reportData.correctFrames}/${reportData.totalFrames} frames correct)</p>
+                        <p> Session saved to your dashboard</p>
                     </div>
                     
                     <button onclick="closeReportAndExercise()" style="background: #28a745; color: white; border: none; padding: 12px 30px; 
                                                             border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;">
-                        ✅ Close Report
+                        ? Close Report
                     </button>
                 </div>
                 <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9999;"></div>
@@ -3272,9 +3299,9 @@
                 });
                 
                 const result = await response.json();
-                console.log("✅ Session saved to database:", result);
+                console.log("? Session saved to database:", result);
             } catch (error) {
-                console.error("❌ Error saving session:", error);
+                console.error("? Error saving session:", error);
             }
         }
 
@@ -3351,25 +3378,25 @@
             });
 
             // Detect user type and initialize patient selection if needed
-            console.log('🔍 Starting initialization...');
+            console.log('?? Starting initialization...');
             
             // Run both in parallel
             detectUserTypeAndInitialize().catch(err => {
                 console.warn('User type detection failed, continuing anyway:', err);
             });
             
-            console.log('🔍 Initializing exercises...');
+            console.log('?? Initializing exercises...');
             try {
                 initializeExercises();
-                console.log('✅ Exercises initialized successfully');
+                console.log('? Exercises initialized successfully');
             } catch (error) {
-                console.error('❌ Error initializing exercises:', error);
+                console.error('? Error initializing exercises:', error);
                 // Fallback: try to render directly
-                console.log('🔄 Attempting fallback render...');
+                console.log('?? Attempting fallback render...');
                 try {
                     renderExercises(exercises);
                 } catch (fallbackError) {
-                    console.error('❌ Fallback also failed:', fallbackError);
+                    console.error('? Fallback also failed:', fallbackError);
                 }
             }
         });
@@ -3386,7 +3413,7 @@
                 
                 const data = await response.json();
                 currentUserType = data.user_type;
-                console.log('✅ User type detected:', currentUserType);
+                console.log('? User type detected:', currentUserType);
                 
                 if (currentUserType === 'doctor') {
                     // Load list of patients this doctor is supervising
@@ -3411,7 +3438,7 @@
                 
                 if (data.success && data.patients) {
                     allPatients = data.patients;
-                    console.log('✅ Loaded patients for doctor:', allPatients.length);
+                    console.log('? Loaded patients for doctor:', allPatients.length);
                     
                     // Populate patient selector
                     const patientSelect = document.getElementById('patientSelect');
@@ -3508,15 +3535,15 @@
         setTimeout(function() {
             const grid = document.getElementById('exercisesGrid');
             const childCount = grid ? grid.children.length : 0;
-            console.log('📊 Diagnostic at 2s - Grid children:', childCount);
+            console.log('?? Diagnostic at 2s - Grid children:', childCount);
             if (childCount === 0 && exercises.length > 0) {
-                console.warn('⚠️ Exercises array has data but grid is empty!');
+                console.warn('?? Exercises array has data but grid is empty!');
                 console.log('Attempting emergency render...');
                 try {
                     renderExercises(exercises);
-                    console.log('✅ Emergency render successful');
+                    console.log('? Emergency render successful');
                 } catch (e) {
-                    console.error('❌ Emergency render failed:', e);
+                    console.error('? Emergency render failed:', e);
                 }
             }
         }, 2000);
