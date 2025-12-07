@@ -703,8 +703,8 @@
                 <div class="user-section">
                     <div class="dropdown">
                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                            <div class="user-avatar">{{ doctor.username|first|upper }}</div>
-                            <span>{{ doctor.username }}</span>
+                            <div class="user-avatar">{{ doctor_user.username|first|upper }}</div>
+                            <span>{{ doctor_user.username }}</span>
                             <i class="bi bi-chevron-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -721,7 +721,7 @@
                 <!-- Welcome Card -->
                 <div class="welcome-card">
                     <div>
-                        <h1>Welcome back, Dr. {{ doctor.username|title }}! 👋</h1>
+                        <h1>Welcome back, Dr. {{ doctor_name|title }}! 👋</h1>
                         <p>You have {{ total_doctor_patients }} patients in your care. Keep providing excellent medical service.</p>
                     </div>
                     <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.1); display: flex; gap: 15px; flex-wrap: wrap;">

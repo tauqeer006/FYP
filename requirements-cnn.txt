@@ -2,6 +2,7 @@
 
 # Flask API
 flask==3.0.0
+flask-cors==4.0.0
 
 # Image processing
 pillow==10.4.0

@@ -24,10 +24,10 @@ RUN pip install --no-cache-dir --timeout 1000 --require-hashes=false -r requirem
 # Copy only the Django app
 COPY FYP/ ./
 
-# Ensure media dir exists (mounted at runtime in compose)
-RUN mkdir -p media/reports logs
+# Ensure media dir and staticfiles dir exist
+RUN mkdir -p media/reports logs staticfiles
 
 EXPOSE 8000
 
-# Just start the server - migrations are handled at startup via docker-compose
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Run migrations and collect static files at startup
+CMD ["sh", "-c", "python manage.py migrate --noinput 2>/dev/null || true && python manage.py collectstatic --noinput 2>/dev/null || true && python manage.py runserver 0.0.0.0:8000"]

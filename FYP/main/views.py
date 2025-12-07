@@ -515,6 +515,8 @@ def patient_dashboard(request):
                 (today.month, today.day) < (patients.dob.month, patients.dob.day)
             )
 
+        print("the age of patient is:" , patients.dob.year,".")
+
         # Debug logging for xray_info
         logger.info(f"Patient dashboard - xray_info: {xray_info}")
         if xray_info:
@@ -874,7 +876,14 @@ def diagnosis(request):
     recent_analysis_count = PatientReport.objects.filter(patient__doctor=request.user).count()
     recent_patients = PatientCreatedByDoctor.objects.filter(doctor=request.user).order_by('-created_at')[:5]
     
+    # Get doctor information
+    doctor_record = Doctor.objects.filter(user=request.user).first()
+    doctor_name = f"{doctor_record.fname} {doctor_record.lname}".strip() if doctor_record and (doctor_record.fname or doctor_record.lname) else request.user.username
+    
     context = {
+        'doctor_user': request.user,
+        'doctor_name': doctor_name,
+        'doctor_record': doctor_record,
         'total_doctor_patients': total_patient,
         'total_xray_records': total_xray_records,
         'total_reports': total_reports,

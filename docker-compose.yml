@@ -1,13 +1,36 @@
 version: '3.8'
 
 services:
+  # Nginx Reverse Proxy - serves static files and routes requests
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "8888:80"
+    volumes:
+      - ./FYP:/app:ro
+      - ./staticfiles:/app/staticfiles:ro
+      - ./media:/app/media:ro
+    depends_on:
+      - django-app
+    networks:
+      - fyp-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   # PostgreSQL Database
   postgres-db:
     image: postgres:15-alpine
+    env_file:
+      - .env
     environment:
-      - POSTGRES_DB=fyp_db
-      - POSTGRES_USER=fyp_user
-      - POSTGRES_PASSWORD=fyp_password_local
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
@@ -26,12 +49,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.django
-    entrypoint: sh -c 'python manage.py migrate --noinput 2>/dev/null || true && python manage.py runserver 0.0.0.0:8888'
-    ports:
-      - "8888:8888"
+    entrypoint: sh -c 'python manage.py migrate --noinput 2>/dev/null || true && python manage.py collectstatic --noinput 2>/dev/null || true && python manage.py runserver 0.0.0.0:8888'
+    # No external port - only accessible via Nginx
     volumes:
       - ./FYP:/app
       - ./media:/app/media
+      - ./staticfiles:/app/staticfiles
     env_file:
       - .env
     environment:
@@ -61,7 +84,7 @@ services:
       - "5001:5001"
     environment:
       - FLASK_ENV=production
-      - CORS_ORIGINS=http://localhost:8000,http://localhost
+      - CORS_ORIGINS=http://54.81.102.223:8888,http://ec2-54-81-102-223.compute-1.amazonaws.com:8888
     networks:
       - fyp-network
     healthcheck:
@@ -72,19 +95,16 @@ services:
 
   # X-ray Model API - Fracture Detection
   xray-api:
-    image: fyp-xray-api-dev        # use your committed image
-    volumes:
-      - ./Models_Apis:/app         # mount your code folder
+    build:
+      context: .
+      dockerfile: Dockerfile.xray-api
     ports:
-      - "5002:5002"                # map port 5002
+      - "5002:5002"
     environment:
       - FLASK_ENV=production
-      - CORS_ORIGINS=http://localhost:8000,http://localhost
+      - CORS_ORIGINS=http://54.81.102.223:8888,http://ec2-54-81-102-223.compute-1.amazonaws.com:8888
     networks:
       - fyp-network
-    command: sh -c "python /app/X-ray_model.py"   # start Flask server
-
-
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5002/api/health"]
       interval: 30s
@@ -117,7 +137,7 @@ services:
     environment:
       - API_ENV=production
       - PYTHONUNBUFFERED=1
-      - CORS_ORIGINS=http://localhost:8000,http://localhost
+      - CORS_ORIGINS=http://54.81.102.223:8888,http://ec2-54-81-102-223.compute-1.amazonaws.com:8888
     depends_on:
       - django-app
     networks:

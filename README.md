@@ -163,3 +163,5 @@ User type: admin (tauqeer056)
 
 
 pateint: tauqeerahmed / 123456789
+saira khan 123456789
+sameer531 
