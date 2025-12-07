@@ -27,7 +27,7 @@ cp .env.aws .env
 
 # Step 4: Remove old Docker resources
 echo "Cleaning up old Docker resources..."
-docker compose down || true
+docker-compose down || true
 docker container prune -f || true
 docker image prune -a -f || true
 docker volume prune -f || true
@@ -48,7 +48,7 @@ docker run --rm \
 
 # Step 6: Build and start services
 echo "Building and starting Docker services..."
-docker compose up -d
+docker-compose up -d
 
 # Step 7: Wait for services to be healthy
 echo "Waiting for services to be healthy..."
@@ -56,11 +56,11 @@ sleep 30
 
 # Step 8: Run Django migrations
 echo "Running Django migrations..."
-docker compose exec -T django-app python manage.py migrate --noinput || true
+docker-compose exec -T django-app python manage.py migrate --noinput || true
 
 # Step 9: Collect static files
 echo "Collecting static files..."
-docker compose exec -T django-app python manage.py collectstatic --noinput || true
+docker-compose exec -T django-app python manage.py collectstatic --noinput || true
 
 echo ""
 echo "=================================="
@@ -74,6 +74,6 @@ echo ""
 echo "Important Notes:"
 echo "1. Make sure your DuckDNS domain points to: 54.81.102.223"
 echo "2. SSL certificate will auto-renew every 90 days"
-echo "3. Check logs: docker compose logs -f"
-echo "4. Stop services: docker compose down"
+echo "3. Check logs: docker-compose logs -f"
+echo "4. Stop services: docker-compose down"
 echo ""

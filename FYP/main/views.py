@@ -1069,7 +1069,17 @@ def get_all_patients(request):
    
 @csrf_protect
 def predict_diagnosis(request):
-    patients = PatientCreatedByDoctor.objects.all()
+    # Show patients that either:
+    # 1. Belong to the current doctor, OR
+    # 2. Don't have a doctor assigned yet (available for any doctor to claim)
+    if request.user.user_type == 'doctor':
+        from django.db.models import Q
+        patients = PatientCreatedByDoctor.objects.filter(
+            Q(doctor=request.user) | Q(doctor__isnull=True)
+        ).order_by('fname', 'lname')
+    else:
+        # Non-doctors see all patients
+        patients = PatientCreatedByDoctor.objects.all().order_by('fname', 'lname')
 
     if request.method == 'POST':
         try:
@@ -1078,6 +1088,13 @@ def predict_diagnosis(request):
             images = request.FILES.getlist('xray_images')
             logging.info("I get the detail of patient:")
             logging.info(patient)
+
+            # ---------------------- Link Patient to Doctor if Not Already Linked ----------------------
+            # If patient doesn't have a doctor assigned and current user is a doctor, link them
+            if not patient.doctor and request.user.user_type == 'doctor':
+                patient.doctor = request.user
+                patient.save()
+                logger.info(f"Patient {patient.id} linked to doctor {request.user.username}")
 
             if not images:
                 return render(request, 'Doctor/Patient/diagnosis_form.html', {
@@ -1281,7 +1298,7 @@ CLINICAL DATA:
 ---------------------------------------------------------
 OUTPUT FORMAT (MANDATORY):
 
-### 🩺 Medical Diagnosis
+### ?? Medical Diagnosis
 (Write 3–4 lines about how this type of fracture occurs + healing duration)
 
 ### Recommended Exercises
@@ -1742,9 +1759,9 @@ def check_exercise_quality(sequence):
     pred = model.predict(seq_padded, verbose=0)
     error = np.mean((seq_padded - pred) ** 2)
     confidence = max(0.0, 1.0 - (error / THRESHOLD_ALMOST))
-    if error < THRESHOLD_GOOD: feedback = "Good ✅"
-    elif error < THRESHOLD_ALMOST: feedback = "Almost 👍"
-    else: feedback = "Not Correct ❌"
+    if error < THRESHOLD_GOOD: feedback = "Good ?"
+    elif error < THRESHOLD_ALMOST: feedback = "Almost ??"
+    else: feedback = "Not Correct ?"
     return feedback, confidence, error
 
 def monitor_view(request):
@@ -2305,7 +2322,7 @@ def faq_page(request):
 @login_required
 def translate_text(request):
     """
-    Translate text between languages (Urdu ↔ English)
+    Translate text between languages (Urdu ? English)
     Used for bilingual chatbot support
     """
     try:
@@ -2377,7 +2394,7 @@ def translate_via_google(text, source_lang='ur', target_lang='en'):
             result = response.json()
             if result['responseStatus'] == 200:
                 translated = result['responseData']['translatedText']
-                logging.info(f"✅ Translation successful: {text[:50]}... → {translated[:50]}...")
+                logging.info(f"? Translation successful: {text[:50]}... ? {translated[:50]}...")
                 return translated
         
         # Fallback
