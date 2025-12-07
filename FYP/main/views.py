@@ -1069,7 +1069,17 @@ def get_all_patients(request):
    
 @csrf_protect
 def predict_diagnosis(request):
-    patients = PatientCreatedByDoctor.objects.all()
+    # Show patients that either:
+    # 1. Belong to the current doctor, OR
+    # 2. Don't have a doctor assigned yet (available for any doctor to claim)
+    if request.user.user_type == 'doctor':
+        from django.db.models import Q
+        patients = PatientCreatedByDoctor.objects.filter(
+            Q(doctor=request.user) | Q(doctor__isnull=True)
+        ).order_by('fname', 'lname')
+    else:
+        # Non-doctors see all patients
+        patients = PatientCreatedByDoctor.objects.all().order_by('fname', 'lname')
 
     if request.method == 'POST':
         try:
@@ -1078,6 +1088,13 @@ def predict_diagnosis(request):
             images = request.FILES.getlist('xray_images')
             logging.info("I get the detail of patient:")
             logging.info(patient)
+
+            # ---------------------- Link Patient to Doctor if Not Already Linked ----------------------
+            # If patient doesn't have a doctor assigned and current user is a doctor, link them
+            if not patient.doctor and request.user.user_type == 'doctor':
+                patient.doctor = request.user
+                patient.save()
+                logger.info(f"Patient {patient.id} linked to doctor {request.user.username}")
 
             if not images:
                 return render(request, 'Doctor/Patient/diagnosis_form.html', {
