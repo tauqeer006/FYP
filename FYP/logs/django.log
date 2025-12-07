@@ -12904,3 +12904,160 @@ WARNING 2025-12-05 11:55:36 log 339 128822878926528 Too Many Requests: /api/chat
 WARNING 2025-12-05 11:55:36 basehttp 339 128822878926528 "POST /api/chatbot/query/ HTTP/1.1" 429 165
 INFO 2025-12-05 11:55:50 basehttp 339 128822878926528 "GET /admin/login/ HTTP/1.1" 200 4160
 INFO 2025-12-05 11:56:20 basehttp 339 128822878926528 "GET /admin/login/ HTTP/1.1" 200 4160
+INFO 2025-12-07 09:21:46 font_manager 7 128384123493248 generated new fontManager
+INFO 2025-12-07 09:23:57 font_manager 7 135150804855680 generated new fontManager
+INFO 2025-12-07 09:25:34 font_manager 7 130422930193280 generated new fontManager
+INFO 2025-12-07 09:25:43 autoreload 46 135072566537088 Watching for file changes with StatReloader
+INFO 2025-12-07 09:25:51 basehttp 46 135070232860352 "GET /admin/login/ HTTP/1.1" 200 4160
+INFO 2025-12-07 09:25:51 basehttp 46 135070249645760 "GET / HTTP/1.1" 200 109907
+INFO 2025-12-07 09:25:51 basehttp 46 135070241253056 "GET /static/css/nice-select.css HTTP/1.1" 200 4182
+INFO 2025-12-07 09:25:51 basehttp 46 135070002177728 "GET /static/css/owl-carousel.css HTTP/1.1" 200 6122
+INFO 2025-12-07 09:25:52 basehttp 46 135069993785024 "GET / HTTP/1.1" 200 109907
+INFO 2025-12-07 09:25:52 basehttp 46 135069968606912 "GET /static/css/slicknav.min.css HTTP/1.1" 200 2239
+INFO 2025-12-07 09:25:52 basehttp 46 135069985392320 "GET /static/css/nice-select.css HTTP/1.1" 200 4182
+INFO 2025-12-07 09:25:52 basehttp 46 135069406590656 "GET /static/css/owl-carousel.css HTTP/1.1" 200 6122
+INFO 2025-12-07 09:25:52 basehttp 46 135069976999616 "GET /static/css/font-awesome.min.css HTTP/1.1" 200 31004
+INFO 2025-12-07 09:25:52 basehttp 46 135069960214208 "GET /static/css/icofont.css HTTP/1.1" 200 92217
+INFO 2025-12-07 09:25:52 basehttp 46 135069993785024 "GET /static/css/bootstrap.min.css HTTP/1.1" 200 174807
+INFO 2025-12-07 09:25:52 basehttp 46 135069968606912 "GET /static/css/datepicker.css HTTP/1.1" 200 3456
+INFO 2025-12-07 09:25:52 basehttp 46 135069985392320 "GET /static/css/animate.min.css HTTP/1.1" 200 16962
+INFO 2025-12-07 09:25:52 basehttp 46 135069406590656 "GET /static/css/magnific-popup.css HTTP/1.1" 200 7302
+INFO 2025-12-07 09:25:52 basehttp 46 135069960214208 "GET /static/style.css HTTP/1.1" 200 86247
+INFO 2025-12-07 09:25:52 basehttp 46 135069976999616 "GET /static/css/normalize.css HTTP/1.1" 200 21528
+INFO 2025-12-07 09:25:52 basehttp 46 135069968606912 "GET /static/main_page/main-page-styles.css HTTP/1.1" 200 4640
+INFO 2025-12-07 09:25:52 basehttp 46 135069993785024 "GET /static/css/responsive.css HTTP/1.1" 200 23246
+INFO 2025-12-07 09:25:52 basehttp 46 135069985392320 "GET /static/img/section-img.png HTTP/1.1" 200 385
+INFO 2025-12-07 09:25:52 basehttp 46 135069976999616 "GET /static/img/blue.png HTTP/1.1" 200 25994
+INFO 2025-12-07 09:25:52 basehttp 46 135069960214208 "GET /static/main_page/hospital.jpg HTTP/1.1" 200 9735
+INFO 2025-12-07 09:25:52 basehttp 46 135069968606912 "GET /static/main_page/ai%20based%20tech.jpg HTTP/1.1" 200 59910
+INFO 2025-12-07 09:25:52 basehttp 46 135069960214208 "GET /static/js/jquery-migrate-3.0.0.js HTTP/1.1" 200 7084
+INFO 2025-12-07 09:25:52 basehttp 46 135069976999616 "GET /static/js/colors.js HTTP/1.1" 200 1553
+INFO 2025-12-07 09:25:52 basehttp 46 135069968606912 "GET /static/js/jquery-ui.min.js HTTP/1.1" 200 30936
+INFO 2025-12-07 09:25:52 basehttp 46 135069985392320 "GET /static/js/easing.js HTTP/1.1" 200 2299
+INFO 2025-12-07 09:25:52 basehttp 46 135069993785024 "GET /static/js/jquery.min.js HTTP/1.1" 200 86661
+INFO 2025-12-07 09:25:52 basehttp 46 135069960214208 "GET /static/js/popper.min.js HTTP/1.1" 200 19241
+INFO 2025-12-07 09:25:52 basehttp 46 135069976999616 "GET /static/js/bootstrap-datepicker.js HTTP/1.1" 200 13386
+INFO 2025-12-07 09:25:52 basehttp 46 135069968606912 "GET /static/js/jquery.nav.js HTTP/1.1" 200 5360
+INFO 2025-12-07 09:25:52 basehttp 46 135069985392320 "GET /static/js/slicknav.min.js HTTP/1.1" 200 8416
+INFO 2025-12-07 09:25:52 basehttp 46 135069960214208 "GET /static/js/jquery.scrollUp.min.js HTTP/1.1" 200 2041
+INFO 2025-12-07 09:25:52 basehttp 46 135069993785024 "GET /static/js/niceselect.js HTTP/1.1" 200 2951
+INFO 2025-12-07 09:25:52 basehttp 46 135069960214208 "GET /static/js/tilt.jquery.min.js HTTP/1.1" 200 5318
+INFO 2025-12-07 09:25:52 basehttp 46 135069985392320 "GET /static/js/jquery.counterup.min.js HTTP/1.1" 200 1074
+INFO 2025-12-07 09:25:52 basehttp 46 135069976999616 "GET /static/js/owl-carousel.js HTTP/1.1" 200 54553
+INFO 2025-12-07 09:25:52 basehttp 46 135069968606912 "GET /static/js/steller.js HTTP/1.1" 200 23756
+INFO 2025-12-07 09:25:52 basehttp 46 135069993785024 "GET /static/js/wow.min.js HTTP/1.1" 200 8183
+INFO 2025-12-07 09:25:52 basehttp 46 135069968606912 "GET /static/js/jquery.magnific-popup.min.js HTTP/1.1" 200 20224
+INFO 2025-12-07 09:25:52 basehttp 46 135069976999616 "GET /static/main_page/ai%20based%20system.jpg HTTP/1.1" 200 12744
+INFO 2025-12-07 09:25:52 basehttp 46 135069985392320 "GET /static/js/main.js HTTP/1.1" 200 6732
+INFO 2025-12-07 09:25:52 basehttp 46 135069968606912 "GET /static/main_page/fracture%20detections.jpg HTTP/1.1" 200 9129
+INFO 2025-12-07 09:25:52 basehttp 46 135069960214208 "GET /static/js/bootstrap.min.js HTTP/1.1" 200 94408
+INFO 2025-12-07 09:25:52 basehttp 46 135069985392320 "GET /static/main_page/fracture%20operation%20threader.jpg HTTP/1.1" 200 6616
+INFO 2025-12-07 09:25:52 basehttp 46 135069985392320 "GET /static/main_page/doc%201.jpg HTTP/1.1" 200 5767
+INFO 2025-12-07 09:25:52 basehttp 46 135069406590656 "GET /static/img/client1.png HTTP/1.1" 200 729
+INFO 2025-12-07 09:25:52 basehttp 46 135069993785024 "GET /static/main_page/doc%202.jpg HTTP/1.1" 200 8010
+INFO 2025-12-07 09:25:52 basehttp 46 135069985392320 "GET /static/img/client2.png HTTP/1.1" 200 1058
+INFO 2025-12-07 09:25:52 basehttp 46 135069976999616 "GET /static/img/client3.png HTTP/1.1" 200 775
+INFO 2025-12-07 09:25:52 basehttp 46 135069993785024 "GET /static/img/client5.png HTTP/1.1" 200 695
+INFO 2025-12-07 09:25:52 basehttp 46 135069406590656 "GET /static/img/client4.png HTTP/1.1" 200 695
+INFO 2025-12-07 09:25:52 basehttp 46 135069968606912 "GET /static/img/fun-bg.jpg HTTP/1.1" 200 30682
+WARNING 2025-12-07 09:25:52 basehttp 46 135069976999616 "GET /static/img/call-bg.png HTTP/1.1" 404 1972
+INFO 2025-12-07 09:25:52 basehttp 46 135069968606912 "GET /static/img/video-bg.jpg HTTP/1.1" 200 113317
+INFO 2025-12-07 09:25:52 basehttp 46 135069985392320 "GET /static/img/client-bg.jpg HTTP/1.1" 200 20866
+INFO 2025-12-07 09:25:52 basehttp 46 135069960214208 "GET /static/main_page/main_image.png HTTP/1.1" 200 2403117
+INFO 2025-12-07 09:25:55 basehttp 46 135069985392320 "GET /static/fonts/fontawesome-webfont.woff2?v=4.7.0 HTTP/1.1" 200 77160
+INFO 2025-12-07 09:25:55 basehttp 46 135069960214208 "GET /static/fonts/icofont.woff2 HTTP/1.1" 200 537868
+INFO 2025-12-07 09:25:55 basehttp 46 135069960214208 "GET /static/img/favicon.png HTTP/1.1" 200 42953
+INFO 2025-12-07 09:26:20 basehttp 46 135069976999616 "GET /admin/login/ HTTP/1.1" 200 4160
+INFO 2025-12-07 09:26:51 basehttp 46 135069976999616 "GET /admin/login/ HTTP/1.1" 200 4160
+INFO 2025-12-07 09:27:15 basehttp 46 135069960214208 "GET /login/ HTTP/1.1" 200 81967
+WARNING 2025-12-07 09:27:15 basehttp 46 135069960214208 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1996
+INFO 2025-12-07 09:27:15 basehttp 46 135069985392320 "GET /static/css/login.css?v=2 HTTP/1.1" 200 7061
+WARNING 2025-12-07 09:27:15 log 46 135069985392320 Not Found: /favicon.ico
+WARNING 2025-12-07 09:27:15 basehttp 46 135069985392320 "GET /favicon.ico HTTP/1.1" 404 11606
+INFO 2025-12-07 09:27:21 basehttp 46 135069960214208 "GET /admin/login/ HTTP/1.1" 200 4160
+WARNING 2025-12-07 09:27:21 auth_service 46 135069985392320 Failed authentication for user: bilal112233
+WARNING 2025-12-07 09:27:21 views 46 135069985392320 Failed doctor login for user: bilal112233
+INFO 2025-12-07 09:27:21 basehttp 46 135069985392320 "POST /login/ HTTP/1.1" 200 81967
+WARNING 2025-12-07 09:27:21 basehttp 46 135069985392320 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1996
+INFO 2025-12-07 09:27:27 basehttp 46 135069968606912 "GET /login/ HTTP/1.1" 200 81967
+WARNING 2025-12-07 09:27:27 basehttp 46 135069968606912 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1996
+INFO 2025-12-07 09:27:32 basehttp 46 135069406590656 "GET /admin_login1/ HTTP/1.1" 200 65700
+INFO 2025-12-07 09:27:32 basehttp 46 135069406590656 "GET /static/Admin/login.css HTTP/1.1" 200 11477
+INFO 2025-12-07 09:27:39 auth_service 46 135069406590656 User admin authenticated successfully
+INFO 2025-12-07 09:27:39 views 46 135069406590656 Admin admin logged in successfully
+INFO 2025-12-07 09:27:39 basehttp 46 135069406590656 "POST /admin_login1/ HTTP/1.1" 302 0
+INFO 2025-12-07 09:27:39 views 46 135069406590656 Admin dashboard accessed by: admin (admin) (user_type: admin)
+INFO 2025-12-07 09:27:39 basehttp 46 135069406590656 "GET /index_admin/ HTTP/1.1" 200 147779
+INFO 2025-12-07 09:27:39 basehttp 46 135069968606912 "GET /static/assets/css/demo.css HTTP/1.1" 200 15013
+INFO 2025-12-07 09:27:39 basehttp 46 135069993785024 "GET /static/assets/css/light-bootstrap-dashboard.css?v=2.0.0 HTTP/1.1" 200 113977
+INFO 2025-12-07 09:27:39 basehttp 46 135069406590656 "GET /static/assets/css/bootstrap.min.css HTTP/1.1" 200 124923
+INFO 2025-12-07 09:27:39 basehttp 46 135069960214208 "GET /static/assets/js/core/popper.min.js HTTP/1.1" 200 18998
+INFO 2025-12-07 09:27:39 basehttp 46 135069968606912 "GET /static/assets/js/light-bootstrap-dashboard.js?v=2.0.0 HTTP/1.1" 200 6804
+INFO 2025-12-07 09:27:39 basehttp 46 135069976999616 "GET /static/assets/js/core/bootstrap.min.js HTTP/1.1" 200 51150
+INFO 2025-12-07 09:27:39 basehttp 46 135069985392320 "GET /static/assets/js/core/jquery.3.2.1.min.js HTTP/1.1" 200 86663
+INFO 2025-12-07 09:27:40 basehttp 46 135069985392320 "GET /static/assets/img/sidebar-5.jpg HTTP/1.1" 200 87627
+INFO 2025-12-07 09:27:40 basehttp 46 135069985392320 "GET /static/assets/img/favicon.ico HTTP/1.1" 200 1150
+INFO 2025-12-07 09:27:44 basehttp 46 135069985392320 "GET /manage_user/ HTTP/1.1" 200 111889
+INFO 2025-12-07 09:27:53 basehttp 46 135070249645760 "GET /admin/login/ HTTP/1.1" 200 4160
+INFO 2025-12-07 09:28:19 basehttp 46 135069985392320 "POST /add_user/ HTTP/1.1" 200 148470
+INFO 2025-12-07 09:28:26 basehttp 46 135070249645760 "GET /admin/login/ HTTP/1.1" 200 4160
+INFO 2025-12-07 09:28:32 basehttp 46 135069985392320 "GET /logout_doctor/ HTTP/1.1" 302 0
+INFO 2025-12-07 09:28:32 basehttp 46 135069985392320 "GET /login/ HTTP/1.1" 200 81967
+WARNING 2025-12-07 09:28:32 basehttp 46 135069985392320 "GET /static/css/fontawesome.min.css HTTP/1.1" 404 1996
+INFO 2025-12-07 09:28:37 auth_service 46 135069976999616 User bilal112233 authenticated successfully
+INFO 2025-12-07 09:28:37 views 46 135069976999616 Doctor bilal112233 logged in successfully
+INFO 2025-12-07 09:28:37 basehttp 46 135069976999616 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-12-07 09:28:37 views 46 135069976999616 The total number of patients are
+INFO 2025-12-07 09:28:37 views 46 135069976999616 0
+INFO 2025-12-07 09:28:38 basehttp 46 135069976999616 "GET /diagnosis/ HTTP/1.1" 200 91904
+INFO 2025-12-07 09:28:42 basehttp 46 135069976999616 "GET /patients/ HTTP/1.1" 200 14250
+INFO 2025-12-07 09:28:43 views 46 135069976999616 The total number of patients are
+INFO 2025-12-07 09:28:43 views 46 135069976999616 0
+INFO 2025-12-07 09:28:43 basehttp 46 135069976999616 "GET /diagnosis/ HTTP/1.1" 200 91904
+INFO 2025-12-07 09:28:44 basehttp 46 135069976999616 "GET /predict/ HTTP/1.1" 200 13019
+INFO 2025-12-07 09:28:47 views 46 135069976999616 The total number of patients are
+INFO 2025-12-07 09:28:47 views 46 135069976999616 0
+INFO 2025-12-07 09:28:47 basehttp 46 135069976999616 "GET /diagnosis/ HTTP/1.1" 200 91904
+INFO 2025-12-07 09:28:50 basehttp 46 135069976999616 "GET /add_patient_record/ HTTP/1.1" 200 72569
+INFO 2025-12-07 09:28:58 basehttp 46 135069985392320 "GET /admin/login/ HTTP/1.1" 200 4160
+INFO 2025-12-07 09:29:11 views 46 135069976999616 Welcome email sent to tauqeerqureshi112@gmail.com
+INFO 2025-12-07 09:29:11 views 46 135069976999616 Patient Tauqeer Qureshi created by doctor bilal112233 with username: tauqeer
+INFO 2025-12-07 09:29:11 basehttp 46 135069976999616 "POST /add_patient_record/ HTTP/1.1" 200 72836
+INFO 2025-12-07 09:29:13 basehttp 46 135069976999616 "GET /add_patient_record/ HTTP/1.1" 200 72569
+INFO 2025-12-07 09:29:13 views 46 135069976999616 The total number of patients are
+INFO 2025-12-07 09:29:13 views 46 135069976999616 1
+INFO 2025-12-07 09:29:13 basehttp 46 135069976999616 "GET /diagnosis/ HTTP/1.1" 200 93213
+INFO 2025-12-07 09:29:17 basehttp 46 135069976999616 "GET /predict/ HTTP/1.1" 200 13255
+INFO 2025-12-07 09:29:27 views 46 135069976999616 I get the detail of patient:
+INFO 2025-12-07 09:29:27 views 46 135069976999616 Tauqeer Qureshi (ID: 1)
+INFO 2025-12-07 09:29:30 views 46 135069976999616 Fracture detection result: {'fracture_types': ['text', 'metal']}
+INFO 2025-12-07 09:29:30 views 46 135069976999616 Left/Right prediction result: {'prediction': 'Left (L)'}
+INFO 2025-12-07 09:29:30 views 46 135069976999616 Creating X-ray data for patient 1
+INFO 2025-12-07 09:29:30 views 46 135069976999616 Full fracture_data response: {'fracture_types': ['text', 'metal']}
+INFO 2025-12-07 09:29:30 views 46 135069976999616 Fracture data keys: dict_keys(['fracture_types'])
+INFO 2025-12-07 09:29:30 views 46 135069976999616 Saliency data extracted: False
+INFO 2025-12-07 09:29:30 views 46 135069976999616 Saliency URL extracted: False
+INFO 2025-12-07 09:29:30 views 46 135069976999616 Saliency data type: <class 'NoneType'>
+INFO 2025-12-07 09:29:30 views 46 135069976999616 X-ray data saved: 1, created=True
+INFO 2025-12-07 09:29:30 views 46 135069976999616 Original image saved: xray_images/original/SP22-BSE-056_Tauqeer_Ahmad_Qureshi.jpg
+INFO 2025-12-07 09:29:30 basehttp 46 135069976999616 "POST /predict/ HTTP/1.1" 200 90273
+INFO 2025-12-07 09:29:31 basehttp 46 135069985392320 "GET /admin/login/ HTTP/1.1" 200 4160
+INFO 2025-12-07 09:30:02 basehttp 46 135069976999616 "GET /predict/ HTTP/1.1" 200 13255
+INFO 2025-12-07 09:30:03 basehttp 46 135069985392320 "GET /admin/login/ HTTP/1.1" 200 4160
+INFO 2025-12-07 09:30:13 views 46 135069976999616 I get the detail of patient:
+INFO 2025-12-07 09:30:13 views 46 135069976999616 Tauqeer Qureshi (ID: 1)
+INFO 2025-12-07 09:30:14 views 46 135069976999616 Fracture detection result: {'fracture_types': ['softtissue', 'text', 'fracture', 'boneanomaly']}
+INFO 2025-12-07 09:30:14 views 46 135069976999616 Left/Right prediction result: {'prediction': 'Left (L)'}
+INFO 2025-12-07 09:30:14 views 46 135069976999616 Creating X-ray data for patient 1
+INFO 2025-12-07 09:30:14 views 46 135069976999616 Full fracture_data response: {'fracture_types': ['softtissue', 'text', 'fracture', 'boneanomaly']}
+INFO 2025-12-07 09:30:14 views 46 135069976999616 Fracture data keys: dict_keys(['fracture_types'])
+INFO 2025-12-07 09:30:14 views 46 135069976999616 Saliency data extracted: False
+INFO 2025-12-07 09:30:14 views 46 135069976999616 Saliency URL extracted: False
+INFO 2025-12-07 09:30:14 views 46 135069976999616 Saliency data type: <class 'NoneType'>
+INFO 2025-12-07 09:30:14 views 46 135069976999616 X-ray data saved: 1, created=False
+INFO 2025-12-07 09:30:14 views 46 135069976999616 Original image saved: xray_images/original/f0360225-800px-wm_12RFDeK.jpg
+INFO 2025-12-07 09:30:14 basehttp 46 135069976999616 "POST /predict/ HTTP/1.1" 200 90280
+INFO 2025-12-07 09:30:36 basehttp 46 135069985392320 "GET /admin/login/ HTTP/1.1" 200 4160
+INFO 2025-12-07 09:31:08 basehttp 46 135069985392320 "GET /admin/login/ HTTP/1.1" 200 4160
+INFO 2025-12-07 09:31:41 basehttp 46 135069985392320 "GET /admin/login/ HTTP/1.1" 200 4160
+INFO 2025-12-07 09:32:13 basehttp 46 135069985392320 "GET /admin/login/ HTTP/1.1" 200 4160
