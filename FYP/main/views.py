@@ -784,6 +784,7 @@ def add_user(request):
 @never_cache
 @login_required(login_url='admin_login')
 def manage_user(request):
+    
 
     visible_patients = PatientCreatedByDoctor.objects.filter(show_on_dashboard=True)
 

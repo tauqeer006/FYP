@@ -18,7 +18,6 @@
 </head>
 <body>
 
-  <div style="position: fixed; top: 15px; right: 15px; z-index: 1000;">{% include 'components/back_button.html' %}</div>
 
   <!-- Preloader -->
   <div class="preloader">
@@ -74,8 +73,12 @@
             </p>
           </form>
         </div>
+          <div style="position: fixed; top: 15px; right: 15px; z-index: 1000;">{% include 'components/back_button.html' %}</div>
+
+
       </div>
     </div>
+
   </div>
 
   <!-- Include Forgot Password Modal -->
@@ -97,9 +100,9 @@
   </script>
 
 <!-- Global Voice Recorder - Always Listening -->
-{% include 'components/global_voice_recorder.html' %}
 
 <!-- Chatbot Widget -->
 {% include 'components/chatbot_widget_unified.html' %}
+
 </body>
 </html>

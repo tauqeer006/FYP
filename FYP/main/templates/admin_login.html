@@ -41,9 +41,10 @@
 </head>
 <body>
 
-    <div style="position: fixed; top: 15px; right: 15px; z-index: 1000;">{% include 'components/back_button.html' %}</div>
 
     <div class="container">
+                  <div style="position: fixed; top: 15px; right: 15px; z-index: 1000;">{% include 'components/back_button.html' %}</div>
+
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="login-card">
@@ -70,10 +71,7 @@
         </div>
     </div>
 
-<!-- Global Voice Recorder - Always Listening -->
-{% include 'components/global_voice_recorder.html' %}
-
-<!-- Chatbot Widget -->
+<!-- Chatbot Widget - Auto Listening -->
 {% include 'components/chatbot_widget_unified.html' %}
 </body>
 </html>

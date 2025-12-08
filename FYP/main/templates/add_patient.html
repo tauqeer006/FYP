@@ -87,6 +87,7 @@
     min-height: 80px;
   }
 </style>
+    <div style="position: fixed; top: 15px; right: 15px; z-index: 1000;">{% include 'components/back_button.html' %}</div>
 
 <div class="content-section form-section">
   <h2>Add New Patient</h2>
@@ -160,7 +161,6 @@
   </form>
 </div>
 <!-- Global Voice Recorder - Always Listening -->
-{% include 'components/global_voice_recorder.html' %}
 <!-- Chatbot Widget -->
 {% include 'components/chatbot_widget_unified.html' %}
 {% endblock %}

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -230,17 +230,17 @@
 <body>
     <div style="position: fixed; top: 15px; right: 15px; z-index: 1000;">{% include 'components/back_button.html' %}</div>
     <div class="container">
-        <h1>🎤 Voice Command Debug Tool</h1>
+        <h1>ًںژ¤ Voice Command Debug Tool</h1>
 
         <div class="test-section">
-            <h2>📌 Information</h2>
+            <h2>ًں“Œ Information</h2>
             <div class="info-box">
                 <strong>How to use:</strong> Click on any test button or enter a custom query to see exactly what the API returns. This helps debug why voice commands might not be working correctly.
             </div>
         </div>
 
         <div class="test-section">
-            <h2>🧪 Quick Tests</h2>
+            <h2>ًں§ھ Quick Tests</h2>
             <div class="test-grid">
                 <button class="test-button" onclick="testQuery('admin login')">Admin Login</button>
                 <button class="test-button" onclick="testQuery('patient dashboard')">Patient Dashboard</button>
@@ -254,7 +254,7 @@
         </div>
 
         <div class="test-section">
-            <h2>✏️ Custom Query</h2>
+            <h2>âœڈï¸ڈ Custom Query</h2>
             <div class="input-group">
                 <input type="text" id="customQuery" placeholder="Enter your voice command here...">
                 <button class="btn-test" onclick="testCustomQuery()">Test Query</button>
@@ -264,7 +264,7 @@
         </div>
 
         <div class="test-section">
-            <h2>📊 Response Details</h2>
+            <h2>ًں“ٹ Response Details</h2>
             <table class="comparison-table">
                 <thead>
                     <tr>
@@ -304,7 +304,7 @@
         </div>
 
         <div class="test-section">
-            <h2>🔍 Raw API Response</h2>
+            <h2>ًں”چ Raw API Response</h2>
             <div id="rawResponse" class="response-container">
                 <div class="response-title">Click a test button or enter a custom query to see the API response here</div>
             </div>
@@ -332,7 +332,7 @@
 
             // Show loading
             statusEl.className = 'status loading';
-            statusEl.textContent = '⏳ Testing...';
+            statusEl.textContent = 'âڈ³ Testing...';
             rawResponseEl.innerHTML = '<div class="response-title">Loading...</div>';
 
             try {
@@ -355,11 +355,11 @@
 
                 // Show success
                 statusEl.className = 'status success';
-                statusEl.textContent = `✅ Test complete for: "${query}"`;
+                statusEl.textContent = `âœ… Test complete for: "${query}"`;
 
             } catch (error) {
                 statusEl.className = 'status error';
-                statusEl.textContent = `❌ Error: ${error.message}`;
+                statusEl.textContent = `â‌Œ Error: ${error.message}`;
                 rawResponseEl.innerHTML = `<div class="response-title">Error</div><div class="response-content">${error.message}</div>`;
                 clearTable();
             }
@@ -372,22 +372,22 @@
             // Response Type
             const type = parsed.response_type || 'unknown';
             document.getElementById('type-actual').textContent = type;
-            document.getElementById('type-status').innerHTML = ['navigation', 'conversation', 'form_fill', 'button_click'].includes(type) ? '<span class="match-yes">✓</span>' : '<span class="match-no">✗</span>';
+            document.getElementById('type-status').innerHTML = ['navigation', 'conversation', 'form_fill', 'button_click'].includes(type) ? '<span class="match-yes">âœ“</span>' : '<span class="match-no">âœ—</span>';
 
             // Route ID
             const routeId = parsed.route_id || '(none)';
             document.getElementById('route-actual').textContent = routeId;
-            document.getElementById('route-status').innerHTML = (type === 'navigation' && routeId !== '(none)') ? '<span class="match-yes">✓</span>' : (type === 'navigation' ? '<span class="match-no">✗</span>' : '-');
+            document.getElementById('route-status').innerHTML = (type === 'navigation' && routeId !== '(none)') ? '<span class="match-yes">âœ“</span>' : (type === 'navigation' ? '<span class="match-no">âœ—</span>' : '-');
 
             // Path
             const path = parsed.path || final.path || '(none)';
             document.getElementById('path-actual').textContent = path;
-            document.getElementById('path-status').innerHTML = (path && path !== '(none)' && path !== '/') ? '<span class="match-yes">✓</span>' : (path === '/' ? '<span class="match-no">⚠ (home)</span>' : '-');
+            document.getElementById('path-status').innerHTML = (path && path !== '(none)' && path !== '/') ? '<span class="match-yes">âœ“</span>' : (path === '/' ? '<span class="match-no">âڑ  (home)</span>' : '-');
 
             // Success
             const success = final.success ? 'true' : 'false';
             document.getElementById('success-actual').textContent = success;
-            document.getElementById('success-status').innerHTML = final.success ? '<span class="match-yes">✓</span>' : '<span class="match-no">✗</span>';
+            document.getElementById('success-status').innerHTML = final.success ? '<span class="match-yes">âœ“</span>' : '<span class="match-no">âœ—</span>';
         }
 
         function clearTable() {
@@ -428,6 +428,6 @@
     {% include 'components/chatbot_widget_unified.html' %}
 
     <!-- Global Voice Recorder -->
-    {% include 'components/global_voice_recorder.html' %}
-</body>
+    </body>
 </html>
+

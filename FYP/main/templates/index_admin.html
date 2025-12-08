@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 {% load static %}
 <html lang="en">
 
@@ -546,52 +546,7 @@
 
     <div class="wrapper">
         <!-- Sidebar -->
-        <div class="sidebar" id="sidebar" data-image="{% static 'assets/img/sidebar-5.jpg' %}">
-            <div class="sidebar-wrapper">
-                <div class="logo">
-                    <a href="{% url 'index_admin' %}">
-                        <i class="bi bi-hospital" style="margin-right: 8px;"></i> X-AI Medical
-                    </a>
-                </div>
-                <ul class="nav">
-                    <!-- Dashboard -->
-                    <li class="active">
-                        <a class="nav-link active" href="{% url 'index_admin' %}">
-                            <i class="bi bi-speedometer2"></i>
-                            <p>Dashboard</p>
-                        </a>
-                    </li>
-
-                    <!-- User Management -->
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="collapse" href="#userManagement" role="button" aria-expanded="false">
-                            <i class="bi bi-people"></i>
-                            <p>
-                                User Management
-                                <b class="caret"></b>
-                            </p>
-                        </a>
-                        <div class="collapse" id="userManagement">
-                            <ul class="nav">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'add_user' %}">
-                                        <i class="bi bi-person-plus"></i>
-                                        <span class="sidebar-normal">Add User</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'manageuser' %}">
-                                        <i class="bi bi-person-gear"></i>
-                                        <span class="sidebar-normal">Manage Users</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
+        
         <!-- Main Panel -->
         <div class="main-panel">
             <!-- Navbar -->
@@ -927,7 +882,7 @@
                 <div class="container-fluid">
                     <nav>
                         <p class="copyright text-center">
-                            © <script>document.write(new Date().getFullYear())</script>
+                            آ© <script>document.write(new Date().getFullYear())</script>
                             <strong style="color: var(--primary-blue);">X-AI Medical System</strong> - Professional Healthcare Management Platform
                             <br>
                             <small style="color: #999;">Powered by Advanced AI & Medical Technology | All Rights Reserved</small>
@@ -939,9 +894,7 @@
     </div>
 
     <!-- Global Voice Recorder -->
-    {% include 'components/global_voice_recorder.html' %}
-
-    <!-- Chatbot Widget -->
+        <!-- Chatbot Widget -->
     {% include 'components/chatbot_widget_unified.html' %}
 
     <!-- Scripts -->
@@ -1031,3 +984,4 @@
 </body>
 
 </html>
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 {% load static %}
 <html lang="en">
 
@@ -589,11 +589,11 @@
             <div class="action-buttons" style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(30, 144, 255, 0.2);">
                 <a href="{% url 'Video-Recommendations' %}" class="action-btn" role="button">
                     <i class="bi bi-play-circle"></i>
-                    <span>🏃 Start Exercise</span>
+                    <span>ًںڈƒ Start Exercise</span>
                 </a>
                 <a href="{% url 'user_profile' %}" class="action-btn" role="button">
                     <i class="bi bi-person-circle"></i>
-                    <span>👤 My Profile</span>
+                    <span>ًں‘¤ My Profile</span>
                 </a>
             </div>
         </div>
@@ -714,13 +714,13 @@
                         {% if xray_info.saliency_map_image %}
                         <div style="border: 2px solid #f093fb; border-radius: 12px; overflow: hidden; background: linear-gradient(135deg, #fff5ff, #ffe5f0); transition: all 0.3s ease; box-shadow: 0 2px 12px rgba(240, 147, 251, 0.2); cursor: pointer;" class="image-card ai-card" onclick="toggleImageExpand(this)">
                             <div style="background: linear-gradient(135deg, #f093fb, #f5576c); color: white; padding: 15px; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px;">
-                                <span style="display: inline-block; animation: pulse 2s infinite;">🧠</span> AI Explainability Map (Saliency)
+                                <span style="display: inline-block; animation: pulse 2s infinite;">ًں§ </span> AI Explainability Map (Saliency)
                             </div>
                             <div style="padding: 15px; text-align: center;">
                                 <img src="{{ xray_info.saliency_map_image.url }}" alt="Saliency Map" style="width: 100%; height: auto; max-height: 350px; border-radius: 8px; object-fit: cover; transition: transform 0.3s ease;" class="saliency-img">
                             </div>
                             <div style="padding: 12px; text-align: center; font-size: 12px; color: #666; background: white; border-top: 1px solid #e0e0e0;">
-                                <strong>💡 Tip:</strong> Red/Hot areas show where the AI focused. Click to expand.
+                                <strong>ًں’، Tip:</strong> Red/Hot areas show where the AI focused. Click to expand.
                             </div>
                         </div>
                         {% endif %}
@@ -899,7 +899,7 @@
                 Last updated: {{ now|date:"M d, Y H:i" }}
             </p>
             <p style="font-size: 12px; margin-top: 10px;">
-                © 2024 X-AI Medical System. All rights reserved.
+                آ© 2024 X-AI Medical System. All rights reserved.
             </p>
         </div>
     </div>
@@ -1022,7 +1022,7 @@
                 document.getElementById('exercise-loading').style.display = 'none';
                 document.getElementById('exercise-error').style.display = 'block';
                 document.getElementById('exercise-error').innerHTML = `
-                    <strong>❌ Error:</strong> ${error.message}
+                    <strong>â‌Œ Error:</strong> ${error.message}
                 `;
             }
         }
@@ -1123,7 +1123,7 @@
             `;
             
             const closeBtn = document.createElement('button');
-            closeBtn.innerHTML = '×';
+            closeBtn.innerHTML = 'أ—';
             closeBtn.style.cssText = `
                 position: absolute;
                 top: -40px;
@@ -1178,7 +1178,7 @@
     {% include 'components/chatbot_widget_unified.html' %}
 
     <!-- Global Voice Recorder -->
-    {% include 'components/global_voice_recorder.html' %}
-</body>
+    </body>
 
 </html>
+

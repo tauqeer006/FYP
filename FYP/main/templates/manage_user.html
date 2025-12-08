@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 {% load static %}
 <html lang="en">
 
@@ -496,29 +496,7 @@
 
     <div class="wrapper">
         <!-- Sidebar -->
-        <div class="sidebar" id="sidebar" data-image="{% static 'assets/img/sidebar-5.jpg' %}">
-            <div class="sidebar-wrapper">
-                <div class="logo">
-                    <a href="{% url 'index_admin' %}">
-                        <i class="bi bi-hospital"></i> X-AI Medical
-                    </a>
-                </div>
-                <ul class="nav">
-                    <li>
-                        <a href="{% url 'index_admin' %}">
-                            <i class="bi bi-speedometer2"></i>
-                            <p>Dashboard</p>
-                        </a>
-                    </li>
-                    <li class="active">
-                        <a class="active" href="{% url 'manageuser' %}">
-                            <i class="bi bi-people"></i>
-                            <p>Manage Users</p>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        
 
         <!-- Main Panel -->
         <div class="main-panel">
@@ -869,7 +847,7 @@
                 <div class="container-fluid">
                     <nav>
                         <p class="copyright text-center">
-                            © <script>document.write(new Date().getFullYear())</script>
+                            آ© <script>document.write(new Date().getFullYear())</script>
                             <strong style="color: var(--primary-blue);">X-AI Medical System</strong> - Professional Healthcare Management
                         </p>
                     </nav>
@@ -879,9 +857,7 @@
     </div>
 
     <!-- Global Voice Recorder -->
-    {% include 'components/global_voice_recorder.html' %}
-
-    <!-- Scripts -->
+        <!-- Scripts -->
     <script src="{% static 'assets/js/core/jquery.3.2.1.min.js' %}"></script>
     <script src="{% static 'assets/js/core/popper.min.js' %}"></script>
     <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
@@ -1064,7 +1040,7 @@
     {% include 'components/chatbot_widget_unified.html' %}
 
     <!-- Global Voice Recorder -->
-    {% include 'components/global_voice_recorder.html' %}
-</body>
+    </body>
 
 </html>
+

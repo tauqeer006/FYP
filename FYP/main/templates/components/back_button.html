@@ -104,13 +104,13 @@
 </script>
 
 <!-- Back Button - Intelligent routing based on current page -->
-<div class="back-button-container" id="backButtonContainer" style="display: none;">
+<div class="back-button-container" id="backButtonContainer" style="display: block;">
   <script>
     function goBack() {
       const currentUrl = window.location.pathname;
       
       // Login pages - go back to home
-      if (currentUrl === '/admin_login1/' || currentUrl === '/patient_login/' || currentUrl === '/login/') {
+      if (currentUrl === '/admin_login1/' || currentUrl === '/admin_login/' || currentUrl === '/patient_login/' || currentUrl === '/login/') {
         window.location.href = '/';
         return;
       }
@@ -140,7 +140,7 @@
         return;
       }
       
-      if (currentUrl.includes('admin') && currentUrl !== '/admin_login1/') {
+      if (currentUrl.includes('admin') && currentUrl !== '/admin_login1/' && currentUrl !== '/admin_login/') {
         window.location.href = '/index_admin/';
         return;
       }
@@ -152,6 +152,8 @@
     // Determine if back button should be shown
     function shouldShowBackButton() {
       const currentUrl = window.location.pathname.toLowerCase();
+      
+      console.log('📍 Current URL:', currentUrl);
       
       // Hide on main pages (main navigation pages) - check with and without trailing slash
       const mainPages = ['/', '/about/', '/services/', '/doctors/', '/contact/', '/faq/',
@@ -174,8 +176,12 @@
         return false;
       }
       
-      // Show on login pages
-      if (currentUrl === '/admin_login1/' || currentUrl === '/patient_login/' || currentUrl === '/login/') {
+      // Show on login pages - check with and without trailing slash
+      if (currentUrl === '/admin_login1/' || currentUrl === '/admin_login1' ||
+          currentUrl === '/admin_login/' || currentUrl === '/admin_login' ||
+          currentUrl === '/patient_login/' || currentUrl === '/patient_login' || 
+          currentUrl === '/login/' || currentUrl === '/login') {
+        console.log('✅ Showing back button on login page:', currentUrl);
         return true;
       }
       
@@ -216,16 +222,31 @@
           backButtonContainer.style.display = 'none';
           console.log('❌ Back button hidden');
         }
+      } else {
+        console.warn('⚠️ Back button container not found in DOM');
       }
     }
     
     // Run immediately
+    console.log('🔧 Initializing back button...');
     initBackButton();
     
     // Also run on DOMContentLoaded to be safe
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initBackButton);
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('🔧 Reinitializing back button on DOMContentLoaded...');
+        initBackButton();
+      });
+    } else {
+      // DOM is already loaded
+      console.log('🔧 DOM already loaded, back button should be initialized');
     }
+    
+    // Also run with a slight delay to ensure DOM is ready
+    setTimeout(function() {
+      console.log('🔧 Final check: reinitializing back button...');
+      initBackButton();
+    }, 100);
   </script>
   <button class="back-btn" onclick="goBack()" title="Go back">
     <i class="fas fa-arrow-left"></i>

@@ -400,9 +400,134 @@ let recognition = null;
 let isListening = false;
 let continuousMode = true; // Always ON
 // NOTE: messageCount is declared globally in predict_vid.html, don't redeclare here
-let selectedLanguage = 'en'; // Default language (English or Urdu)
 
 // Detect Language (Urdu vs English)
+
+// ===== UNIFIED CHATBOT WIDGET - ALWAYS LISTENING =====
+
+// NOTE: messageCount is declared globally in predict_vid.html, don't redeclare here
+let selectedLanguage = 'en'; // Default language (English or Urdu)
+
+// =======================================================
+// === NEW VOICE-TO-TEXT IMPLEMENTATION (Start Here) ===
+// =======================================================
+
+function initVoiceRecognition() {
+    if (window.webkitSpeechRecognition) {
+        recognition = new webkitSpeechRecognition();
+    } else if (window.SpeechRecognition) {
+        recognition = new SpeechRecognition();
+    } else {
+        console.error('❌ Web Speech API is not supported in this browser.');
+        return;
+    }
+
+    // Key settings for continuous listening
+    recognition.continuous = true; 
+    recognition.interimResults = true;
+    recognition.lang = selectedLanguage; // 'en' or 'ur'
+
+    // The core function: captures spoken audio and turns it into text
+    recognition.onresult = function(event) {
+        let interimTranscript = '';
+        let finalTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+                finalTranscript += transcript;
+            } else {
+                interimTranscript += transcript;
+            }
+        }
+        
+        // 1. Write the current spoken words (interim results) to the input box
+        updateInterimChat(interimTranscript); 
+
+        // 2. Process the final, confirmed phrase
+        if (finalTranscript.trim().length > 0) {
+            handleFinalVoiceCommand(finalTranscript.trim());
+        }
+    };
+
+    // Auto-restart listening when one session ends (crucial for 'always listening')
+    recognition.onend = function() {
+        if (continuousMode) {
+            recognition.start();
+        } else {
+            isListening = false;
+        }
+    };
+
+    recognition.onerror = function(event) {
+        console.error('🛑 Speech recognition error:', event.error);
+        if (event.error === 'network' || event.error === 'audio-capture') {
+             addMessage('⚠️ Voice error: Check your microphone and network connection.', 'system');
+        }
+    };
+
+    // Start the recognition
+    try {
+        recognition.start();
+        isListening = true;
+        console.log(`🎤 Voice recognition started in ${selectedLanguage} mode.`);
+    } catch (e) {
+        // Prevent error if start is called when already active
+        if (e.name !== 'InvalidStateError') {
+            console.error('Error starting recognition:', e);
+        }
+    }
+}
+
+// Helper function to write the current spoken words into the input field
+function updateInterimChat(text) {
+    document.getElementById('chatbot-input-unified').value = text;
+}
+
+// Helper function to process the final command (sends it to the chat/API)
+function handleFinalVoiceCommand(text) {
+    // 1. Clear the interim text from the input box
+    document.getElementById('chatbot-input-unified').value = '';
+
+    // 2. Send the message to the chat history and the backend API
+    sendChatMessage(text);
+}
+
+
+// You also need to call the initialization function when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    // Initial call to start the always-listening mode
+    initVoiceRecognition(); 
+    
+    // Add event listeners for the language buttons to change the recognition language
+    document.getElementById('lang-en-btn').addEventListener('click', () => setLanguage('en'));
+    document.getElementById('lang-ur-btn').addEventListener('click', () => setLanguage('ur'));
+});
+
+// Function to change the recognition language
+function setLanguage(lang) {
+    selectedLanguage = lang;
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.lang === lang) {
+            btn.classList.add('active');
+        }
+    });
+    
+    if (recognition) {
+        recognition.stop(); // Stop the current session
+        recognition.lang = lang; // Change the language
+        recognition.start(); // Restart the session
+        console.log(`🗣️ Language switched to: ${lang}`);
+        addMessage(`Language switched to ${lang === 'en' ? 'English' : 'Urdu'}.`, 'system');
+    }
+}
+
+// =======================================================
+// === END NEW VOICE-TO-TEXT IMPLEMENTATION ===
+// =======================================================
+
+
 function detectLanguage(text) {
   const urduRegex = /[\u0600-\u06FF]/g;
   const urduChars = (text.match(urduRegex) || []).length;

@@ -132,12 +132,28 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('🔍 Voice recorder initialization started');
+  
   const voiceBtn = document.getElementById('global-voice-btn');
   const statusIndicator = document.getElementById('voice-status-indicator');
+  
+  console.log('🔍 Voice button element:', voiceBtn);
+  console.log('🔍 Status indicator element:', statusIndicator);
+  
+  if (!voiceBtn) {
+    console.error('❌ CRITICAL: Voice button element not found! Cannot initialize voice system.');
+    return;
+  }
+  
+  if (!statusIndicator) {
+    console.error('❌ CRITICAL: Status indicator element not found! Cannot initialize voice system.');
+    return;
+  }
   
   let isListening = false;
   let recognition = null;
   let isProcessing = false;
+  let isStarting = false; // Prevent double-start
 
   // Check for Web Speech API support
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -156,18 +172,20 @@ document.addEventListener('DOMContentLoaded', function() {
     recognition.language = 'en-US';
 
     recognition.onstart = function() {
+      console.log('✅ Recognition started');
       isListening = true;
+      isStarting = false;
       voiceBtn.classList.add('listening');
       statusIndicator.classList.add('listening');
       showVoiceToast('🎤 Listening... Speak now!', 'listening');
-      console.log('🎤 Global voice recording started');
     };
 
     recognition.onend = function() {
+      console.log('⏹️ Recognition ended');
       isListening = false;
+      isStarting = false;
       voiceBtn.classList.remove('listening');
       statusIndicator.classList.remove('listening');
-      console.log('⏹️ Voice recording stopped');
     };
 
     recognition.onresult = function(event) {
@@ -179,18 +197,23 @@ document.addEventListener('DOMContentLoaded', function() {
       
       if (transcript.trim() && event.results[event.results.length - 1].isFinal) {
         console.log('✅ Speech recognized:', transcript.trim());
-        voiceBtn.classList.remove('listening');
-        statusIndicator.classList.remove('listening');
-        
         // Send to chatbot API
         sendVoiceCommand(transcript.trim());
       }
     };
 
     recognition.onerror = function(event) {
-      console.error('❌ Speech recognition error:', event.error);
+      console.error('❌ Recognition error:', event.error);
+      isListening = false;
+      isStarting = false;
       voiceBtn.classList.remove('listening');
       statusIndicator.classList.remove('listening');
+      
+      // Don't show error for aborted (happens when stopping)
+      if (event.error === 'aborted') {
+        console.log('ℹ️ Recognition was aborted (stopped by user)');
+        return;
+      }
       
       if (event.error === 'no-speech') {
         showVoiceToast('❌ No speech detected. Please try again.', 'error');
@@ -209,14 +232,26 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
+    if (isStarting) {
+      console.log('⚠️ Recognition is already starting, ignoring click');
+      return;
+    }
+
     if (isListening) {
       // Stop recording
-      console.log('🛑 Stopping voice recording');
+      console.log('🛑 Stopping recognition');
+      isStarting = true;
       recognition.stop();
     } else {
       // Start recording
-      console.log('🎤 Starting voice recording');
-      recognition.start();
+      console.log('🎤 Starting recognition');
+      isStarting = true;
+      try {
+        recognition.start();
+      } catch (error) {
+        console.error('❌ Error calling recognition.start():', error);
+        isStarting = false;
+      }
     }
   });
 

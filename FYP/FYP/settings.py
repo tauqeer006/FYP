@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', "django-insecure-1ngo+oo&!ib*f4f&xlw5_+^%jl
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True').lower() in ['true', '1', 'yes']
 
-
+# Hardcoded ALLOWED_HOSTS for both domain and IP access
 ALLOWED_HOSTS = [
     'medxai.duckdns.org',
     '54.81.102.223',

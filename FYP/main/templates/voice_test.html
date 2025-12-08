@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -93,7 +93,7 @@
 <body>
     <div style="position: fixed; top: 15px; right: 15px; z-index: 1000;">{% include 'components/back_button.html' %}</div>
     <div class="container">
-        <h1>🎤 Voice Recognition & Chatbot Debug Console</h1>
+        <h1>ًںژ¤ Voice Recognition & Chatbot Debug Console</h1>
         
         <div class="test-section">
             <h2>Browser Capabilities</h2>
@@ -187,19 +187,19 @@
             const hasGetUserMedia = hasMediaDevices && !!navigator.mediaDevices.getUserMedia;
 
             let html = '<div class="status ' + (hasSpeechRecognition ? 'success' : 'error') + '">';
-            html += hasSpeechRecognition ? '✅ Speech Recognition: Supported' : '❌ Speech Recognition: NOT Supported';
+            html += hasSpeechRecognition ? 'âœ… Speech Recognition: Supported' : 'â‌Œ Speech Recognition: NOT Supported';
             html += '</div>';
 
             html += '<div class="status ' + (hasGetUserMedia ? 'success' : 'error') + '">';
-            html += hasGetUserMedia ? '✅ Microphone Access: Supported' : '❌ Microphone Access: NOT Supported';
+            html += hasGetUserMedia ? 'âœ… Microphone Access: Supported' : 'â‌Œ Microphone Access: NOT Supported';
             html += '</div>';
 
             html += '<div class="status ' + (!!window.fetch ? 'success' : 'error') + '">';
-            html += window.fetch ? '✅ Fetch API: Supported' : '❌ Fetch API: NOT Supported';
+            html += window.fetch ? 'âœ… Fetch API: Supported' : 'â‌Œ Fetch API: NOT Supported';
             html += '</div>';
 
             html += '<div class="status warning">';
-            html += '📱 User Agent: ' + navigator.userAgent.substring(0, 100) + '...';
+            html += 'ًں“± User Agent: ' + navigator.userAgent.substring(0, 100) + '...';
             html += '</div>';
 
             output.innerHTML = html;
@@ -211,17 +211,17 @@
             output.innerHTML = '';
 
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                log('micOutput', '❌ Microphone access not supported', 'error');
+                log('micOutput', 'â‌Œ Microphone access not supported', 'error');
                 return;
             }
 
             navigator.mediaDevices.getUserMedia({ audio: true })
                 .then(stream => {
-                    log('micOutput', '✅ Microphone access granted!', 'success');
+                    log('micOutput', 'âœ… Microphone access granted!', 'success');
                     stream.getTracks().forEach(track => track.stop());
                 })
                 .catch(error => {
-                    log('micOutput', '❌ Microphone access denied: ' + error.message, 'error');
+                    log('micOutput', 'â‌Œ Microphone access denied: ' + error.message, 'error');
                 });
         }
 
@@ -232,7 +232,7 @@
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             
             if (!SpeechRecognition) {
-                log('voiceOutput', '❌ Speech Recognition not supported', 'error');
+                log('voiceOutput', 'â‌Œ Speech Recognition not supported', 'error');
                 return;
             }
 
@@ -241,11 +241,11 @@
             voiceRecognition.interimResults = true;
             voiceRecognition.language = 'en-US';
 
-            log('voiceOutput', '🎤 Starting voice recognition...', 'info');
-            log('voiceOutput', '📢 Please speak now...', 'warning');
+            log('voiceOutput', 'ًںژ¤ Starting voice recognition...', 'info');
+            log('voiceOutput', 'ًں“¢ Please speak now...', 'warning');
 
             voiceRecognition.onstart = () => {
-                log('voiceOutput', '✅ Listening started', 'success');
+                log('voiceOutput', 'âœ… Listening started', 'success');
             };
 
             voiceRecognition.onresult = (event) => {
@@ -261,29 +261,29 @@
 
                 const confidence = event.results[event.results.length - 1][0].confidence;
                 log('voiceOutput', 
-                    `${isFinal ? '✅ FINAL' : '⏳ INTERIM'}: "${transcript}" (Confidence: ${(confidence * 100).toFixed(0)}%)`, 
+                    `${isFinal ? 'âœ… FINAL' : 'âڈ³ INTERIM'}: "${transcript}" (Confidence: ${(confidence * 100).toFixed(0)}%)`, 
                     isFinal ? 'success' : 'info');
             };
 
             voiceRecognition.onerror = (event) => {
-                log('voiceOutput', `❌ Error: ${event.error}`, 'error');
+                log('voiceOutput', `â‌Œ Error: ${event.error}`, 'error');
             };
 
             voiceRecognition.onend = () => {
-                log('voiceOutput', '⏹️ Listening ended', 'warning');
+                log('voiceOutput', 'âڈ¹ï¸ڈ Listening ended', 'warning');
             };
 
             try {
                 voiceRecognition.start();
             } catch (e) {
-                log('voiceOutput', `❌ Error starting: ${e.message}`, 'error');
+                log('voiceOutput', `â‌Œ Error starting: ${e.message}`, 'error');
             }
         }
 
         function stopSpeechRecognition() {
             if (voiceRecognition) {
                 voiceRecognition.stop();
-                log('voiceOutput', '⏹️ Stopped by user', 'warning');
+                log('voiceOutput', 'âڈ¹ï¸ڈ Stopped by user', 'warning');
             }
         }
 
@@ -293,11 +293,11 @@
             output.innerHTML = '';
 
             if (!query) {
-                log('chatbotOutput', '❌ Please enter a query', 'error');
+                log('chatbotOutput', 'â‌Œ Please enter a query', 'error');
                 return;
             }
 
-            log('chatbotOutput', `📤 Sending query: "${query}"`, 'info');
+            log('chatbotOutput', `ًں“¤ Sending query: "${query}"`, 'info');
 
             fetch('/api/chatbot/query/', {
                 method: 'POST',
@@ -308,15 +308,15 @@
                 body: JSON.stringify({ query: query })
             })
             .then(response => {
-                log('chatbotOutput', `📥 Response Status: ${response.status}`, 'info');
+                log('chatbotOutput', `ًں“¥ Response Status: ${response.status}`, 'info');
                 return response.json();
             })
             .then(data => {
-                log('chatbotOutput', '✅ API Response:', 'success');
+                log('chatbotOutput', 'âœ… API Response:', 'success');
                 log('chatbotOutput', JSON.stringify(data, null, 2), 'success');
             })
             .catch(error => {
-                log('chatbotOutput', `❌ Error: ${error.message}`, 'error');
+                log('chatbotOutput', `â‌Œ Error: ${error.message}`, 'error');
             });
         }
 
@@ -337,7 +337,7 @@
 
         // Run initial checks on page load
         window.addEventListener('load', () => {
-            log('consoleLogs', '🚀 Debug console loaded', 'success');
+            log('consoleLogs', 'ًںڑ€ Debug console loaded', 'success');
             checkBrowserCapabilities();
         });
     </script>
@@ -346,6 +346,6 @@
     {% include 'components/chatbot_widget_unified.html' %}
 
     <!-- Global Voice Recorder -->
-    {% include 'components/global_voice_recorder.html' %}
-</body>
+    </body>
 </html>
+

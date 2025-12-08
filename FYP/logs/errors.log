@@ -6075,6 +6075,7 @@ Traceback (most recent call last):
   File "/usr/local/lib/python3.11/site-packages/django/http/request.py", line 202, in get_host
     raise DisallowedHost(msg)
 django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '54.81.102.223'. You may need to add '54.81.102.223' to ALLOWED_HOSTS.
+<<<<<<< Updated upstream
 ERROR 2025-12-07 16:30:48 log 26 123731066222272 Invalid HTTP_HOST header: 'ec2-54-81-102-223.compute-1.amazonaws.com'. You may need to add 'ec2-54-81-102-223.compute-1.amazonaws.com' to ALLOWED_HOSTS.
 Traceback (most recent call last):
   File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
@@ -7425,3 +7426,11 @@ Traceback (most recent call last):
   File "/usr/local/lib/python3.11/site-packages/django/http/request.py", line 202, in get_host
     raise DisallowedHost(msg)
 django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '2347387728.gundulic.edu.rs'. You may need to add '2347387728.gundulic.edu.rs' to ALLOWED_HOSTS.
+=======
+ERROR 2025-12-07 18:27:26 chatbot_service 46 123839846545088 Gemini API error: 403 Client Error: Forbidden for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyAPeAsYZE1zd-mRpStdD3TwJJSD07nqzSo
+ERROR 2025-12-08 16:31:59 chatbot_service 46 126691959613120 Gemini API error: 403 Client Error: Forbidden for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyAPeAsYZE1zd-mRpStdD3TwJJSD07nqzSo
+ERROR 2025-12-08 16:32:03 chatbot_service 46 126691959613120 Gemini API error: 403 Client Error: Forbidden for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyAPeAsYZE1zd-mRpStdD3TwJJSD07nqzSo
+ERROR 2025-12-08 16:32:47 chatbot_service 46 126691968005824 Gemini API error: 403 Client Error: Forbidden for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyAPeAsYZE1zd-mRpStdD3TwJJSD07nqzSo
+ERROR 2025-12-08 16:47:41 chatbot_service 46 126692004722368 Gemini API error: 403 Client Error: Forbidden for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyAPeAsYZE1zd-mRpStdD3TwJJSD07nqzSo
+ERROR 2025-12-08 16:47:48 chatbot_service 46 126692004722368 Gemini API error: 403 Client Error: Forbidden for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyAPeAsYZE1zd-mRpStdD3TwJJSD07nqzSo
+>>>>>>> Stashed changes
