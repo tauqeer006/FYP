@@ -33,14 +33,22 @@ DEBUG = os.getenv('DEBUG', 'True').lower() in ['true', '1', 'yes']
 
 ALLOWED_HOSTS = [
     'medxai.duckdns.org',
-    'localhost',       # optional, if you want local access
+    '54.81.102.223',
+    'ec2-54-81-102-223.compute-1.amazonaws.com',
+    'ip-172-31-23-197.ec2.internal',
+    'localhost',
+    '127.0.0.1',
 ]
 
+# Hardcoded CSRF_TRUSTED_ORIGINS for both domain and IP access
 CSRF_TRUSTED_ORIGINS = [
     'https://medxai.duckdns.org',
-    'http://localhost:8888',  # optional for testing
+    'http://medxai.duckdns.org',
+    'https://54.81.102.223',
+    'http://54.81.102.223',
+    'http://localhost:8888',
+    'http://127.0.0.1:8888',
 ]
-
 
 # Application definition
 AUTH_USER_MODEL = 'main.User'
