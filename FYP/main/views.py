@@ -41,6 +41,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 import mediapipe as mp
 
 from .models import PatientCreatedByDoctor, PatientXRayInfo, Doctor, PatientReport, User
+from .services.gemini_service import GeminiService
 from .decorators import (
     rate_limit_view,
     require_ajax,
@@ -1171,46 +1172,41 @@ def predict_diagnosis(request):
             # Reset image pointer to start for saving
             image.seek(0)
             
-            # Get saliency map from fracture detection response if available
-            saliency_data = fracture_data.get('saliency_map', None)
-            saliency_url = fracture_data.get('saliency_map_url', None)
+            # Get Grad-CAM image from fracture detection response if available
+            gradcam_data = fracture_data.get('gradcam_image', None)
             
-            logger.info(f"Saliency data extracted: {saliency_data is not None}")
-            logger.info(f"Saliency URL extracted: {saliency_url is not None}")
-            logger.info(f"Saliency data type: {type(saliency_data)}")
-            if saliency_data:
-                logger.info(f"Saliency data length: {len(saliency_data) if isinstance(saliency_data, str) else 'N/A'}")
+            logger.info(f"Grad-CAM data extracted: {gradcam_data is not None}")
+            logger.info(f"Grad-CAM data type: {type(gradcam_data)}")
+            if gradcam_data:
+                logger.info(f"Grad-CAM data length: {len(gradcam_data) if isinstance(gradcam_data, str) else 'N/A'}")
             
-            saliency_image = None
+            gradcam_image = None
             
-            # Try saliency_map first, then saliency_map_url
-            saliency_data = saliency_data or saliency_url
-            
-            if saliency_data:
-                # If saliency map is a data URI (data:image/jpeg;base64,...)
-                if isinstance(saliency_data, str) and saliency_data.startswith('data:'):
+            if gradcam_data:
+                # If Grad-CAM image is a data URI (data:image/jpeg;base64,...)
+                if isinstance(gradcam_data, str) and gradcam_data.startswith('data:'):
                     import base64
                     try:
-                        logger.info("Extracting base64 from data URI...")
+                        logger.info("Extracting base64 from Grad-CAM data URI...")
                         # Extract base64 part after comma
-                        base64_str = saliency_data.split(',')[1]
-                        saliency_bytes = base64.b64decode(base64_str)
-                        saliency_image = ContentFile(saliency_bytes, name=f"saliency_{prediction_result['xray_id']}.jpg")
-                        logger.info(f"Saliency map from data URI decoded successfully: {len(saliency_bytes)} bytes")
+                        base64_str = gradcam_data.split(',')[1]
+                        gradcam_bytes = base64.b64decode(base64_str)
+                        gradcam_image = ContentFile(gradcam_bytes, name=f"gradcam_{prediction_result['xray_id']}.jpg")
+                        logger.info(f"Grad-CAM image from data URI decoded successfully: {len(gradcam_bytes)} bytes")
                     except Exception as e:
-                        logger.error(f"Error decoding saliency map from data URI: {e}")
-                # If saliency map is base64 encoded directly
-                elif isinstance(saliency_data, str):
+                        logger.error(f"Error decoding Grad-CAM image from data URI: {e}")
+                # If Grad-CAM image is base64 encoded directly
+                elif isinstance(gradcam_data, str):
                     import base64
                     try:
-                        logger.info("Attempting to decode base64 saliency map...")
-                        saliency_bytes = base64.b64decode(saliency_data)
-                        saliency_image = ContentFile(saliency_bytes, name=f"saliency_{prediction_result['xray_id']}.jpg")
-                        logger.info(f"Saliency map decoded successfully: {len(saliency_bytes)} bytes")
+                        logger.info("Attempting to decode base64 Grad-CAM image...")
+                        gradcam_bytes = base64.b64decode(gradcam_data)
+                        gradcam_image = ContentFile(gradcam_bytes, name=f"gradcam_{prediction_result['xray_id']}.jpg")
+                        logger.info(f"Grad-CAM image decoded successfully: {len(gradcam_bytes)} bytes")
                     except Exception as e:
-                        logger.error(f"Error decoding saliency map: {e}")
+                        logger.error(f"Error decoding Grad-CAM image: {e}")
                 else:
-                    logger.warning(f"Saliency data is not a string, it's a {type(saliency_data)}")
+                    logger.warning(f"Grad-CAM data is not a string, it's a {type(gradcam_data)}")
             
             # Create X-ray info with images
             xray_info, created = PatientXRayInfo.objects.update_or_create(
@@ -1223,7 +1219,7 @@ def predict_diagnosis(request):
                     'fracture_type': prediction_result['fracture_types'][0],  
                     'affected_hand': prediction_result['left_right'],
                     'original_image': image,
-                    'saliency_map_image': saliency_image,
+                    'saliency_map_image': gradcam_image,
                     'date_of_birth': patient.dob,
                 }
             )
@@ -1340,49 +1336,19 @@ Make sure your output is fully structured with headings.
 """
 
         # Load Gemini API key from environment variables
-        api_key = os.getenv('GEMINI_API_KEY', '')
-        if not api_key:
-            return JsonResponse({
-                'error': 'API configuration error',
-                'message': 'Gemini API key not configured. Please check .env file.'
-            }, status=500)
+        gemini_service = GeminiService()
         
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
-
-        headers = {
-            'Content-Type': 'application/json',
-        }
-
-        data = {
-            "contents": [
-                {
-                    "parts": [
-                        {"text": prompt1}
-                    ]
-                }
-            ]
-        }
-
         try:
-            response = requests.post(
-                url,
-                headers=headers,
-                json=data,
-                timeout=getattr(settings, 'API_REQUEST_TIMEOUT', 30)
-            )
-            response.raise_for_status()
-            result = response.json()
-            generated_report = result['candidates'][0]['content']['parts'][0]['text']
-            logger.info(f"Report generated successfully for patient {latest_report.patient.id}")
-        except requests.Timeout:
-            logger.error("Gemini API timeout while generating report")
-            generated_report = "Unable to generate report due to API timeout. Please try again."
-        except requests.RequestException as e:
+            generated_report = gemini_service.get_response(prompt1)
+            if not generated_report or generated_report.startswith("Error"):
+                generated_report = "Unable to generate report. Please try again."
+                logger.error(f"Gemini API error: {generated_report}")
+            else:
+                logger.info(f"Report generated successfully for patient {latest_report.patient.id}")
+        except Exception as e:
             logger.error(f"Gemini API error: {e}")
             generated_report = f"Error generating report: {str(e)}"
-        except (KeyError, IndexError) as e:
-            logger.error(f"Error parsing Gemini API response: {e}")
-            generated_report = "Invalid response from Gemini API"
+
 
         test_results = []
 
@@ -1453,86 +1419,56 @@ Make sure your output is fully structured with headings.
             {"test": "General X-ray", "result": "No clear diagnosis", "remarks": "Further evaluation recommended"}
         ]
            
-        headers1 = {
-            'Content-Type': 'application/json',
-        }
         prompt2 = f"""
         Summarize the following clinical findings into a short medical summary suitable for a doctor's report:
         from the given data only summarize it to write only 2 lines to generate a small summary
         {prompt1}
-
 """
 
-        data1 = {
-            "contents": [
-                {
-                    "parts": [
-                        {"text": prompt2}
-                    ]
-                }
-            ]
-        }
-
         try:
-            response2 = requests.post(
-                url,
-                headers=headers1,
-                json=data1,
-                timeout=getattr(settings, 'API_REQUEST_TIMEOUT', 30)
-            )
-            response2.raise_for_status()
-            result = response2.json()
-            summary = result['candidates'][0]['content']['parts'][0]['text']
-            logger.info("Medical summary generated successfully")
-        except requests.Timeout:
-            logger.error("Gemini API timeout while generating summary")
-            summary = "Unable to generate summary due to API timeout."
-        except requests.RequestException as e:
+            summary = gemini_service.get_response(prompt2)
+            if not summary or summary.startswith("Error"):
+                summary = "Unable to generate summary due to API error."
+                logger.error(f"Gemini API error: {summary}")
+            else:
+                logger.info("Medical summary generated successfully")
+        except Exception as e:
             logger.error(f"Gemini API error while generating summary: {e}")
             summary = f"Error generating summary: {str(e)}"
-        except (KeyError, IndexError) as e:
-            logger.error(f"Error parsing summary response: {e}")
-            summary = "Invalid response from Gemini API"
 
-        headers2 = {
-            'Content-Type': 'application/json',
-        }
         prompt3 = f"""tell me 3 points small recommendation in bullets points just According to their type of fracture only write 3 bullet points from given data
                     {latest_report.affected_hand}  and 
                     in this hand{latest_report.fracture_type} 
 """
-        data2 = {
-            "contents": [
-                {
-                    "parts": [
-                        {"text": prompt3}
-                    ]
-                }
-            ]
-        }
 
         try:
-            response3 = requests.post(
-                url,
-                headers=headers2,
-                json=data2,
-                timeout=getattr(settings, 'API_REQUEST_TIMEOUT', 30)
-            )
-            response3.raise_for_status()
-            result = response3.json()
-            recommendation = result['candidates'][0]['content']['parts'][0]['text']
-            logger.info("Recommendations generated successfully")
-        except requests.Timeout:
-            logger.error("Gemini API timeout while generating recommendations")
-            recommendation = "Unable to generate recommendations due to API timeout."
-        except requests.RequestException as e:
+            recommendation = gemini_service.get_response(prompt3)
+            if not recommendation or recommendation.startswith("Error"):
+                recommendation = "Unable to generate recommendations due to API error."
+                logger.error(f"Gemini API error: {recommendation}")
+            else:
+                logger.info("Recommendations generated successfully")
+        except Exception as e:
             logger.error(f"Gemini API error while generating recommendations: {e}")
             recommendation = f"Error generating recommendations: {str(e)}"
-        except (KeyError, IndexError) as e:
-            logger.error(f"Error parsing recommendations response: {e}")
-            recommendation = "Invalid response from Gemini API"
 
         logger.info("Creating report database entry for patient")
+
+        # Clean up Gemini responses - remove extra HTML tags and format properly
+        def clean_gemini_response(text):
+            """Remove or clean HTML tags from Gemini response"""
+            if not text:
+                return ""
+            # Replace markdown-style headers with plain text
+            text = text.replace("## ", "").replace("### ", "").replace("# ", "")
+            # Remove HTML tags if any
+            import re
+            text = re.sub(r'<[^>]+>', '', text)
+            return text.strip()
+        
+        generated_report_clean = clean_gemini_response(generated_report)
+        summary_clean = clean_gemini_response(summary)
+        recommendation_clean = clean_gemini_response(recommendation)
 
         ###################### report model:
         report_content = f"""
@@ -1544,14 +1480,16 @@ Make sure your output is fully structured with headings.
         <p><b>Fracture type:</b> {latest_report.fracture_type}</p>
         <p><b>Hand Affected:</b> {latest_report.affected_hand}</p>
 
-        <h3>Clinical History & Complaints</h3>
-        {generated_report}
+        <p>{generated_report_clean}</p>
 
         <h3>Summary</h3>
-        {summary}
+        <p>{summary_clean}</p>
 
         <h3>Recommendations</h3>
-        {recommendation}
+        <p>{recommendation_clean}</p>
+        
+        <hr style="margin-top: 40px;">
+        <p style="text-align: right; margin-top: 30px;"><b>Doctor:</b> {doctor_data.fname} {doctor_data.lname}</p>
         """
         logger.info("Report content generated for patient")
 
@@ -1583,6 +1521,7 @@ Make sure your output is fully structured with headings.
 
         return render(request, 'Report.html', {
             'report': latest_report,
+            'doctor': doctor_data,
             'prompt1': markdown.markdown(generated_report),
             'test_results': test_results,
             'summary': markdown.markdown(summary),

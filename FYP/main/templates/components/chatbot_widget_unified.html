@@ -318,6 +318,41 @@
     font-weight: 600;
   }
 
+  /* Voice Button */
+  .voice-btn-unified {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s;
+  }
+
+  .voice-btn-unified:hover {
+    transform: scale(1.1);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  }
+
+  .voice-btn-unified:active {
+    transform: scale(0.95);
+  }
+
+  .voice-btn-unified.listening {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    animation: voice-pulse 1s infinite;
+  }
+
+  @keyframes voice-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+    50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  }
+
   @media (max-width: 480px) {
     .chatbot-panel-unified {
       width: 100vw;
@@ -355,10 +390,7 @@
         <div class="bot-avatar">🤖</div>
         <div class="bot-info">
           <h4>X-Ai Assistant</h4>
-          <p>
-            <span class="listening-indicator"></span>
-            Always Listening...
-          </p>
+          <p>Click the 🎤 button to speak</p>
         </div>
       </div>
       <button class="close-btn-unified" id="close-btn-unified">×</button>
@@ -373,17 +405,20 @@
     <!-- Messages -->
     <div class="chatbot-messages-unified" id="chatbot-messages-unified">
       <div class="message bot">
-        👋 Hello! I'm your AI Assistant. I'm always listening for your voice commands. Say "Hey Bot" to start, or type below!
+        👋 Hello! I'm your AI Assistant. Click the 🎤 button to start speaking, or type your message below!
       </div>
     </div>
 
     <!-- Input -->
     <div class="chatbot-input-area-unified">
+      <button class="voice-btn-unified" id="voice-btn-unified" title="Click to start voice recording">
+        🎤
+      </button>
       <input
         type="text"
         class="chatbot-text-input-unified"
         id="chatbot-input-unified"
-        placeholder="Type or say a command..."
+        placeholder="Type or use voice button..."
         autocomplete="off"
       >
       <button class="send-btn-unified" id="send-btn-unified">
@@ -1437,7 +1472,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   closeBtn.addEventListener('click', () => {
     panel.classList.remove('active');
-    floatBtn.classList.remove('listening');
+    // Stop listening if active
+    if (isListening && recognition) {
+      recognition.stop();
+    }
   });
 
   // Send message
@@ -1477,49 +1515,47 @@ document.addEventListener('DOMContentLoaded', function() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (SpeechRecognition) {
     recognition = new SpeechRecognition();
-    recognition.continuous = true;
-    recognition.interimResults = false;
+    recognition.continuous = false;  // ON-DEMAND: Only listen for one phrase at a time
+    recognition.interimResults = true;  // Show interim results
     recognition.language = 'en-US';
 
     recognition.onstart = () => {
       isListening = true;
-      floatBtn.classList.add('listening');
-      console.log('🎤 Listening...');
+      voiceBtn.classList.add('listening');
+      addMessage('🎤 Listening... speak now!', 'system');
+      console.log('🎤 Listening started');
     };
 
     recognition.onend = () => {
-      console.log('🛑 Recognition ended. isListening:', isListening, 'continuousMode:', continuousMode);
+      console.log('🛑 Listening stopped');
       isListening = false;
-      floatBtn.classList.remove('listening');
-      
-      if (continuousMode) {
-        console.log('🔄 Restarting recognition in continuous mode...');
-        setTimeout(() => {
-          try {
-            if (!isListening) {
-              recognition.start();
-              console.log('✅ Recognition restarted');
-            }
-          } catch (e) {
-            console.warn('⚠️ Could not restart recognition:', e.message);
-          }
-        }, 500);
-      }
+      voiceBtn.classList.remove('listening');
     };
 
     recognition.onresult = async (event) => {
       let transcript = '';
+      let isFinal = false;
+
       for (let i = event.resultIndex; i < event.results.length; i++) {
         transcript += event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          isFinal = true;
+        }
       }
 
       transcript = transcript.trim();
-      console.log('🎤 Raw transcript:', transcript);
-      console.log('🌍 Selected language mode:', selectedLanguage);
-      
+      console.log('🎤 Transcript:', transcript, 'Final:', isFinal);
+
+      // Update input field with interim results
       if (transcript) {
-        // If user selected Urdu mode, accept all transcripts (English or Urdu)
-        // If user selected English mode, only process English
+        input.value = transcript;
+      }
+      
+      // Process only final results
+      if (isFinal && transcript) {
+        console.log('🎤 Final transcript:', transcript);
+        console.log('🌍 Selected language mode:', selectedLanguage);
+        
         let processedText = transcript;
 
         if (selectedLanguage === 'ur') {
@@ -1540,71 +1576,65 @@ document.addEventListener('DOMContentLoaded', function() {
           if (lang === 'ur') {
             console.log('⚠️ Urdu text detected, but English mode selected. Ignoring.');
             addMessage('📢 I\'m set to English mode. Please speak in English or switch to Urdu mode.', 'bot');
+            input.value = '';
             return;
           }
         }
 
         console.log('📝 Final processed text:', processedText);
         
-        // Accept commands with OR without "Hey Bot"
-        let command = processedText;
-        const hasWakeWord = processedText.toLowerCase().includes('hey bot');
-        
-        if (hasWakeWord) {
-          console.log('✅ "Hey Bot" detected!');
-          command = processedText.replace(/hey bot/i, '').trim();
-        } else {
-          console.log('🎯 Direct command detected (no wake word needed)');
-        }
-        
-        console.log('📝 Final command:', command);
-        
-        if (command && command.length > 2) {
-          console.log('📤 Sending command:', command);
+        if (processedText && processedText.length > 2) {
+          console.log('📤 Sending command:', processedText);
           
-          // Auto-open chat panel
-          const panel = document.getElementById('chatbot-panel-unified');
-          const floatBtn = document.getElementById('chatbot-float-btn');
-          if (panel && !panel.classList.contains('active')) {
-            panel.classList.add('active');
-            floatBtn.classList.add('listening');
-            console.log('📂 Chat panel opened automatically');
-          }
-          
-          input.value = command;
-          // Small delay to ensure panel is visible
+          input.value = processedText;
+          // Small delay to ensure input is populated
           setTimeout(() => {
-            sendChatMessage(command);
+            sendChatMessage(processedText);
           }, 300);
         } else {
           console.log('⚠️ Command too short, ignoring');
+          input.value = '';
         }
       }
     };
 
     recognition.onerror = (event) => {
       console.warn('🎤 Recognition error:', event.error);
-      if (continuousMode && !isListening) {
-        console.log('🔄 Restarting recognition...');
-        setTimeout(() => {
-          try {
-            if (!isListening) {
-              recognition.start();
-            }
-          } catch (e) {
-            console.warn('⚠️ Could not restart recognition:', e.message);
-          }
-        }, 1000);
+      isListening = false;
+      voiceBtn.classList.remove('listening');
+      
+      if (event.error === 'network') {
+        addMessage('⚠️ Network error. Check your internet connection.', 'system');
+      } else if (event.error === 'audio-capture') {
+        addMessage('⚠️ No microphone detected. Please check your audio device.', 'system');
+      } else {
+        addMessage(`⚠️ Error: ${event.error}`, 'system');
       }
     };
 
-    // Start listening automatically (only once)
-    try {
-      recognition.start();
-      console.log('✅ Speech recognition started');
-    } catch (e) {
-      console.warn('⚠️ Could not start recognition:', e.message);
-    }
+    // Voice Button Click Handler - Start/Stop Listening
+    voiceBtn.addEventListener('click', () => {
+      if (!isListening) {
+        // Start listening
+        console.log('🎙️ Starting voice recording...');
+        try {
+          recognition.start();
+        } catch (e) {
+          console.warn('⚠️ Could not start recognition:', e.message);
+        }
+      } else {
+        // Stop listening
+        console.log('🛑 Stopping voice recording...');
+        try {
+          recognition.stop();
+          isListening = false;
+          voiceBtn.classList.remove('listening');
+        } catch (e) {
+          console.warn('⚠️ Could not stop recognition:', e.message);
+        }
+      }
+    });
+
   } else {
     addMessage('⚠️ Voice recognition not supported in your browser.', 'bot');
   }

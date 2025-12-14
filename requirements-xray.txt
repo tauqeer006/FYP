@@ -3,13 +3,19 @@
 # YOLO model (includes PyTorch automatically)
 ultralytics==8.2.42
 
+# PyTorch and computer vision
+torch>=2.0.0
+torchvision>=0.15.0
+
 # Flask API
 flask==3.0.0
 flask-cors==4.0.0
 
 # Image processing
 pillow==10.4.0
+opencv-python==4.8.1.78
 
+# Explainability
 grad-cam
 pytorch-gradcam
 

@@ -1430,7 +1430,7 @@
             {
                 name: "Scapular Retraction/Depression (Wall Slide Variation)",
                 description: "While sliding arms up the wall, focus on pulling shoulder blades down and back to activate scapular stabilizers.",
-                video: "https://www.youtube.com/embed/PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
+                video: "https://www.youtube.com/embed/AMqT-3l0I6k",
                 youtubeLink: "https://www.youtube.com/playlist?list=PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
                 leftArm: { shoulderAngle: 90, elbowAngle: 180 },
                 rightArm: { shoulderAngle: 90, elbowAngle: 180 },
@@ -1460,7 +1460,7 @@
             {
                 name: "Seated Shoulder Flexion (Using Assistive Device)",
                 description: "Sitting upright, raise arm(s) forward with assistance or support to the shoulder height range.",
-                video: "https://www.youtube.com/embed/PLMnHlHoq4yFQAFSO9CNx_3b25993iytL",
+                video: "https://www.youtube.com/embed/S4H_rZA2kSM",
                 youtubeLink: "https://www.youtube.com/playlist?list=PLMnHlHoq4yFQAFSO9CNx_3b25993iytL",
                 leftArm: { shoulderAngle: 90, elbowAngle: 180 },
                 rightArm: { shoulderAngle: 90, elbowAngle: 180 },
@@ -1490,7 +1490,7 @@
             {
                 name: "Scaption (Scapular-Plane Elevation)",
                 description: "Raise arms in front at about 30آ° from the body (in scapular plane) to shoulder height with thumbs up.",
-                video: "https://www.youtube.com/embed/PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
+                video: "https://www.youtube.com/embed/AMqT-3l0I6k",
                 youtubeLink: "https://www.youtube.com/playlist?list=PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
                 leftArm: { shoulderAngle: 90, elbowAngle: 160 },
                 rightArm: { shoulderAngle: 90, elbowAngle: 160 },
@@ -1520,7 +1520,7 @@
             {
                 name: "Shoulder Extension (Standing Assisted)",
                 description: "In standing, use a stick or assistive device to move arm backward (extension) behind body to activate posterior shoulder.",
-                video: "https://www.youtube.com/embed/PLMnHlHoq4yFQAFSO9CNx_3b25993iytL",
+                video: "https://www.youtube.com/embed/S4H_rZA2kSM",
                 youtubeLink: "https://www.youtube.com/playlist?list=PLMnHlHoq4yFQAFSO9CNx_3b25993iytL",
                 leftArm: { shoulderAngle: 40, elbowAngle: 180 },
                 rightArm: { shoulderAngle: 40, elbowAngle: 180 },
@@ -1560,7 +1560,7 @@
             {
                 name: "Shoulder Flexion in Side-lying (Low Load)",
                 description: "Lie on side with unaffected arm down, lift affected arm in front to about 90آ° flexion using minimal load.",
-                video: "https://www.youtube.com/embed/PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
+                video: "https://www.youtube.com/embed/AMqT-3l0I6k",
                 youtubeLink: "https://www.youtube.com/playlist?list=PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
                 leftArm: { shoulderAngle: 90, elbowAngle: 180 },
                 rightArm: { shoulderAngle: 0, elbowAngle: 180 },
@@ -1580,7 +1580,7 @@
             {
                 name: "Assisted Overhead Reach (Seated or Supported)",
                 description: "Seated with back support, use stick or cane to gently assist overhead reach to improve flexion safely.",
-                video: "https://www.youtube.com/embed/PLMnHlHoq4yFQAFSO9CNx_3b25993iytL",
+                video: "https://www.youtube.com/embed/S4H_rZA2kSM",
                 youtubeLink: "https://www.youtube.com/playlist?list=PLMnHlHoq4yFQAFSO9CNx_3b25993iytL",
                 leftArm: { shoulderAngle: 150, elbowAngle: 180 },
                 rightArm: { shoulderAngle: 150, elbowAngle: 180 },
@@ -1598,9 +1598,9 @@
                 feedbackRight: ["Relax right arm at side"]
             },
             {
-                name: "Wall Walks آ– Finger Walks Up Wall",
+                name: "Wall Walks Finger Walks Up Wall",
                 description: "Face wall and \"walk\" fingers up the wall as high as comfortable to improve flexion/abduction safely.",
-                video: "https://www.youtube.com/embed/PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
+                video: "https://www.youtube.com/embed/AMqT-3l0I6k",
                 youtubeLink: "https://www.youtube.com/playlist?list=PLx10M_1d-mu2S7CK5H6ft2wi4-zPLdmcQ",
                 leftArm: { shoulderAngle: 110, elbowAngle: 180 },
                 rightArm: { shoulderAngle: 110, elbowAngle: 180 },
@@ -2661,11 +2661,13 @@
             match = url.match(/(?:youtube\.com\/embed\/)([^&\n?#]+)/);
             if (match) return match[1];
             
-            // Playlist URL: try to extract first video from playlist or use placeholder
-            if (url.includes('playlist')) {
-                return 'dQw4w9WgXcQ'; // Fallback placeholder video ID
-            }
+            // Playlist URL: youtube.com/playlist?list=PLAYLIST_ID
+            // For playlists, we'll use the playlist ID as the video ID for the thumbnail
+            // YouTube will show the first video in the playlist
+            match = url.match(/(?:youtube\.com\/playlist\?list=)([^&\n?#]+)/);
+            if (match) return match[1];
             
+            // Fallback: return empty string
             return '';
         }
 
@@ -3034,21 +3036,25 @@
                             lastFeedbackTime = currentTime;
                         }
                     } catch (error) {
-                        console.error('? Pose API Error:', error);
+                        console.error('❌ Pose API Error:', error);
                         console.error('Error details:', error.message);
+                        console.error('Exercise name sent:', currentExercise.name);
+                        console.error('Pose API URL:', getPoseApiUrl('/api/check-pose'));
                         
                         // Only show error message ONCE per exercise session
                         if (!apiErrorShown) {
                             apiErrorShown = true;
                             
-                            // Show helpful error messages
+                            // Show helpful error messages based on error type
                             const poseApiUrl = getPoseApiUrl('/api/check-pose');
                             if (error.message.includes('Failed to fetch')) {
-                                addExerciseMessage(`? Cannot connect to Pose API at ${poseApiUrl}`, 'error', 'Make sure the Pose API service is running and the URL is correct');
+                                addExerciseMessage(`❌ Cannot connect to Pose API at ${poseApiUrl}`, 'error', 'Make sure the Pose API service (port 5003) is running: python pose_api.py');
                             } else if (error.message.includes('timeout')) {
-                                addExerciseMessage('?? Pose API timeout - request took too long', 'error', 'The API may be overloaded or slow');
+                                addExerciseMessage('⏱️ Pose API timeout - request took too long', 'error', 'The API may be overloaded or slow. Try restarting it.');
+                            } else if (error.message.includes('404')) {
+                                addExerciseMessage(`🔍 Exercise "${currentExercise.name}" not found on Pose API backend`, 'error', 'Make sure the exercise is defined in the YAML configuration');
                             } else {
-                                addExerciseMessage(`? Pose API Error: ${error.message}`, 'error', 'Check browser console for details');
+                                addExerciseMessage(`❌ Pose API Error: ${error.message}`, 'error', `Exercise: ${currentExercise.name} | URL: ${poseApiUrl}`);
                             }
                         }
                     }
@@ -3508,13 +3514,38 @@
 
         // New function to handle start exercise with doctor/patient check
         function handleStartExercise() {
-            if (currentUserType === 'doctor' && allPatients.length > 0) {
-                // Doctor - show patient selector
-                showPatientSelector();
-            } else {
-                // Patient or no patients - start directly
-                startExercising();
-            }
+            // First, check if Pose API is accessible
+            const poseApiUrl = getPoseApiUrl('/api/check-pose');
+            console.log('🔍 Checking Pose API connectivity at:', poseApiUrl);
+            
+            // Quick health check
+            fetch(poseApiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    exercise_name: currentExercise.name,
+                    image: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwwDAwwGBAMDMwcGBQcGBwcGBwcHBwcICAgICAcICAcICAgICAgICAgICAj/2wBDAQICAgICAwUDAwUICAgICAj/wAARCAABAAEDASIAAhEBAxEB/8QAFQAQAQAAAAAAAAAAAAAAAAAAAAX/8QAFBEAAAAAAAAAAAAAAAAAAAAAX/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/8QAFBEBAAAAAAAAAAAAAAAAAAAAAX/2gAMAwEAAgEDEQA/AJ/u5wAA//9k='
+                })
+            }).then(response => {
+                console.log('✅ Pose API is accessible (status:', response.status, ')');
+                // API is accessible, proceed
+                if (currentUserType === 'doctor' && allPatients.length > 0) {
+                    showPatientSelector();
+                } else {
+                    startExercising();
+                }
+            }).catch(error => {
+                console.error('❌ Pose API is NOT accessible:', error.message);
+                // Show warning but allow user to proceed anyway
+                alert('⚠️ Warning: The Pose API service is not responding.\n\nThe Pose feedback will not work during exercise.\n\nMake sure the Pose API is running on port 5003.');
+                
+                // Still allow proceeding if user wants
+                if (currentUserType === 'doctor' && allPatients.length > 0) {
+                    showPatientSelector();
+                } else {
+                    startExercising();
+                }
+            });
         }
 
         // Override showExerciseModal to check user type first

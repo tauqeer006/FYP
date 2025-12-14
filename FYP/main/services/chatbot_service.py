@@ -1,16 +1,17 @@
 """
 Chatbot Service - Route Matching using Google Gemini AI
 This service handles user queries and matches them to the appropriate Django routes
-using Google Gemini AI with RAG (Retrieval-Augmented Generation)
+using Google Generative AI library with RAG (Retrieval-Augmented Generation)
 """
 
 import yaml
-import requests
 import json
 import logging
 import os
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
+from functools import lru_cache
+from .gemini_service import get_gemini_service
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -69,11 +70,9 @@ class ChatbotService:
         """Initialize the chatbot service with routes data"""
         self.routes_file = Path(__file__).parent.parent / "config" / "routes.yml"
         self.routes_data = None
-        # Load Gemini API key from environment variables
-        self.gemini_api_key = os.getenv('GEMINI_API_KEY', '')
-        if not self.gemini_api_key:
-            logger.warning("⚠️ GEMINI_API_KEY not found in environment variables. Please set it in .env file.")
-        self.gemini_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+        # Initialize Gemini service
+        self.gemini_service = get_gemini_service()
+        logger.info("✓ Chatbot service initialized with Gemini")
         self.load_routes()
     
     def load_routes(self) -> bool:
@@ -151,7 +150,8 @@ class ChatbotService:
     
     def call_gemini_api(self, user_query: str, routes_context: str) -> Optional[str]:
         """
-        Call Google Gemini API to process user query with routes context
+        Call Gemini API to process user query with routes context.
+        Uses the unified GeminiService with retry logic.
         
         Args:
             user_query: The user's natural language query
@@ -160,10 +160,8 @@ class ChatbotService:
         Returns:
             Gemini's response text, or None if API call fails
         """
-
-        try:
-            # Construct the prompt
-            prompt = f"""You are an intelligent assistant for a medical diagnostic system. Your job is to:
+        # Construct the prompt
+        prompt = f"""You are an intelligent assistant for a medical diagnostic system. Your job is to:
 1. Match user navigation requests to routes using keywords
 2. Detect when users want to FILL FORM FIELDS
 3. Detect when users want to CLICK BUTTONS
@@ -334,48 +332,13 @@ IMPORTANT:
 - Do NOT confuse OPEN_TAB with NAVIGATION - OPEN_TAB opens in new tab, NAVIGATION replaces current page
 - Do NOT confuse CLOSE_BROWSER with CLOSE_TAB - CLOSE_BROWSER closes entire browser, CLOSE_TAB closes current tab only"""
 
-            headers = {
-                'Content-Type': 'application/json',
-            }
-
-            data = {
-                "contents": [
-                    {
-                        "parts": [
-                            {"text": prompt}
-                        ]
-                    }
-                ]
-            }
-
-            # Call Gemini API
-            response = requests.post(
-                f"{self.gemini_url}?key={self.gemini_api_key}",
-                headers=headers,
-                json=data,
-                timeout=10
-            )
-            response.raise_for_status()
-
-            result = response.json()
-            gemini_response = result['candidates'][0]['content']['parts'][0]['text']
-            
-            logger.info(f"Gemini response: {gemini_response}")
-            return gemini_response
-
-        except requests.exceptions.Timeout:
-            logger.error("Gemini API call timed out")
-            return None
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Gemini API error: {str(e)}")
-            return None
-        except (KeyError, IndexError) as e:
-            logger.error(f"Error parsing Gemini response: {str(e)}")
-            return None
-        except Exception as e:
-            logger.error(f"Unexpected error in Gemini API call: {str(e)}")
-            return None
+        # Call Gemini API with built-in retry logic
+        logger.info(f"Processing query: {user_query}")
+        gemini_response = self.gemini_service.get_response(prompt, max_retries=3)
+        
+        return gemini_response
     
+
     def parse_gemini_response(self, gemini_response: str) -> Tuple[Optional[str], Optional[str], Optional[str], Optional[str], Optional[str], Optional[Dict], Optional[str], Optional[str]]:
         """
         Parse Gemini's response to extract response type and relevant data

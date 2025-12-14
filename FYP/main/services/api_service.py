@@ -7,6 +7,7 @@ import logging
 import requests
 from django.conf import settings
 from requests.exceptions import Timeout, ConnectionError, RequestException
+from .gemini_service import get_gemini_service
 
 logger = logging.getLogger(__name__)
 
@@ -189,12 +190,19 @@ class MLAPIService:
 
 
 class GeminiAPIService:
-    """Service for communicating with Google Gemini API"""
+    """
+    Service for communicating with Google Gemini API using the unified GeminiService.
+    Provides medical report generation capabilities.
+    """
     
     def __init__(self):
         """Initialize Gemini API service"""
-        self.api_key = getattr(settings, 'GEMINI_API_KEY', None)
-        self.timeout = getattr(settings, 'API_REQUEST_TIMEOUT', 30)
+        try:
+            self.gemini_service = get_gemini_service()
+            logger.info("✓ Gemini API service initialized")
+        except Exception as e:
+            logger.error(f"❌ Failed to initialize Gemini API service: {str(e)}")
+            raise
     
     def send_message(self, message, context=None):
         """
@@ -205,43 +213,85 @@ class GeminiAPIService:
             context (str): Optional context for the conversation
             
         Returns:
-            dict: API response
+            dict: API response with status and message
         """
-        # This is a placeholder - actual implementation depends on Gemini SDK
-        logger.info(f"Sending message to Gemini: {message[:50]}...")
-        return {'status': 'success', 'message': 'Response from Gemini'}
+        try:
+            # Combine context and message if provided
+            full_prompt = f"{context}\n{message}" if context else message
+            
+            logger.info(f"📤 Sending message to Gemini: {message[:100]}...")
+            response = self.gemini_service.get_response(full_prompt, max_retries=3)
+            
+            if response:
+                logger.info("✓ Received response from Gemini")
+                return {'status': 'success', 'message': response}
+            else:
+                logger.warning("⚠️ Empty response from Gemini")
+                return {'status': 'error', 'message': 'No response from Gemini API'}
+                
+        except Exception as e:
+            logger.error(f"❌ Error sending message to Gemini: {str(e)}")
+            return {'status': 'error', 'message': f'Error communicating with Gemini: {str(e)}'}
     
     def generate_report(self, findings, patient_data):
         """
         Generate a medical report using Gemini API
         
         Args:
-            findings (dict): Medical findings
+            findings (dict or str): Medical findings/analysis
             patient_data (dict): Patient information
             
         Returns:
-            str: Generated report
+            dict: Generated report or error response
         """
         try:
-            # Construct prompt for Gemini
-            prompt = f"""
-Generate a medical report based on the following:
+            # Format findings if it's a dict
+            if isinstance(findings, dict):
+                findings_str = "\n".join([f"- {k}: {v}" for k, v in findings.items()])
+            else:
+                findings_str = str(findings)
+            
+            # Construct comprehensive prompt for report generation
+            prompt = f"""Generate a professional medical report based on the following:
 
-Patient Information:
+PATIENT INFORMATION:
 - Name: {patient_data.get('name', 'N/A')}
 - Age: {patient_data.get('age', 'N/A')}
 - Gender: {patient_data.get('gender', 'N/A')}
+- Patient ID: {patient_data.get('patient_id', 'N/A')}
 
-Findings:
-{findings}
+MEDICAL FINDINGS AND ANALYSIS:
+{findings_str}
 
-Please generate a professional medical report.
-            """
+REPORT REQUIREMENTS:
+1. Use professional medical terminology
+2. Provide clear conclusions based on findings
+3. Include recommendations if applicable
+4. Organize the report into logical sections
+5. Keep the report concise but comprehensive
+
+Generate the complete medical report now:"""
             
-            result = self.send_message(prompt)
-            logger.info("Medical report generated successfully")
-            return result
+            logger.info("📄 Generating medical report using Gemini...")
+            response = self.gemini_service.get_response(prompt, max_retries=3)
+            
+            if response:
+                logger.info("✓ Medical report generated successfully")
+                return {
+                    'status': 'success',
+                    'report': response,
+                    'message': 'Report generated successfully'
+                }
+            else:
+                logger.error("❌ Failed to generate report - empty response")
+                return {
+                    'status': 'error',
+                    'message': 'Failed to generate report - no response from API'
+                }
             
         except Exception as e:
-            logger.error(f"Error generating report: {e}")
-            return {'error': str(e)}
+            logger.error(f"❌ Error generating report: {str(e)}")
+            return {
+                'status': 'error',
+                'message': f'Error generating report: {str(e)}'
+            }

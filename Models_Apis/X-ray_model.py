@@ -9,7 +9,10 @@ import numpy as np
 from ultralytics.nn.tasks import DetectionModel
 import cv2
 from pytorch_grad_cam import GradCAM
-from pytorch_grad_cam.utils.image import show_cam_on_image, preprocess_image
+from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
+from pytorch_grad_cam.utils.image import show_cam_on_image
+from torchvision import models, transforms
+import base64
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -28,7 +31,22 @@ app = Flask(__name__)
 cors_origins = os.getenv('CORS_ORIGINS', '*').split(',')
 CORS(app, resources={r'/api/*': {'origins': cors_origins}})
 
+# Load YOLO model for detection
 model = YOLO('best.pt')
+
+# Load a ResNet18 classifier for Grad-CAM (or use your custom classifier)
+try:
+    classifier = models.resnet18(pretrained=True)
+    classifier.eval()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    classifier.to(device)
+    target_layer = classifier.layer4[-1]
+    gradcam_available = True
+    logger.info(f"✓ Grad-CAM classifier loaded on {device}")
+except Exception as e:
+    logger.warning(f"⚠️ Grad-CAM classifier failed to load: {str(e)}")
+    gradcam_available = False
+    device = None
 
 HEATMAP_FOLDER = "static/heatmaps"
 os.makedirs(HEATMAP_FOLDER, exist_ok=True)
@@ -41,7 +59,8 @@ def health_check():
             'status': 'ok',
             'service': 'xray-api',
             'version': '1.0.0',
-            'device': 'cuda' if torch.cuda.is_available() else 'cpu'
+            'device': 'cuda' if torch.cuda.is_available() else 'cpu',
+            'gradcam_available': gradcam_available
         }), 200
     except Exception as e:
         logger.error(f"Health check failed: {str(e)}")
@@ -51,12 +70,88 @@ def health_check():
             'message': str(e)
         }), 500
 
+
+def generate_gradcam(image_path, boxes):
+    """
+    Generate Grad-CAM heatmap for each detected bounding box
+    
+    Args:
+        image_path: Path to the X-ray image
+        boxes: List of bounding boxes from YOLO detection
+    
+    Returns:
+        base64 encoded Grad-CAM image or None
+    """
+    if not gradcam_available or len(boxes) == 0:
+        return None
+    
+    try:
+        img_bgr = cv2.imread(image_path)
+        if img_bgr is None:
+            logger.warning("Failed to read image for Grad-CAM")
+            return None
+        
+        img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
+        img_copy = img_bgr.copy()
+        
+        # Process each detected box
+        for box in boxes:
+            x1, y1, x2, y2 = map(int, box[:4])
+            
+            # Extract crop
+            crop = img_bgr[y1:y2, x1:x2]
+            if crop.size == 0:
+                continue
+            
+            # Preprocess crop for classifier
+            crop_resized = cv2.resize(crop, (224, 224))
+            crop_rgb = cv2.cvtColor(crop_resized, cv2.COLOR_BGR2RGB).astype(np.float32) / 255.0
+            
+            # Convert to tensor
+            transform = transforms.ToTensor()
+            input_tensor = transform(crop_rgb).unsqueeze(0).to(device)
+            
+            # Apply Grad-CAM
+            try:
+                cam = GradCAM(model=classifier, target_layers=[target_layer])
+                targets = [ClassifierOutputTarget(0)]  # Target class 0
+                grayscale_cam = cam(input_tensor=input_tensor, targets=targets)[0, :]
+                
+                # Overlay Grad-CAM on crop
+                cam_image = show_cam_on_image(crop_rgb, grayscale_cam, use_rgb=True)
+                cam_image_bgr = cv2.cvtColor((cam_image * 255).astype(np.uint8), cv2.COLOR_RGB2BGR)
+                
+                # Resize to original box size
+                cam_image_bgr = cv2.resize(cam_image_bgr, (x2 - x1, y2 - y1))
+                
+                # Place back on original image
+                img_copy[y1:y2, x1:x2] = cam_image_bgr
+                logger.info(f"✓ Grad-CAM applied to box: ({x1}, {y1}, {x2}, {y2})")
+                
+            except Exception as e:
+                logger.warning(f"⚠️ Grad-CAM failed for box: {str(e)}")
+                continue
+        
+        # Encode to base64
+        _, buffer = cv2.imencode('.jpg', img_copy)
+        gradcam_base64 = base64.b64encode(buffer).decode('utf-8')
+        logger.info("✓ Grad-CAM image encoded to base64")
+        return gradcam_base64
+        
+    except Exception as e:
+        logger.error(f"❌ Grad-CAM generation failed: {str(e)}")
+        return None
+
+
 @app.route('/detect-fracture', methods=['POST'])
 def detect_fracture():
     if 'image' not in request.files:
         return jsonify({'error': 'No image uploaded'}), 400
 
     file = request.files['image']
+    
+    # Confidence threshold - only accept detections >= 0.55
+    CONFIDENCE_THRESHOLD = 0.55
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as temp:
         file.save(temp.name)
@@ -66,66 +161,54 @@ def detect_fracture():
     results = model(image_path)
 
     labels = []
+    boxes = []
+    confidences = []
+    
     for result in results:
         names = result.names
         for box in result.boxes:
-            cls_id = int(box.cls[0])
-            labels.append(names[cls_id])
+            # Get confidence score for this detection
+            confidence = float(box.conf[0])
+            
+            # Only include detections with confidence >= threshold
+            if confidence >= CONFIDENCE_THRESHOLD:
+                cls_id = int(box.cls[0])
+                label = names[cls_id]
+                labels.append(label)
+                boxes.append(box.xyxy.cpu().numpy()[0])
+                confidences.append(confidence)
+                logger.info(f"✓ Detection accepted: {label} (confidence: {confidence:.2f})")
+            else:
+                cls_id = int(box.cls[0])
+                label = names[cls_id]
+                logger.info(f"⚠️ Detection filtered out: {label} (confidence: {confidence:.2f} < {CONFIDENCE_THRESHOLD})")
 
-    # ---------------- Explainable AI: Saliency Map ----------------
-    saliency_map_base64 = None
-    
-    try:
-        img_bgr = cv2.imread(image_path)
-        img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
-        
-        # Generate saliency map using Sobel edge detection
-        # This shows regions of high gradient (important features)
-        img_gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
-        
-        # Compute gradients using Sobel
-        sobelx = cv2.Sobel(img_gray, cv2.CV_64F, 1, 0, ksize=5)
-        sobely = cv2.Sobel(img_gray, cv2.CV_64F, 0, 1, ksize=5)
-        
-        # Magnitude of gradients
-        magnitude = np.sqrt(sobelx**2 + sobely**2)
-        
-        # Normalize to 0-1
-        magnitude = (magnitude - magnitude.min()) / (magnitude.max() - magnitude.min() + 1e-8)
-        
-        # Apply Gaussian blur for smoothing
-        saliency = cv2.GaussianBlur(magnitude, (21, 21), 0)
-        
-        # Normalize again
-        saliency = (saliency - saliency.min()) / (saliency.max() - saliency.min() + 1e-8)
-        
-        # Apply colormap
-        saliency_colored = cv2.applyColorMap((saliency * 255).astype(np.uint8), cv2.COLORMAP_JET)
-        
-        # Blend with original image
-        heatmap = cv2.addWeighted(img_bgr, 0.6, saliency_colored, 0.4, 0)
-        
-        # Encode heatmap to base64 instead of saving to file
-        import base64
-        _, buffer = cv2.imencode('.jpg', heatmap)
-        saliency_map_base64 = base64.b64encode(buffer).decode('utf-8')
-        logger.info(f"Saliency map generated and encoded to base64")
-        
-    except Exception as e:
-        logger.warning(f"Saliency map generation failed: {str(e)}")
-
+    # Generate Grad-CAM explainable image (only if detections passed threshold)
+    gradcam_base64 = None
+    if boxes:  # Only generate Grad-CAM if we have high-confidence detections
+        try:
+            gradcam_base64 = generate_gradcam(image_path, boxes)
+            if gradcam_base64:
+                logger.info("✓ Grad-CAM image generated successfully")
+        except Exception as e:
+            logger.warning(f"⚠️ Grad-CAM generation skipped: {str(e)}")
 
     os.remove(image_path)
 
     response = {}
     if labels:
         response['fracture_types'] = list(set(labels))
+        response['detections_count'] = len(boxes)
+        response['confidences'] = [f"{conf:.2f}" for conf in confidences]
     else:
-        response['message'] = 'No fracture detected.'
+        response['message'] = 'No fracture detected (all detections below confidence threshold of 0.55).'
+        response['detections_count'] = 0
 
-    if saliency_map_base64:
-        response['saliency_map_url'] = f"data:image/jpeg;base64,{saliency_map_base64}"
-
+    # Return Grad-CAM heatmap if available
+    if gradcam_base64:
+        response['gradcam_image'] = f"data:image/jpeg;base64,{gradcam_base64}"
+        response['explainability'] = f"Grad-CAM visualization of detected fractures (confidence threshold: {CONFIDENCE_THRESHOLD})"
+    
     return jsonify(response)
 
 if __name__ == '__main__':
